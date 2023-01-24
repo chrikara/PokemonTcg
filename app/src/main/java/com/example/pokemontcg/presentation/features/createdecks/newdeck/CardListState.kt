@@ -1,8 +1,6 @@
-package com.example.pokemontcg.presentation.features.deck.newdeck
+package com.example.pokemontcg.presentation.features.createdecks.newdeck
 
 
-import com.example.pokemontcg.data.remote.api.dto.Cards
-import com.example.pokemontcg.data.remote.api.dto.Data
 import com.example.pokemontcg.domain.model.CardOverview
 
 data class CardListState(

@@ -6,8 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.pokemontcg.presentation.features.deck.newdeck.CardList
-import com.example.pokemontcg.presentation.features.deck.alldecks.AllDecksScreen
+import com.example.pokemontcg.presentation.features.createdecks.chosendeck.ChosenDeck
+import com.example.pokemontcg.presentation.features.createdecks.newdeck.CardList
+import com.example.pokemontcg.presentation.features.createdecks.mydecks.AllDecksScreen
 import com.example.pokemontcg.presentation.features.main.MainScreen
 import com.example.pokemontcg.presentation.features.welcome.WelcomeScreen
 import com.example.pokemontcg.ui.theme.PokemonTcgTheme
@@ -25,7 +26,7 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(
                     navController = navController,
-                    startDestination = Screen.Welcome.route
+                    startDestination = Screen.ChosenDeck.route
                 ){
                     composable(route = Screen.Welcome.route){
                         WelcomeScreen(navController = navController)
@@ -34,12 +35,14 @@ class MainActivity : ComponentActivity() {
                     composable(route = Screen.Main.route){
                         MainScreen(navController = navController)
                     }
-
+                    composable(route = Screen.ChosenDeck.route){
+                        ChosenDeck(navController = navController)
+                    }
                     composable(route = Screen.AllDecks.route){
                         AllDecksScreen(navController = navController)
                     }
                     
-                    composable(route = Screen.Deck.route){
+                    composable(route = Screen.DeckModify.route){
                         CardList()
                     }
 

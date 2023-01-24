@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.pokemontcg.ui.theme.BlueAlpha
 import com.example.pokemontcg.ui.theme.BlueAlpha30
@@ -26,7 +27,8 @@ fun PrimaryButton(
     modifier: Modifier = Modifier,
     onClick : () -> Unit,
     paddingValues: PaddingValues = PaddingValues(horizontal = 45.dp, vertical = 15.dp),
-    enabled : Boolean = true
+    enabled : Boolean = true,
+    textAlign: TextAlign? = null
 ) {
 
     Box(
@@ -47,8 +49,10 @@ fun PrimaryButton(
 
     ){
         Text(
+            modifier = Modifier.fillMaxWidth(),
             text = text,
             color = MaterialTheme.colorScheme.onBackground,
+            textAlign = textAlign
         )
     }
 }

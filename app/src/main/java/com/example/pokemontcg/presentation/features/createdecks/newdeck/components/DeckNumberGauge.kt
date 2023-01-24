@@ -1,9 +1,6 @@
-package com.example.pokemontcg.presentation.features.deck.newdeck.components
+package com.example.pokemontcg.presentation.features.createdecks.newdeck.components
 
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.AnimationSpec
-import androidx.compose.animation.core.Easing
-import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.material3.MaterialTheme

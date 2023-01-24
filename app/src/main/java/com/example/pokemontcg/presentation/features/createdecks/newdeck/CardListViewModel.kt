@@ -1,4 +1,4 @@
-package com.example.pokemontcg.presentation.features.deck.newdeck
+package com.example.pokemontcg.presentation.features.createdecks.newdeck
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
