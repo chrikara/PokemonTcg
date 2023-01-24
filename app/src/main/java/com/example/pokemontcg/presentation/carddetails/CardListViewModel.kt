@@ -19,20 +19,20 @@ class CardListViewModel @Inject constructor(
     var state by mutableStateOf<CardListState>(CardListState())
         private set
 
+    init {
+        getCoinList()
+    }
     fun getCoinList(){
         viewModelScope.launch {
 
             val cardsDto = repository.getCards().data
 
-            for (cardDto in cardsDto){
-                println(cardDto.types)
-            }
+
             val cards = cardsDto.map { it.toCardOverViewList() }
 
             state = state.copy(
                 cardList = cards
             )
-            println("STATE ${state}")
         }
 
 
