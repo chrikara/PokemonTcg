@@ -16,7 +16,7 @@ data class Data(
     val legalities: Legalities,
     val level: String,
     val name: String,
-    val nationalPokedexNumbers: List<Int>,
+    val nationalPokedexNumbers: List<Int>?,
     val number: String,
     val rarity: String,
     val retreatCost: List<String>,
@@ -33,7 +33,8 @@ fun Data.toCardOverViewList() : CardOverview{
         id = this.id,
         name = this.name,
         imgString = this.images.large,
-        type = this.types?.get(0)
+        type = this.types?.get(0),
+        nationalDex = this.nationalPokedexNumbers?.get(0)
 
     )
 }

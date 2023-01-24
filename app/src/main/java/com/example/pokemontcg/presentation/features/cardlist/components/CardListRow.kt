@@ -1,4 +1,4 @@
-package com.example.pokemontcg.presentation.carddetails.components
+package com.example.pokemontcg.presentation.features.cardlist.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,27 +38,26 @@ fun CardListRow(
             contentDescription = "",
             modifier = Modifier
                 .size(285.dp)
-                .background(Color.Transparent)
+                .background(MaterialTheme.colorScheme.surface)
                 .weight(1f)
         )
 
-                Image(
-                    painter = rememberImagePainter(
-                        data = image2,
-                        builder = {
-                            crossfade(true)
-                        }
-                    ),
-                    contentDescription = "",
-                    modifier = Modifier
-                        .aspectRatio(1f)
-                        .fillMaxWidth()
-                        .background(Color.Transparent)
-                        .weight(1f)
-                )
-            }
+        Image(
+            painter = rememberImagePainter(
+                data = image2,
+                builder = {
+                    crossfade(true)
+                }
+            ),
+            contentDescription = "",
+            modifier = Modifier
+                .size(285.dp)
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surface)
+                .weight(1f)
+        )
 
-
-        }
+    }
+}
         
 
