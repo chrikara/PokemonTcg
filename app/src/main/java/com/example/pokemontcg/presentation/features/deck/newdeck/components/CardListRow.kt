@@ -1,4 +1,4 @@
-package com.example.pokemontcg.presentation.features.cardlist.components
+package com.example.pokemontcg.presentation.features.deck.newdeck.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

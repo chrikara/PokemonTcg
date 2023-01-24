@@ -6,7 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.pokemontcg.presentation.features.cardlist.CardList
+import com.example.pokemontcg.presentation.features.deck.newdeck.CardList
+import com.example.pokemontcg.presentation.features.deck.alldecks.AllDecksScreen
 import com.example.pokemontcg.presentation.features.main.MainScreen
 import com.example.pokemontcg.presentation.features.welcome.WelcomeScreen
 import com.example.pokemontcg.ui.theme.PokemonTcgTheme
@@ -33,7 +34,10 @@ class MainActivity : ComponentActivity() {
                     composable(route = Screen.Main.route){
                         MainScreen(navController = navController)
                     }
-                    
+
+                    composable(route = Screen.AllDecks.route){
+                        AllDecksScreen(navController = navController)
+                    }
                     
                     composable(route = Screen.Deck.route){
                         CardList()

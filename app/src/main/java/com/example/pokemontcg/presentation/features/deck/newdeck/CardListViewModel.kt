@@ -1,4 +1,4 @@
-package com.example.pokemontcg.presentation.features.cardlist
+package com.example.pokemontcg.presentation.features.deck.newdeck
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,10 +21,10 @@ class CardListViewModel @Inject constructor(
         private set
 
     init {
-        getCoinList()
+        getCardList()
     }
 
-    fun getCoinList(){
+    fun getCardList(){
         getCardsUseCase().onEach {result ->
             when(result){
                 is Resource.Success -> {
