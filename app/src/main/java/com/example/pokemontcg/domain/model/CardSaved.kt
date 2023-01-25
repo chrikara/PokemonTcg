@@ -5,7 +5,7 @@ import com.example.pokemontcg.data.local.entity.PokemonEntity
 import com.example.pokemontcg.data.local.entity.toCardSaved
 
 data class CardSaved(
-    val deckNumber : Int,
+    val deckNumber : DeckNumber,
     val pokemonName : String,
     val pokemonId : String,
     val pokemonImageUrl : String,
@@ -15,7 +15,7 @@ data class CardSaved(
 
 fun CardSaved.toPokemonEntity() : PokemonEntity {
     return PokemonEntity(
-        deckNumber = this.deckNumber,
+        deckNumber = this.deckNumber.toInt(),
         pokemonName = this.pokemonName,
         pokemonId = this.pokemonId,
         pokemonImageUrl = this.pokemonImageUrl,

@@ -3,9 +3,11 @@ package com.example.pokemontcg
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.pokemontcg.presentation.features.createdecks.chosendeck.ChosenDeck
 import com.example.pokemontcg.presentation.features.createdecks.modifydeck.CardList
 import com.example.pokemontcg.presentation.features.createdecks.alldecks.AllDecksScreen
@@ -39,11 +41,32 @@ class MainActivity : ComponentActivity() {
                     composable(route = Screen.AllDecks.route){
                         AllDecksScreen(navController = navController)
                     }
-                    composable(route = Screen.ChosenDeck.route){
-                        ChosenDeck(navController = navController)
+                    composable(
+                        route = Screen.ChosenDeck.route + "/{deckNumber}",
+                        arguments = listOf(
+                            navArgument("deckNumber"){
+                                type = NavType.IntType
+                            }
+                        )
+                    ){
+                        val deckNumber = it.arguments?.getInt("deckNumber") ?: -1
+                        println("DeckNumber $deckNumber")
+                        ChosenDeck(
+                            deckNumber = deckNumber,
+                            navController = navController
+                        )
                     }
-                    composable(route = Screen.DeckModify.route){
-                        CardList()
+                    composable(route = Screen.DeckModify.route + "/{deckNumber}",
+                        arguments = listOf(
+                            navArgument("deckNumber"){
+                                type = NavType.IntType
+                            }
+                        )
+                        ){
+                        val deckNumber = it.arguments?.getInt("deckNumber") ?: -1
+                        CardList(
+                            deckNumber = deckNumber
+                        )
                     }
 
                 }

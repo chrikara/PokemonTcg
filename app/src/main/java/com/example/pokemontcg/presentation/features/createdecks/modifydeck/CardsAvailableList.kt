@@ -21,17 +21,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.annotation.ExperimentalCoilApi
+import com.example.pokemontcg.domain.model.DeckNumber
 import com.example.pokemontcg.presentation.features.createdecks.modifydeck.components.CardListRow
 import com.example.pokemontcg.presentation.features.createdecks.modifydeck.components.DeckNumberHeader
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
 fun CardList(
-    viewModel: CardListViewModel = hiltViewModel()
+    viewModel: CardListViewModel = hiltViewModel(),
+    deckNumber: Int
 ) {
     val state = viewModel.state
-    println(state)
+    viewModel.getCardsForOneDeck(DeckNumber.fromInt(deckNumber))
 
+    println(state)
 
 
     Column(modifier = Modifier
@@ -69,8 +72,8 @@ fun CardList(
                         CardListRow(
                             image1 = state.cardList[i + i].imgString ,
                             image2 = state.cardList[i+i+1].imgString,
-                            onClickAdd1st = {viewModel.insertPokemonToDeck(state.cardList[i+i])},
-                            onClickAdd2nd = {viewModel.insertPokemonToDeck(state.cardList[i+i+1])},
+                            onClickAdd1st = {viewModel.insertPokemonToDeck(deckNumber, state.cardList[i+i])},
+                            onClickAdd2nd = {viewModel.insertPokemonToDeck(deckNumber,state.cardList[i+i+1])},
                             onClickSub1st = {
                                             println(state.cardList[i+i])
                                 viewModel.deletePokemonFromDeck(state.cardList[i+i])
@@ -86,7 +89,7 @@ fun CardList(
                         CardListRow(
                             image1 = state.cardList[i + i].imgString ,
                             image2 = "",
-                            onClickAdd1st = {viewModel.insertPokemonToDeck(state.cardList[i+1])},
+                            onClickAdd1st = {viewModel.insertPokemonToDeck(deckNumber,state.cardList[i+1])},
                             onClickAdd2nd = {},
                             onClickSub1st = {
                                 viewModel.deletePokemonFromDeck(state.cardList[i+i])

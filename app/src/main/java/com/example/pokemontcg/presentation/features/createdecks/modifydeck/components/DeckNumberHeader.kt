@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -75,7 +76,7 @@ fun DeckNumberHeader(
                     text = when{
                         totalCards < 59 -> {"Χρειάζεσαι ${60-totalCards} κάρτες!"}
                         totalCards == 59 -> {"Χρειάζεσαι 1 κάρτα!"}
-                        else -> {"Πλήρης τράπουλα"}
+                        else -> {"Πλήρης τράπουλα, παίξε!"}
                     }
                     ,
                         color = MaterialTheme.colorScheme.onBackground,

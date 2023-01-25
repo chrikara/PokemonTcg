@@ -3,6 +3,7 @@ package com.example.pokemontcg.data.local.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.pokemontcg.domain.model.CardSaved
+import com.example.pokemontcg.domain.model.DeckNumber
 
 
 @Entity
@@ -17,7 +18,7 @@ data class PokemonEntity(
 
 fun PokemonEntity.toCardSaved() : CardSaved{
     return CardSaved(
-        deckNumber = this.deckNumber,
+        deckNumber = DeckNumber.fromInt(this.deckNumber),
         pokemonName = this.pokemonName,
         pokemonId = this.pokemonId,
         pokemonImageUrl = this.pokemonImageUrl,

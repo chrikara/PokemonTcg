@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokemontcg.domain.model.CardOverview
 import com.example.pokemontcg.domain.model.CardSaved
+import com.example.pokemontcg.domain.model.DeckNumber
 import com.example.pokemontcg.domain.use_cases.GetCardsUseCase
 import com.example.pokemontcg.presentation.features.createdecks.use_cases.AllMyDeckUseCases
 import com.example.pokemontcg.presentation.features.createdecks.use_cases.GetPokemonFromDeckUseCase
@@ -31,15 +32,14 @@ class CardListViewModel @Inject constructor(
     private var getCardsForOneDeckJob: Job? = null
 
     init {
-        getCardsForOneDeck()
         getAllAvailableCardsFromAPI()
     }
-    fun getCardsForOneDeck() {
+    fun getCardsForOneDeck(deckNumber : DeckNumber) {
         getCardsForOneDeckJob?.cancel()
         getCardsForOneDeckJob = allMyDeckUseCases.getPokemonFromDeckUseCase().onEach { cardsSaved ->
 
             state = state.copy(
-                savedCardList = cardsSaved
+                savedCardList = cardsSaved.filter {  it.deckNumber == deckNumber}
             )
 
         }.launchIn(viewModelScope)
@@ -54,13 +54,17 @@ class CardListViewModel @Inject constructor(
 
         }
     }
-    fun insertPokemonToDeck(card : CardOverview){
+    fun insertPokemonToDeck(
+        deckToInsert : Int,
+        card : CardOverview
+    ){
         viewModelScope.launch {
             when{
                 state.savedCardList.size <60 ->{
                     insertPokemonToDeck(
-                        allMyDeckUseCases,
-                        card
+                        deckToInsert = deckToInsert,
+                        card = card,
+                        allMyDeckUseCases = allMyDeckUseCases
                     )
                 }
                 else -> Unit
@@ -106,9 +110,13 @@ class CardListViewModel @Inject constructor(
     }
 }
 
-private suspend fun insertPokemonToDeck(allMyDeckUseCases: AllMyDeckUseCases,card: CardOverview){
+private suspend fun insertPokemonToDeck(
+    allMyDeckUseCases: AllMyDeckUseCases,
+    card: CardOverview,
+    deckToInsert : Int
+){
     allMyDeckUseCases.insertPokemonToDeckUseCase(
-        deckNumber = 1,
+        deckNumber = deckToInsert,
         pokemonId = card.id,
         pokemonName = card.name,
         pokemonImageUrl = card.imgString,

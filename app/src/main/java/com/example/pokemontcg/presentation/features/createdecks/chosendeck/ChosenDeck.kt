@@ -33,6 +33,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.pokemontcg.domain.model.CardSaved
+import com.example.pokemontcg.domain.model.DeckNumber
+import com.example.pokemontcg.domain.model.toInt
 import com.example.pokemontcg.presentation.features.createdecks.modifydeck.components.DeckNumberHeader
 import com.example.pokemontcg.presentation.features.welcome.PrimaryButton
 import com.example.pokemontcg.util.Screen
@@ -40,10 +42,14 @@ import com.example.pokemontcg.util.myClickable
 
 @Composable
 fun ChosenDeck(
+    deckNumber: Int,
     navController: NavController,
     viewModel: ChosenDeckViewModel = hiltViewModel()
 ) {
     val state = viewModel.state
+    val deckChosen = DeckNumber.fromInt(deckNumber)
+    viewModel.getCardsForOneDeck(deckChosen)
+
 
 
     ConstraintLayout(
@@ -88,7 +94,7 @@ fun ChosenDeck(
             text = "Modify Deck",
             textAlign = TextAlign.Center,
             onClick = {
-                navController.navigate(Screen.DeckModify.route)
+                navController.navigate(Screen.DeckModify.route + "/${deckNumber}")
             }
         )
 
