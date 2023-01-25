@@ -1,4 +1,4 @@
-package com.example.pokemontcg.presentation.features.createdecks.newdeck.components
+package com.example.pokemontcg.presentation.features.createdecks.modifydeck.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -97,7 +97,8 @@ fun DeckNumberHeader(
             Spacer(modifier = Modifier.width(15.dp))
 
             Image(
-                painter = painterResource(id = R.drawable.krokorok),
+                painter = painterResource(id =
+                if(totalCards == 60) R.drawable.krokorok2 else R.drawable.krokorok),
                 contentDescription = "",
                 modifier = Modifier.size(70.dp),
             )

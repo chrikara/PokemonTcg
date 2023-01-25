@@ -1,4 +1,4 @@
-package com.example.pokemontcg.presentation.features.createdecks.newdeck
+package com.example.pokemontcg.presentation.features.createdecks.modifydeck
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -6,7 +6,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokemontcg.domain.model.CardOverview
+import com.example.pokemontcg.domain.model.CardSaved
 import com.example.pokemontcg.domain.use_cases.GetCardsUseCase
+import com.example.pokemontcg.presentation.features.createdecks.use_cases.AllMyDeckUseCases
 import com.example.pokemontcg.presentation.features.createdecks.use_cases.GetPokemonFromDeckUseCase
 import com.example.pokemontcg.presentation.features.createdecks.use_cases.InsertPokemonToDeckUseCase
 import com.example.pokemontcg.util.Resource
@@ -20,8 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CardListViewModel @Inject constructor(
     private val getCardsUseCase: GetCardsUseCase,
-    private val getPokemonFromDeckUseCase: GetPokemonFromDeckUseCase,
-    private val insertPokemonToDeckUseCase: InsertPokemonToDeckUseCase
+    private val allMyDeckUseCases: AllMyDeckUseCases
 ) : ViewModel() {
 
     var state by mutableStateOf<CardListState>(CardListState())
@@ -35,7 +36,7 @@ class CardListViewModel @Inject constructor(
     }
     fun getCardsForOneDeck() {
         getCardsForOneDeckJob?.cancel()
-        getCardsForOneDeckJob = getPokemonFromDeckUseCase().onEach { cardsSaved ->
+        getCardsForOneDeckJob = allMyDeckUseCases.getPokemonFromDeckUseCase().onEach { cardsSaved ->
 
             state = state.copy(
                 savedCardList = cardsSaved
@@ -43,12 +44,22 @@ class CardListViewModel @Inject constructor(
 
         }.launchIn(viewModelScope)
     }
+
+    fun deletePokemonFromDeck(cardOverview: CardOverview){
+        viewModelScope.launch {
+            if(cardOverview.id in state.savedCardList.map { it.pokemonId }){
+                val cardSaved = state.savedCardList.find { it.pokemonId == cardOverview.id }!!
+                allMyDeckUseCases.deletePokemonFromDeckUseCase(cardSaved)
+            }
+
+        }
+    }
     fun insertPokemonToDeck(card : CardOverview){
         viewModelScope.launch {
             when{
                 state.savedCardList.size <60 ->{
                     insertPokemonToDeck(
-                        insertPokemonToDeckUseCase,
+                        allMyDeckUseCases,
                         card
                     )
                 }
@@ -95,8 +106,8 @@ class CardListViewModel @Inject constructor(
     }
 }
 
-private suspend fun insertPokemonToDeck(insertPokemonToDeckUseCase: InsertPokemonToDeckUseCase,card: CardOverview){
-    insertPokemonToDeckUseCase(
+private suspend fun insertPokemonToDeck(allMyDeckUseCases: AllMyDeckUseCases,card: CardOverview){
+    allMyDeckUseCases.insertPokemonToDeckUseCase(
         deckNumber = 1,
         pokemonId = card.id,
         pokemonName = card.name,

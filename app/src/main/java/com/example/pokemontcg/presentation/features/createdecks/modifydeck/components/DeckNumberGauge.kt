@@ -1,4 +1,4 @@
-package com.example.pokemontcg.presentation.features.createdecks.newdeck.components
+package com.example.pokemontcg.presentation.features.createdecks.modifydeck.components
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween

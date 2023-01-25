@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalCoilApi::class)
 
-package com.example.pokemontcg.presentation.features.createdecks.newdeck
+package com.example.pokemontcg.presentation.features.createdecks.modifydeck
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -21,8 +21,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.annotation.ExperimentalCoilApi
-import com.example.pokemontcg.presentation.features.createdecks.newdeck.components.CardListRow
-import com.example.pokemontcg.presentation.features.createdecks.newdeck.components.DeckNumberHeader
+import com.example.pokemontcg.presentation.features.createdecks.modifydeck.components.CardListRow
+import com.example.pokemontcg.presentation.features.createdecks.modifydeck.components.DeckNumberHeader
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
@@ -65,20 +65,37 @@ fun CardList(
                 items(state.cardList.size/2){ i ->
 
                     if(state.cardList.size-1>= i + i +1){
-                        println("$i row 1 card${state.cardList[i+1]} 2 card${state.cardList[i+i+1]}")
+
                         CardListRow(
                             image1 = state.cardList[i + i].imgString ,
                             image2 = state.cardList[i+i+1].imgString,
-                            onClick1 = {viewModel.insertPokemonToDeck(state.cardList[i+i])},
-                            onClick2 = {viewModel.insertPokemonToDeck(state.cardList[i+i+1])}
+                            onClickAdd1st = {viewModel.insertPokemonToDeck(state.cardList[i+i])},
+                            onClickAdd2nd = {viewModel.insertPokemonToDeck(state.cardList[i+i+1])},
+                            onClickSub1st = {
+                                            println(state.cardList[i+i])
+                                viewModel.deletePokemonFromDeck(state.cardList[i+i])
+                                            },
+                            onClickSub2nd = {
+                                viewModel.deletePokemonFromDeck(state.cardList[i+i+1])
+                            },
+                            totalCounts1 = state.savedCardList.count { it.pokemonId == state.cardList[i+i].id },
+                            totalCounts2 = state.savedCardList.count { it.pokemonId == state.cardList[i+i+1].id },
 
                         )
                     }else{
                         CardListRow(
                             image1 = state.cardList[i + i].imgString ,
                             image2 = "",
-                            onClick1 = {viewModel.insertPokemonToDeck(state.cardList[i+1])},
-                            onClick2 = {}
+                            onClickAdd1st = {viewModel.insertPokemonToDeck(state.cardList[i+1])},
+                            onClickAdd2nd = {},
+                            onClickSub1st = {
+                                viewModel.deletePokemonFromDeck(state.cardList[i+i])
+                            },
+                            onClickSub2nd = {
+                                viewModel.deletePokemonFromDeck(state.cardList[i+i+1])
+                            },
+                            totalCounts1 = state.savedCardList.count { it.pokemonId == state.cardList[i+i].id },
+                            totalCounts2 = state.savedCardList.count { it.pokemonId == state.cardList[i+i+1].id },
                         )
                     }
                 }

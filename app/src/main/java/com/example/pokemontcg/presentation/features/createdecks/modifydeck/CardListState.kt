@@ -1,4 +1,4 @@
-package com.example.pokemontcg.presentation.features.createdecks.newdeck
+package com.example.pokemontcg.presentation.features.createdecks.modifydeck
 
 
 import com.example.pokemontcg.domain.model.CardOverview
