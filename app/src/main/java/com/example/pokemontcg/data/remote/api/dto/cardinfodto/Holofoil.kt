@@ -1,4 +1,4 @@
-package com.example.pokemontcg.data.remote.api.dto
+package com.example.pokemontcg.data.remote.api.dto.cardinfodto
 
 data class Holofoil(
     val directLow: Double,

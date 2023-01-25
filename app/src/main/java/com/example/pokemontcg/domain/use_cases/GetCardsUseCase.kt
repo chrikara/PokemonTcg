@@ -1,6 +1,6 @@
 package com.example.pokemontcg.domain.use_cases
 
-import com.example.pokemontcg.data.remote.api.dto.toCardOverViewList
+import com.example.pokemontcg.data.remote.api.dto.cardoverviewdto.toCardOverViewList
 import com.example.pokemontcg.domain.model.CardOverview
 import com.example.pokemontcg.domain.repository.PokemonCardsRepository
 import com.example.pokemontcg.util.Resource

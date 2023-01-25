@@ -1,6 +1,7 @@
 package com.example.pokemontcg.data.remote.api
 
-import com.example.pokemontcg.data.remote.api.dto.Cards
+import com.example.pokemontcg.data.remote.api.dto.cardinfodto.CardInfoDto
+import com.example.pokemontcg.data.remote.api.dto.cardoverviewdto.Cards
 
 import com.example.pokemontcg.util.Constants.API_KEY
 import retrofit2.http.GET
@@ -23,6 +24,6 @@ interface PokemonTcgApi {
 
     @Headers("X-Api-Key:${API_KEY}")
     @GET("v2/cards/{cardId}")
-    suspend fun getCardById(@Path("cardId") cardId : String) : Cards
+    suspend fun getCardById(@Path("cardId") cardId : String) : CardInfoDto
 
 }

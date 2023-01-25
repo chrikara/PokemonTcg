@@ -4,7 +4,8 @@ import com.example.pokemontcg.data.local.entity.PokemonEntity
 import com.example.pokemontcg.data.local.entity.TrackerDao
 import com.example.pokemontcg.data.local.entity.toCardSaved
 import com.example.pokemontcg.data.remote.api.PokemonTcgApi
-import com.example.pokemontcg.data.remote.api.dto.Cards
+import com.example.pokemontcg.data.remote.api.dto.cardinfodto.CardInfoDto
+import com.example.pokemontcg.data.remote.api.dto.cardoverviewdto.Cards
 import com.example.pokemontcg.domain.model.CardSaved
 import com.example.pokemontcg.domain.model.toPokemonEntity
 
@@ -20,7 +21,7 @@ class PokemonCardsRepositoryImpl(
         return api.getCards()
     }
 
-    override suspend fun getCardById(cardId: String): Cards {
+    override suspend fun getCardById(cardId: String): CardInfoDto {
         return api.getCardById(cardId)
     }
 

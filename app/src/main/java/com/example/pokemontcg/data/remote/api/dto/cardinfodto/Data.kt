@@ -1,5 +1,6 @@
-package com.example.pokemontcg.data.remote.api.dto
+package com.example.pokemontcg.data.remote.api.dto.cardinfodto
 
+import com.example.pokemontcg.data.remote.api.dto.cardoverviewdto.Data
 import com.example.pokemontcg.domain.model.CardOverview
 
 data class Data(
@@ -28,13 +29,3 @@ data class Data(
     val weaknesses: List<Weaknesse>
 )
 
-fun Data.toCardOverViewList() : CardOverview{
-    return CardOverview(
-        id = this.id,
-        name = this.name,
-        imgString = this.images.large,
-        type = this.types?.get(0),
-        nationalDex = this.nationalPokedexNumbers?.get(0)
-
-    )
-}

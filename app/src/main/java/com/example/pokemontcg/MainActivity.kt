@@ -12,6 +12,7 @@ import com.example.pokemontcg.presentation.features.createdecks.chosendeck.Chose
 import com.example.pokemontcg.presentation.features.createdecks.modifydeck.CardList
 import com.example.pokemontcg.presentation.features.createdecks.alldecks.AllDecksScreen
 import com.example.pokemontcg.presentation.features.main.MainScreen
+import com.example.pokemontcg.presentation.features.pokecardinfo.PokeCardInfoScreen
 import com.example.pokemontcg.presentation.features.welcome.WelcomeScreen
 import com.example.pokemontcg.ui.theme.PokemonTcgTheme
 import com.example.pokemontcg.util.Screen
@@ -28,7 +29,7 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(
                     navController = navController,
-                    startDestination = Screen.Welcome.route
+                    startDestination = Screen.ChosenDeck.route + "/{deckNumber}"
                 ){
                     composable(route = Screen.Welcome.route){
                         WelcomeScreen(navController = navController)
@@ -49,7 +50,7 @@ class MainActivity : ComponentActivity() {
                             }
                         )
                     ){
-                        val deckNumber = it.arguments?.getInt("deckNumber") ?: -1
+                        val deckNumber = it.arguments?.getInt("deckNumber") ?: 1
                         println("DeckNumber $deckNumber")
                         ChosenDeck(
                             deckNumber = deckNumber,
@@ -63,9 +64,22 @@ class MainActivity : ComponentActivity() {
                             }
                         )
                         ){
-                        val deckNumber = it.arguments?.getInt("deckNumber") ?: -1
+                        val deckNumber = it.arguments?.getInt("deckNumber") ?: 1
                         CardList(
                             deckNumber = deckNumber
+                        )
+                    }
+
+                    composable(route = Screen.PokeCardInfo.route + "/{pokeId}",
+                        arguments = listOf(
+                            navArgument("pokeId"){
+                                type = NavType.StringType
+                            }
+                        )
+                    ){
+                        val pokeId = it.arguments?.getString("pokeId") ?: ""
+                        PokeCardInfoScreen(
+                            pokeId = pokeId
                         )
                     }
 

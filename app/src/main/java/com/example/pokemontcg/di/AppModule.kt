@@ -9,6 +9,7 @@ import com.example.pokemontcg.domain.repository.PokemonCardsRepository
 import com.example.pokemontcg.presentation.features.createdecks.use_cases.AllMyDeckUseCases
 import com.example.pokemontcg.presentation.features.createdecks.use_cases.DeletePokemonFromDeckUseCase
 import com.example.pokemontcg.presentation.features.createdecks.use_cases.GetPokemonFromDeckUseCase
+import com.example.pokemontcg.presentation.features.createdecks.use_cases.GetPokemonInfoFromAPIUseCase
 import com.example.pokemontcg.presentation.features.createdecks.use_cases.InsertPokemonToDeckUseCase
 import com.example.pokemontcg.util.Constants
 import dagger.Module
@@ -82,7 +83,8 @@ object AppModule {
         return AllMyDeckUseCases(
             getPokemonFromDeckUseCase = GetPokemonFromDeckUseCase(repository),
             insertPokemonToDeckUseCase = InsertPokemonToDeckUseCase(repository),
-            deletePokemonFromDeckUseCase = DeletePokemonFromDeckUseCase(repository)
+            deletePokemonFromDeckUseCase = DeletePokemonFromDeckUseCase(repository),
+            getPokemonInfoFromAPIUseCase = GetPokemonInfoFromAPIUseCase(repository)
         )
 
     }

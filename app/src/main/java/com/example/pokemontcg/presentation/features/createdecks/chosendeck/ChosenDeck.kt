@@ -76,6 +76,7 @@ fun ChosenDeck(
             content = {
                 items(state.cardsSaved){cardSaved ->
                     SavedImageInDeck(
+                        navController = navController,
                         viewModel = viewModel,
                         cardSaved = cardSaved
                     )
@@ -135,6 +136,7 @@ private fun TextForEmptyDeck(modifier : Modifier = Modifier){
 
 @Composable
 private fun SavedImageInDeck(
+    navController: NavController,
     viewModel: ChosenDeckViewModel,
     cardSaved : CardSaved
 ){
@@ -162,7 +164,9 @@ private fun SavedImageInDeck(
                     .padding(end = 40.dp)
                     .size(35.dp)
                     .alpha(0.7f)
-                    .myClickable(onClick = {})
+                    .myClickable(onClick = {
+                        navController.navigate(Screen.PokeCardInfo.route + "/${cardSaved.pokemonId}")
+                    })
                 ,
                 tint = MaterialTheme.colorScheme.primary
             )

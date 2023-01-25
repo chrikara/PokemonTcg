@@ -1,6 +1,4 @@
-package com.example.pokemontcg.data.remote.api.dto
-
-import com.example.pokemontcg.domain.model.CardOverview
+package com.example.pokemontcg.data.remote.api.dto.cardoverviewdto
 
 data class Cards(
     val count: Int,

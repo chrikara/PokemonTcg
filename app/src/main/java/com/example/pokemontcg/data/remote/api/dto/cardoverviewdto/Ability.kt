@@ -1,4 +1,4 @@
-package com.example.pokemontcg.data.remote.api.dto
+package com.example.pokemontcg.data.remote.api.dto.cardoverviewdto
 
 data class Ability(
     val name: String,
