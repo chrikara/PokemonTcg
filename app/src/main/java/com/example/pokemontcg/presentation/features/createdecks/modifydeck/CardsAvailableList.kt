@@ -20,14 +20,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import com.example.pokemontcg.domain.model.DeckNumber
 import com.example.pokemontcg.presentation.features.createdecks.modifydeck.components.CardListRow
 import com.example.pokemontcg.presentation.features.createdecks.modifydeck.components.DeckNumberHeader
+import com.example.pokemontcg.util.Screen
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
 fun CardList(
+    navController: NavController,
     viewModel: CardListViewModel = hiltViewModel(),
     deckNumber: Int
 ) {
@@ -83,6 +86,8 @@ fun CardList(
                             },
                             totalCounts1 = state.savedCardList.count { it.pokemonId == state.cardList[i+i].id },
                             totalCounts2 = state.savedCardList.count { it.pokemonId == state.cardList[i+i+1].id },
+                            onClickCardInfo1st = {navController.navigate(Screen.PokeCardInfo.route + "/${state.cardList[i+i].id}")},
+                            onClickCardInfo2nd= {navController.navigate(Screen.PokeCardInfo.route + "/${state.cardList[i+i+1].id}")},
 
                         )
                     }else{
@@ -99,6 +104,8 @@ fun CardList(
                             },
                             totalCounts1 = state.savedCardList.count { it.pokemonId == state.cardList[i+i].id },
                             totalCounts2 = state.savedCardList.count { it.pokemonId == state.cardList[i+i+1].id },
+                            onClickCardInfo1st = {navController.navigate(Screen.PokeCardInfo.route + "/${state.cardList[i+i].id}")},
+                            onClickCardInfo2nd= {},
                         )
                     }
                 }

@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(
                     navController = navController,
-                    startDestination = Screen.ChosenDeck.route + "/{deckNumber}"
+                    startDestination = Screen.Welcome.route
                 ){
                     composable(route = Screen.Welcome.route){
                         WelcomeScreen(navController = navController)
@@ -66,6 +66,7 @@ class MainActivity : ComponentActivity() {
                         ){
                         val deckNumber = it.arguments?.getInt("deckNumber") ?: 1
                         CardList(
+                            navController = navController,
                             deckNumber = deckNumber
                         )
                     }

@@ -14,6 +14,7 @@ import com.example.pokemontcg.domain.model.cardinfo.TrainerInfoCard
 import com.example.pokemontcg.presentation.features.createdecks.use_cases.AllMyDeckUseCases
 import com.example.pokemontcg.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 
 import kotlinx.coroutines.flow.onEach
@@ -28,9 +29,11 @@ class PokeCardInfoViewModel @Inject constructor(
         private set
 
     var count = 0
+    private var a : Job? = null
 
     fun getPokeCardInfoByPokemonIdFromAPI(pokemonId : String){
-       allMyDeckUseCases.getPokemonInfoFromAPIUseCase(pokemonId).onEach { result->
+        a?.cancel()
+        a = allMyDeckUseCases.getPokemonInfoFromAPIUseCase(pokemonId).onEach { result->
            count++
            println(count)
            when(result){
@@ -52,6 +55,7 @@ class PokeCardInfoViewModel @Inject constructor(
                                    weakness = data.weaknesses?.get(0)?.type,
                                    evolvesFrom = data.evolvesFrom,
                                    evolvesTo = data.evolvesTo?.get(0),
+                                   hp = data.hp
                                )
                            )
                        }

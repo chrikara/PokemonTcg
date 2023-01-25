@@ -34,6 +34,8 @@ fun CardListRow(
     onClickAdd2nd : () -> Unit,
     onClickSub1st : () -> Unit,
     onClickSub2nd : () -> Unit,
+    onClickCardInfo1st:() -> Unit,
+    onClickCardInfo2nd:() -> Unit,
     totalCounts1: Int,
     totalCounts2: Int,
 
@@ -49,7 +51,8 @@ fun CardListRow(
             onClickImageOrAdd = onClickAdd1st,
             modifier = Modifier.weight(1f),
             onClickSub = onClickSub1st,
-            totalCounts = totalCounts1
+            totalCounts = totalCounts1,
+            onClickCardInfo = onClickCardInfo1st
         )
 
         ImageAndCursors(
@@ -57,7 +60,8 @@ fun CardListRow(
             onClickImageOrAdd = onClickAdd2nd,
             modifier = Modifier.weight(1f),
             onClickSub = onClickSub2nd,
-            totalCounts = totalCounts2
+            totalCounts = totalCounts2,
+            onClickCardInfo = onClickCardInfo2nd
 
         )
 
@@ -72,7 +76,8 @@ private fun ImageAndCursors(
     image: String,
     totalCounts : Int,
     onClickImageOrAdd: () -> Unit,
-    onClickSub: () -> Unit
+    onClickSub: () -> Unit,
+    onClickCardInfo: () -> Unit
 ){
 
 
@@ -91,7 +96,7 @@ private fun ImageAndCursors(
                 .size(285.dp)
                 .background(MaterialTheme.colorScheme.surface)
                 .clickable(
-                    onClick = onClickImageOrAdd
+                    onClick = onClickCardInfo
                 )
             ,
         )

@@ -147,8 +147,11 @@ private fun SavedImageInDeck(
             painter = rememberImagePainter(
                 data = cardSaved.pokemonImageUrl,
             ),
-            modifier = Modifier.size(350.dp),
+            modifier = Modifier.size(350.dp).myClickable(onClick = {
+                navController.navigate(Screen.PokeCardInfo.route + "/${cardSaved.pokemonId}")
+            }),
             contentDescription ="",
+
         )
 
         Row(

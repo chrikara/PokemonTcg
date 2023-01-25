@@ -4,6 +4,7 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -63,6 +65,9 @@ import com.example.pokemontcg.data.remote.api.dto.cardinfodto.Attack
 import com.example.pokemontcg.domain.model.Symbol
 import com.example.pokemontcg.domain.model.cardinfo.PokeInfoCard
 import com.example.pokemontcg.util.myClickable
+import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
+import com.google.accompanist.flowlayout.FlowMainAxisAlignment
+import com.google.accompanist.flowlayout.FlowRow
 
 @Composable
 fun PokeCardInfo(
@@ -138,17 +143,38 @@ fun PokeCardInfo(
                 )
             }
         }
-        Text(
-            text = "${pokeInfoCard.nationalDex}",
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Medium,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .alpha(0.7f)
-        )
-            Spacer(modifier = Modifier.height(20.dp))
-            
+
+
+            val colorHeart = MaterialTheme.colorScheme.background
+            FlowRow(
+                modifier = Modifier
+                    .border(
+                        color = colorHeart,
+                        width = 0.2.dp,
+                        shape = RoundedCornerShape(30.dp)
+                    )
+                    .clip(RoundedCornerShape(30.dp))
+
+                    .background(Color(0xF9A1D2D8))
+                    .padding(15.dp)
+                    ,
+                mainAxisAlignment = FlowMainAxisAlignment.Center,
+                crossAxisAlignment = FlowCrossAxisAlignment.Center
+            ){
+                Text("HP:${pokeInfoCard.hp}")
+                Spacer(modifier = Modifier.width(10.dp))
+
+                repeat((pokeInfoCard.hp.toInt()/10)){
+                    Image(
+                        painter = painterResource(id = R.drawable.heart_outlined_50),
+                        contentDescription = "",
+                        colorFilter = ColorFilter.tint(colorHeart),
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+
+            }
+            Spacer(modifier = Modifier.height(10.dp))
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -184,7 +210,9 @@ fun PokeCardInfo(
                     color = Color(0xFFBDC6CF),
                     modifier = Modifier
                         .align(TopStart)
-                        .alpha(0.7f),
+                        .alpha(0.7f)
+                        .padding(start = 20.dp)
+                    ,
 
                 )
                 Text(
@@ -193,7 +221,8 @@ fun PokeCardInfo(
                     color = Color(0xFFBDC6CF),
                     modifier = Modifier
                         .align(TopCenter)
-                        .alpha(0.7f),
+                        .alpha(0.7f)
+                    ,
                 )
                 Text(
                     text = nationalDexString[2].toString(),
@@ -201,7 +230,9 @@ fun PokeCardInfo(
                     color = Color(0xFFBDC6CF),
                     modifier = Modifier
                         .align(TopEnd)
-                        .alpha(0.7f),
+                        .alpha(0.7f)
+                        .padding(end = 20.dp)
+                    ,
                 )
                 Column(
                     modifier = Modifier.fillMaxWidth(),
