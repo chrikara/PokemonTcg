@@ -29,6 +29,7 @@ class CardListViewModel @Inject constructor(
     var state by mutableStateOf<CardListState>(CardListState())
         private set
 
+    var count = 0
     private var getCardsForOneDeckJob: Job? = null
 
     init {
@@ -78,8 +79,10 @@ class CardListViewModel @Inject constructor(
 
     fun getAllAvailableCardsFromAPI(){
         getCardsUseCase().onEach {result ->
+            count++
             when(result){
                 is Resource.Success -> {
+                    println("mpike success $count")
                     var newResult = result.data!!
 
                     newResult = newResult.map { card->
@@ -96,11 +99,16 @@ class CardListViewModel @Inject constructor(
                 }
 
                 is Resource.Error -> {
+                    println("mpike error $count")
+
                     state = state.copy(
                         error = result.message ?: "An error occured",
                         isLoading = false
-                    )                }
+                    )
+                }
                 is Resource.Loading -> {
+                    println("mpike loading $count")
+
                     state = state.copy(
                         isLoading = true
                     )

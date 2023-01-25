@@ -9,7 +9,8 @@ data class Data(
     val attacks: List<Attack>,
     val cardmarket: Cardmarket,
     val convertedRetreatCost: Int,
-    val evolvesFrom: String,
+    val evolvesFrom: String?,
+    val evolvesTo: List<String>?,
     val flavorText: String,
     val hp: String,
     val id: String,
@@ -26,6 +27,7 @@ data class Data(
     val supertype: String,
     val tcgplayer: Tcgplayer,
     val types: List<String>?,
-    val weaknesses: List<Weaknesse>
+    val rules : List<String>?,
+    val weaknesses: List<Weaknesse>?
 )
 

@@ -79,6 +79,7 @@ class MainActivity : ComponentActivity() {
                     ){
                         val pokeId = it.arguments?.getString("pokeId") ?: ""
                         PokeCardInfoScreen(
+                            navController = navController,
                             pokeId = pokeId
                         )
                     }

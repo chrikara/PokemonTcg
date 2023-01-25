@@ -1,6 +1,7 @@
 package com.example.pokemontcg.data.remote.api.dto.cardoverviewdto
 
 import com.example.pokemontcg.domain.model.CardOverview
+import com.example.pokemontcg.domain.model.cardinfo.SuperType
 
 data class Data(
     val abilities: List<Ability>,
@@ -25,7 +26,8 @@ data class Data(
     val supertype: String,
     val tcgplayer: Tcgplayer,
     val types: List<String>?,
-    val weaknesses: List<Weaknesse>
+    val weaknesses: List<Weaknesse>,
+
 )
 
 fun Data.toCardOverViewList() : CardOverview{
@@ -33,7 +35,7 @@ fun Data.toCardOverViewList() : CardOverview{
         id = this.id,
         name = this.name,
         imgString = this.images.large,
-        type = this.types?.get(0),
+        superType = SuperType.fromString(supertype),
         nationalDex = this.nationalPokedexNumbers?.get(0)
 
     )

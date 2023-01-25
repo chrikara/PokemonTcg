@@ -12,6 +12,16 @@ import org.junit.Assert.*
 class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+        println(numberWithThreeDigits(1))
+        println(numberWithThreeDigits(30))
+        println(numberWithThreeDigits(400))
+    }
+}
+
+fun numberWithThreeDigits(number : Int):String{
+    return when (number.toString().length){
+        1 -> "00$number"
+        2 -> "0$number"
+        else -> number.toString()
     }
 }
