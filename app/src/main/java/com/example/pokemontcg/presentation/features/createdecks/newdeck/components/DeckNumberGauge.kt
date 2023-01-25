@@ -38,7 +38,7 @@ fun DeckNumberGauge(
 
     Canvas(modifier = modifier){
 
-        if(totalCards<=60){
+        if(totalCards<60){
             val totalCardsWidth = totalCardNumberRatio.value *size.width
 
             drawRoundRect(

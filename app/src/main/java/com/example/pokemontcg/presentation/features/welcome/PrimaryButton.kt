@@ -28,7 +28,7 @@ fun PrimaryButton(
     onClick : () -> Unit,
     paddingValues: PaddingValues = PaddingValues(horizontal = 45.dp, vertical = 15.dp),
     enabled : Boolean = true,
-    textAlign: TextAlign? = null
+    textAlign: TextAlign? = TextAlign.Center
 ) {
 
     Box(

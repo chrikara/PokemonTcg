@@ -43,7 +43,7 @@ fun CardList(
 
         DeckNumberHeader(
             modifier = Modifier.fillMaxWidth(),
-            totalCards = 45
+            totalCards = state.savedCardList.size
         )
 
         if(state.isLoading) {
@@ -65,14 +65,20 @@ fun CardList(
                 items(state.cardList.size/2){ i ->
 
                     if(state.cardList.size-1>= i + i +1){
+                        println("$i row 1 card${state.cardList[i+1]} 2 card${state.cardList[i+i+1]}")
                         CardListRow(
                             image1 = state.cardList[i + i].imgString ,
-                            image2 = state.cardList[i+i+1].imgString
+                            image2 = state.cardList[i+i+1].imgString,
+                            onClick1 = {viewModel.insertPokemonToDeck(state.cardList[i+i])},
+                            onClick2 = {viewModel.insertPokemonToDeck(state.cardList[i+i+1])}
+
                         )
                     }else{
                         CardListRow(
                             image1 = state.cardList[i + i].imgString ,
-                            image2 = ""
+                            image2 = "",
+                            onClick1 = {viewModel.insertPokemonToDeck(state.cardList[i+1])},
+                            onClick2 = {}
                         )
                     }
                 }

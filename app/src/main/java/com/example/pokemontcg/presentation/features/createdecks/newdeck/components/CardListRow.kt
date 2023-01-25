@@ -2,6 +2,7 @@ package com.example.pokemontcg.presentation.features.createdecks.newdeck.compone
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -11,11 +12,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
+import com.example.pokemontcg.domain.model.CardOverview
 
 @Composable
 fun CardListRow(
     image1 : String,
     image2 : String,
+    onClick1 : () -> Unit,
+    onClick2 : () -> Unit
 
 ) {
     Row(
@@ -36,6 +40,10 @@ fun CardListRow(
                 .size(285.dp)
                 .background(MaterialTheme.colorScheme.surface)
                 .weight(1f)
+                .clickable(
+                    onClick = onClick1
+                )
+            ,
         )
 
         Image(
@@ -51,6 +59,7 @@ fun CardListRow(
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.surface)
                 .weight(1f)
+                .clickable(onClick = onClick2)
         )
 
     }

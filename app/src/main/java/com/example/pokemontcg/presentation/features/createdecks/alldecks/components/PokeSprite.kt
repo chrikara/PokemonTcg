@@ -1,4 +1,4 @@
-package com.example.pokemontcg.presentation.features.createdecks.mydecks.components
+package com.example.pokemontcg.presentation.features.createdecks.alldecks.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.aspectRatio

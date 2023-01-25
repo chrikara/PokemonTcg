@@ -72,14 +72,20 @@ fun DeckNumberHeader(
 
             ) {
                 Text(
-                    text = "Χρειάζεσαι ακόμα ${60-totalCards} κάρτες!",
-                    color = MaterialTheme.colorScheme.onBackground,
-                    letterSpacing = 0.05.sp,
-                    textAlign = TextAlign.Center,
-                    lineHeight = 15.sp
+                    text = when{
+                        totalCards < 59 -> {"Χρειάζεσαι ${60-totalCards} κάρτες!"}
+                        totalCards == 59 -> {"Χρειάζεσαι 1 κάρτα!"}
+                        else -> {"Πλήρης τράπουλα"}
+                    }
+                    ,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        letterSpacing = 0.05.sp,
+                        textAlign = TextAlign.Center,
+                        lineHeight = 15.sp
 
-                )
-                Spacer(modifier = Modifier.height(10.dp))
+                            )
+                            Spacer(modifier = Modifier.height(10.dp))
+
 
                 DeckNumberGauge(
                     totalCards = totalCards,
@@ -103,3 +109,4 @@ fun DeckNumberHeader(
         )
     }
 }
+

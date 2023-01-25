@@ -2,8 +2,10 @@ package com.example.pokemontcg.presentation.features.createdecks.newdeck
 
 
 import com.example.pokemontcg.domain.model.CardOverview
+import com.example.pokemontcg.domain.model.CardSaved
 
 data class CardListState(
+    val savedCardList : List<CardSaved> = emptyList(),
     val cardList : List<CardOverview> = emptyList(),
     var isLoading : Boolean = false,
     val error : String = ""

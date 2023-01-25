@@ -46,7 +46,8 @@ fun WelcomeScreen(
                 text = "New Game",
                 modifier = Modifier
                     .align(CenterHorizontally)
-                    .padding(horizontal = 15.dp),
+                    .padding(horizontal = 25.dp)
+                ,
                 onClick = { navController.navigate(Screen.Main.route) }
             )
 
@@ -55,7 +56,10 @@ fun WelcomeScreen(
             PrimaryButton(
                 text = "Continue",
                 enabled = false,
-                modifier = Modifier.align(CenterHorizontally),
+                modifier = Modifier
+                    .align(CenterHorizontally)
+                    .padding(horizontal = 25.dp)
+                ,
                 onClick = {}
             )
         }
