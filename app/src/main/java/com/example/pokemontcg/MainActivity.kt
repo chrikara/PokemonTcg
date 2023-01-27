@@ -23,13 +23,14 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+
             PokemonTcgTheme {
 
                 val navController = rememberNavController()
 
                 NavHost(
                     navController = navController,
-                    startDestination = Screen.Welcome.route
+                    startDestination = Screen.Main.route
                 ){
                     composable(route = Screen.Welcome.route){
                         WelcomeScreen(navController = navController)

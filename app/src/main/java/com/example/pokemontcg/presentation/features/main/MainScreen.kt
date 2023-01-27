@@ -86,7 +86,8 @@ fun MainScreen(
                     gymValue = gym.value,
                     gymName = gym.name ,
                     isEnabled = gym.enabled,
-                    leaderUrl = gym.leaderUrl
+                    leaderUrl = gym.leaderUrl,
+                    isCurrent = gym.isCurrent
                 )
                 Spacer(modifier = Modifier.height(14.dp))
             }

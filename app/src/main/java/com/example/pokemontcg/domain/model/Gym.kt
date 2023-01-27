@@ -4,7 +4,8 @@ data class Gym(
     val name : String,
     val value : String,
     val enabled : Boolean = false,
-    val leaderUrl : String
+    val leaderUrl : String,
+    val isCurrent: Boolean = false
 )
 
 val defaultGyms = listOf<Gym>(
@@ -18,8 +19,8 @@ val defaultGyms = listOf<Gym>(
         name = "Cerulean",
         value = "II",
         leaderUrl = "https://www.serebii.net/pokearth//trainers/frlg/31.png",
-
-        enabled = true
+        enabled = true,
+        isCurrent = true
 
     ),
     Gym(

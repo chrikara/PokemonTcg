@@ -1,5 +1,13 @@
 package com.example.pokemontcg.presentation.features.main.components
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.VectorConverter
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateValue
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -10,6 +18,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -18,12 +27,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
@@ -39,8 +51,21 @@ fun GymBox(
     gymValue : String,
     gymName : String,
     paddingValues: PaddingValues = PaddingValues(horizontal = 25.dp, vertical = 15.dp),
-    leaderUrl : String
+    leaderUrl : String,
+    isCurrent : Boolean = false
     ) {
+
+    val infiniteTransition = rememberInfiniteTransition()
+    val sizeOfBorder by infiniteTransition.animateValue(
+        initialValue = 50.dp,
+        targetValue = 70.dp,
+        typeConverter =  Dp.VectorConverter,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1000),
+            repeatMode = RepeatMode.Reverse
+        )
+
+    )
 
     Box(
         modifier = modifier
@@ -65,20 +90,40 @@ fun GymBox(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceAround
         ){
-            Box(
-                modifier = Modifier
-                    .size(50.dp)
+            Box(modifier = Modifier
+                .size(80.dp)
+                ,
+                contentAlignment = Alignment.Center
+            )
+            {
+
+                Box(modifier = Modifier
+                    .size(if(isCurrent) sizeOfBorder else 60.dp)
                     .clip(RoundedCornerShape(80.dp))
-                    .background(MaterialTheme.colorScheme.onBackground),
-            ){
+                    .border(
+                        width = 0.5.dp,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        shape = RoundedCornerShape(80.dp)
+                    )
+                )
+                Box(modifier = Modifier
+                    .size(60.dp)
+                    .clip(RoundedCornerShape(80.dp))
+                    .background(MaterialTheme.colorScheme.onBackground)
+
+                )
                 Text(
                     text = gymValue,
                     color = MaterialTheme.colorScheme.primary,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.align(Alignment.Center),
                     fontSize = 20.sp
                 )
+
+
+
+
             }
+
 
         Spacer(modifier = Modifier.width(15.dp))
 
