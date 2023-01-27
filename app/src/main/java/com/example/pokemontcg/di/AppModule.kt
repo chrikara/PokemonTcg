@@ -11,14 +11,12 @@ import com.example.pokemontcg.presentation.features.createdecks.use_cases.Delete
 import com.example.pokemontcg.presentation.features.createdecks.use_cases.GetPokemonFromDeckUseCase
 import com.example.pokemontcg.presentation.features.createdecks.use_cases.GetPokemonInfoFromAPIUseCase
 import com.example.pokemontcg.presentation.features.createdecks.use_cases.InsertPokemonToDeckUseCase
-import com.example.pokemontcg.util.Constants
+import com.example.pokemontcg.util.DangerousConstants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
-import okhttp3.internal.addHeaderLenient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -45,7 +43,7 @@ object AppModule {
     @Singleton
     fun providePokemonTcgApi(client: OkHttpClient): PokemonTcgApi {
         return Retrofit.Builder()
-            .baseUrl(Constants.BASE_URL)
+            .baseUrl(DangerousConstants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()

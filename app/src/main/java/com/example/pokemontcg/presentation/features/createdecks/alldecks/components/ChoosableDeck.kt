@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.example.pokemontcg.ui.theme.BlueAlpha30
+import com.example.pokemontcg.util.TOTAL_DECK_CARDS_GLOBAL
 import com.example.pokemontcg.util.myClickable
 
 @Composable
@@ -79,7 +80,7 @@ fun ChoosableDeck(
                 Spacer(modifier = Modifier.height(10.dp))
 
                 Text(
-                    text = "$totalCards / 60",
+                    text = "$totalCards / $TOTAL_DECK_CARDS_GLOBAL",
                     color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.alpha(0.6f)
                     )

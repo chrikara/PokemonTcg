@@ -8,8 +8,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.pokemontcg.presentation.features.createdecks.chosendeck.ChosenDeck
-import com.example.pokemontcg.presentation.features.createdecks.modifydeck.CardList
+import com.example.pokemontcg.presentation.features.createdecks.chosendeck.ChosenDeckScreen
+import com.example.pokemontcg.presentation.features.createdecks.modifydeck.ModifyDeckScreen
 import com.example.pokemontcg.presentation.features.createdecks.alldecks.AllDecksScreen
 import com.example.pokemontcg.presentation.features.main.MainScreen
 import com.example.pokemontcg.presentation.features.pokecardinfo.PokeCardInfoScreen
@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(
                     navController = navController,
-                    startDestination = Screen.Main.route
+                    startDestination = Screen.Welcome.route
                 ){
                     composable(route = Screen.Welcome.route){
                         WelcomeScreen(navController = navController)
@@ -53,7 +53,7 @@ class MainActivity : ComponentActivity() {
                     ){
                         val deckNumber = it.arguments?.getInt("deckNumber") ?: 1
                         println("DeckNumber $deckNumber")
-                        ChosenDeck(
+                        ChosenDeckScreen(
                             deckNumber = deckNumber,
                             navController = navController
                         )
@@ -66,7 +66,7 @@ class MainActivity : ComponentActivity() {
                         )
                         ){
                         val deckNumber = it.arguments?.getInt("deckNumber") ?: 1
-                        CardList(
+                        ModifyDeckScreen(
                             navController = navController,
                             deckNumber = deckNumber
                         )

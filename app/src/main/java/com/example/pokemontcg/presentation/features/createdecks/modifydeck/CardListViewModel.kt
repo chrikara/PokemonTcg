@@ -6,13 +6,11 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokemontcg.domain.model.CardOverview
-import com.example.pokemontcg.domain.model.CardSaved
 import com.example.pokemontcg.domain.model.DeckNumber
 import com.example.pokemontcg.domain.use_cases.GetCardsUseCase
 import com.example.pokemontcg.presentation.features.createdecks.use_cases.AllMyDeckUseCases
-import com.example.pokemontcg.presentation.features.createdecks.use_cases.GetPokemonFromDeckUseCase
-import com.example.pokemontcg.presentation.features.createdecks.use_cases.InsertPokemonToDeckUseCase
 import com.example.pokemontcg.util.Resource
+import com.example.pokemontcg.util.TOTAL_DECK_CARDS_GLOBAL
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
@@ -61,7 +59,7 @@ class CardListViewModel @Inject constructor(
     ){
         viewModelScope.launch {
             when{
-                state.savedCardList.size <60 ->{
+                state.savedCardList.size  <  TOTAL_DECK_CARDS_GLOBAL ->{
                     insertPokemonToDeck(
                         deckToInsert = deckToInsert,
                         card = card,
@@ -70,10 +68,6 @@ class CardListViewModel @Inject constructor(
                 }
                 else -> Unit
             }
-
-
-
-
         }
     }
 

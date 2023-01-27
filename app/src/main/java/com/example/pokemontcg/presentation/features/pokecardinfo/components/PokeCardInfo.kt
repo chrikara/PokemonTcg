@@ -76,16 +76,20 @@ fun PokeCardInfo(
 ) {
 
 
+
     var sizeState by remember {
         mutableStateOf(1000.dp)
     }
+
 
     val size by animateDpAsState(
     targetValue = sizeState,
         tween(durationMillis = 500)
     )
 
+
     LaunchedEffect(key1 = true){
+
         sizeState = 200.dp
     }
 
@@ -124,24 +128,14 @@ fun PokeCardInfo(
                 text = pokeInfoCard.name,
                 fontSize = 19.sp ,
                 fontWeight = FontWeight.Medium,
-                modifier = Modifier.align(Center)
+                modifier = Modifier.align(Center),
             )
 
-            Box(modifier = Modifier
-                .align(CenterEnd)
-                .clip(RoundedCornerShape(5.dp))
-                .background(Symbol.fromString(pokeInfoCard.types ?: "Colorless").color)
-                .padding(6.dp)
-
-            ){
-                Text(
-                    text = pokeInfoCard.types?: "Not found",
-                    fontSize = 14.sp ,
-
-                    color = Color.White,
-                    fontFamily = FontFamily.Monospace
-                )
-            }
+            Image(
+                painter = painterResource(Symbol.fromString(pokeInfoCard.types?: "Colorless").drawable),
+                contentDescription = "",
+                modifier = Modifier.size(30.dp).align(CenterEnd)
+            )
         }
 
 

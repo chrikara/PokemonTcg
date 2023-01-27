@@ -3,7 +3,7 @@ package com.example.pokemontcg.data.remote.api
 import com.example.pokemontcg.data.remote.api.dto.cardinfodto.CardInfoDto
 import com.example.pokemontcg.data.remote.api.dto.cardoverviewdto.Cards
 
-import com.example.pokemontcg.util.Constants.API_KEY
+import com.example.pokemontcg.util.DangerousConstants.API_KEY
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Path

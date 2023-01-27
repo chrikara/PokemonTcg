@@ -27,58 +27,16 @@ import coil.compose.rememberImagePainter
 import com.example.pokemontcg.util.myClickable
 
 @Composable
-fun CardListRow(
-    image1 : String,
-    image2 : String,
-    onClickAdd1st : () -> Unit,
-    onClickAdd2nd : () -> Unit,
-    onClickSub1st : () -> Unit,
-    onClickSub2nd : () -> Unit,
-    onClickCardInfo1st:() -> Unit,
-    onClickCardInfo2nd:() -> Unit,
-    totalCounts1: Int,
-    totalCounts2: Int,
-
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding()
-    ){
-
-        ImageAndCursors(
-            image = image1,
-            onClickImageOrAdd = onClickAdd1st,
-            modifier = Modifier.weight(1f),
-            onClickSub = onClickSub1st,
-            totalCounts = totalCounts1,
-            onClickCardInfo = onClickCardInfo1st
-        )
-
-        ImageAndCursors(
-            image = image2,
-            onClickImageOrAdd = onClickAdd2nd,
-            modifier = Modifier.weight(1f),
-            onClickSub = onClickSub2nd,
-            totalCounts = totalCounts2,
-            onClickCardInfo = onClickCardInfo2nd
-
-        )
-
-
-
-    }
-}
-
-@Composable
-private fun ImageAndCursors(
-    modifier: Modifier = Modifier,
+fun CardItemToInsertToDeck(
+    modifier : Modifier = Modifier,
     image: String,
     totalCounts : Int,
-    onClickImageOrAdd: () -> Unit,
-    onClickSub: () -> Unit,
-    onClickCardInfo: () -> Unit
-){
+    onShowInfo : () -> Unit,
+    onAddCard : () -> Unit,
+    onDeleteCard: () -> Unit,
+
+    )
+{
 
 
     Column(
@@ -96,7 +54,7 @@ private fun ImageAndCursors(
                 .size(285.dp)
                 .background(MaterialTheme.colorScheme.surface)
                 .clickable(
-                    onClick = onClickCardInfo
+                    onClick = onShowInfo
                 )
             ,
         )
@@ -112,7 +70,7 @@ private fun ImageAndCursors(
                 modifier =
                 Modifier
                     .clip(RoundedCornerShape(10.dp))
-                    .myClickable(onClick = onClickSub)
+                    .myClickable(onClick = onDeleteCard)
                     .padding(15.dp)
             )
             Text(
@@ -127,7 +85,7 @@ private fun ImageAndCursors(
                 tint = MaterialTheme.colorScheme.onBackground ,
                 modifier = Modifier
                     .clip(RoundedCornerShape(10.dp))
-                    .myClickable(onClick = onClickImageOrAdd)
+                    .myClickable(onClick = onAddCard)
                     .padding(15.dp)
 
 
@@ -137,9 +95,4 @@ private fun ImageAndCursors(
         Spacer(modifier = Modifier.height(10.dp))
     }
 
-
-
 }
-
-        
-

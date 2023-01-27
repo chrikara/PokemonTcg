@@ -20,12 +20,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.pokemontcg.R
+import com.example.pokemontcg.util.TOTAL_DECK_CARDS_GLOBAL
 
 @Composable
 fun DeckNumberHeader(
@@ -54,7 +54,7 @@ fun DeckNumberHeader(
                     .background(MaterialTheme.colorScheme.onBackground),
             ){
                 Text(
-                    text = "$totalCards/60",
+                    text = "$totalCards/$TOTAL_DECK_CARDS_GLOBAL",
                     color = MaterialTheme.colorScheme.primary,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.align(Alignment.Center),
@@ -74,8 +74,8 @@ fun DeckNumberHeader(
             ) {
                 Text(
                     text = when{
-                        totalCards < 59 -> {"Χρειάζεσαι ${60-totalCards} κάρτες!"}
-                        totalCards == 59 -> {"Χρειάζεσαι 1 κάρτα!"}
+                        totalCards < TOTAL_DECK_CARDS_GLOBAL - 1 -> {"Χρειάζεσαι ${TOTAL_DECK_CARDS_GLOBAL-totalCards} κάρτες!"}
+                        totalCards == TOTAL_DECK_CARDS_GLOBAL - 1 -> {"Χρειάζεσαι 1 κάρτα!"}
                         else -> {"Πλήρης τράπουλα, παίξε!"}
                     }
                     ,

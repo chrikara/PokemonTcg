@@ -10,6 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Size
+import com.example.pokemontcg.util.TOTAL_DECK_CARDS_GLOBAL
 
 @Composable
 fun DeckNumberGauge(
@@ -29,7 +30,7 @@ fun DeckNumberGauge(
 
     LaunchedEffect(key1 = totalCards) {
         totalCardNumberRatio.animateTo(
-            targetValue = totalCards.toFloat()/60,
+            targetValue = totalCards.toFloat()/ TOTAL_DECK_CARDS_GLOBAL,
             animationSpec = tween(
                 durationMillis = 2000,
             )
@@ -38,7 +39,7 @@ fun DeckNumberGauge(
 
     Canvas(modifier = modifier){
 
-        if(totalCards<60){
+        if(totalCards<TOTAL_DECK_CARDS_GLOBAL){
             val totalCardsWidth = totalCardNumberRatio.value *size.width
 
             drawRoundRect(
