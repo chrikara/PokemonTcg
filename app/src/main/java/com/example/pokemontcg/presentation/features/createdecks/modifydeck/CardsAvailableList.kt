@@ -43,18 +43,14 @@ fun ModifyDeckScreen(
 ) {
     LaunchedEffect(key1 = true){
         viewModel.uiEvent.collect{event ->
-
             when(event){
                 is UiEvent.ShowSnackBar -> {
                     println("Before")
                     snackbarHostState.showSnackbar(
-                        message = event.message
+                        message = event.message,
+                        withDismissAction = true
                     )
-                    println("After")
-
-
                 }
-
                 else -> {}
             }
         }
@@ -71,8 +67,6 @@ fun ModifyDeckScreen(
         .background(MaterialTheme.colorScheme.background),
     )
     {
-
-
 
         DeckNumberHeader(
             modifier = Modifier.fillMaxWidth(),

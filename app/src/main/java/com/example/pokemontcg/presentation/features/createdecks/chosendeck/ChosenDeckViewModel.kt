@@ -10,10 +10,14 @@ import com.example.pokemontcg.domain.model.DeckNumber
 import com.example.pokemontcg.domain.use_cases.FilterOutDeckUseCase
 import com.example.pokemontcg.presentation.features.createdecks.use_cases.AllMyDeckUseCases
 import com.example.pokemontcg.presentation.features.createdecks.use_cases.GetPokemonFromDeckUseCase
+import com.example.pokemontcg.util.UiEvent
+import com.example.pokemontcg.util.navigation.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,7 +32,32 @@ class ChosenDeckViewModel @Inject constructor(
 
     private var getCardsForOneDeckJob: Job? = null
 
+    private val _uiEvent = Channel<UiEvent>()
+    val uiEvent = _uiEvent.receiveAsFlow()
 
+
+
+    fun onEvent(event : ChosenDeckEvent){
+        when(event){
+            is ChosenDeckEvent.GetAllCardsFromRoom ->{
+                getCardsForOneDeck(deckNumber = event.deckNumber)
+            }
+
+            is ChosenDeckEvent.DeleteCardFromRoom -> {
+                deleteCardFromDeck(event.cardSaved)
+            }
+            is ChosenDeckEvent.ShowCardInfo -> {
+                viewModelScope.launch {
+                    _uiEvent.send(UiEvent.Navigate(Screen.PokeCardInfo.route + "/${event.cardSaved.pokemonId}"))
+                }
+            }
+            is ChosenDeckEvent.onModifyDeckClick -> {
+                viewModelScope.launch {
+                    _uiEvent.send(UiEvent.Navigate(Screen.DeckModify.route + "/${event.deckNumber}"))
+                }
+            }
+        }
+    }
 
 
     fun getCardsForOneDeck(deckNumber: DeckNumber) {
@@ -50,8 +79,4 @@ class ChosenDeckViewModel @Inject constructor(
             allMyDeckUseCases.deletePokemonFromDeckUseCase(cardSaved)
         }
     }
-
-
-
-
 }

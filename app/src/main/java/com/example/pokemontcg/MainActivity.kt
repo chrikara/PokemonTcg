@@ -77,7 +77,7 @@ class MainActivity : ComponentActivity() {
                         println("DeckNumber $deckNumber")
                         ChosenDeckScreen(
                             deckNumber = deckNumber,
-                            navController = navController
+                            onNavigate = navController::navigate
                         )
                     }
                     composable(route = Screen.DeckModify.route + "/{deckNumber}",

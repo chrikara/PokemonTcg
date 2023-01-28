@@ -19,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -37,18 +38,32 @@ import com.example.pokemontcg.domain.model.CardSaved
 import com.example.pokemontcg.domain.model.DeckNumber
 import com.example.pokemontcg.presentation.features.createdecks.modifydeck.components.DeckNumberHeader
 import com.example.pokemontcg.presentation.features.welcome.PrimaryButton
+import com.example.pokemontcg.util.UiEvent
 import com.example.pokemontcg.util.navigation.Screen
 
 @Composable
 fun ChosenDeckScreen(
     deckNumber: Int,
-    navController: NavController,
+    onNavigate: (UiEvent.Navigate) -> Unit,
     viewModel: ChosenDeckViewModel = hiltViewModel()
 ) {
-    val state = viewModel.state
-    val deckChosen = DeckNumber.fromInt(deckNumber)
-    viewModel.getCardsForOneDeck(deckChosen)
 
+    LaunchedEffect(key1 = true){
+        viewModel.uiEvent.collect{event ->
+            when(event){
+                is UiEvent.Navigate ->{
+                    onNavigate(event)
+                }
+
+                else -> Unit
+            }
+        }
+    }
+
+    val deckChosen = DeckNumber.fromInt(deckNumber)
+    viewModel.onEvent(ChosenDeckEvent.GetAllCardsFromRoom(deckNumber = deckChosen))
+
+    val state = viewModel.state
 
 
     ConstraintLayout(
@@ -58,12 +73,22 @@ fun ChosenDeckScreen(
     ) {
         val (header, lazyRow, button, textNoCards) = createRefs()
 
+
+
         DeckNumberHeader(
             modifier = Modifier.constrainAs(header){
                                                    top.linkTo(parent.top)
             },
             totalCards = state.cardsSaved.size
         )
+
+
+        if(state.cardsSaved.isEmpty())
+            TextForEmptyDeck(modifier = Modifier.constrainAs(textNoCards){
+                top.linkTo(header.bottom)
+                bottom.linkTo(button.top)
+            })
+
 
 
         LazyRow(
@@ -75,7 +100,6 @@ fun ChosenDeckScreen(
             content = {
                 items(state.cardsSaved){cardSaved ->
                     SavedImageInDeck(
-                        navController = navController,
                         viewModel = viewModel,
                         cardSaved = cardSaved
                     )
@@ -94,20 +118,14 @@ fun ChosenDeckScreen(
             text = "Modify Deck",
             textAlign = TextAlign.Center,
             onClick = {
-                navController.navigate(Screen.DeckModify.route + "/${deckNumber}")
+                viewModel.onEvent(ChosenDeckEvent.onModifyDeckClick(deckNumber))
             }
         )
 
-        if(state.cardsSaved.isEmpty())
-            TextForEmptyDeck(modifier = Modifier.constrainAs(textNoCards){
-                top.linkTo(header.bottom)
-                bottom.linkTo(button.top)
-            })
+
 
 
     }
-
-
 }
 @Composable
 private fun TextForEmptyDeck(modifier : Modifier = Modifier){
@@ -135,7 +153,6 @@ private fun TextForEmptyDeck(modifier : Modifier = Modifier){
 
 @Composable
 private fun SavedImageInDeck(
-    navController: NavController,
     viewModel: ChosenDeckViewModel,
     cardSaved : CardSaved
 ){
@@ -146,9 +163,13 @@ private fun SavedImageInDeck(
             painter = rememberImagePainter(
                 data = cardSaved.pokemonImageUrl,
             ),
-            modifier = Modifier.size(350.dp).clickable  {
-                navController.navigate(Screen.PokeCardInfo.route + "/${cardSaved.pokemonId}")
-            },
+            modifier = Modifier
+                .size(350.dp)
+                .clickable(
+                    onClick = {
+                        viewModel.onEvent(ChosenDeckEvent.ShowCardInfo(cardSaved))
+                    }
+                ),
             contentDescription ="",
 
         )
@@ -167,7 +188,7 @@ private fun SavedImageInDeck(
                     .size(35.dp)
                     .alpha(0.7f)
                     .clickable(onClick = {
-                        navController.navigate(Screen.PokeCardInfo.route + "/${cardSaved.pokemonId}")
+                        viewModel.onEvent(ChosenDeckEvent.ShowCardInfo(cardSaved))
                     })
                 ,
                 tint = MaterialTheme.colorScheme.primary
@@ -180,16 +201,16 @@ private fun SavedImageInDeck(
                     .alpha(0.7f)
                     .clickable(
                         onClick = {
-                            viewModel.deleteCardFromDeck(cardSaved)
+                            viewModel.onEvent(ChosenDeckEvent.DeleteCardFromRoom(cardSaved))
                         }
                     )
-
                 ,
                 tint = MaterialTheme.colorScheme.primary
             )
         }
 
-
     }
 
 }
+
+
