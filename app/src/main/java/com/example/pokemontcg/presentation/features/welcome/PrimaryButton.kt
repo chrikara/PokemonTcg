@@ -18,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.pokemontcg.ui.theme.BlueAlpha
 import com.example.pokemontcg.ui.theme.BlueAlpha30
+import kotlin.time.TimeSource
 
 @Composable
 fun PrimaryButton(
@@ -28,6 +29,9 @@ fun PrimaryButton(
     enabled : Boolean = true,
     textAlign: TextAlign? = TextAlign.Center
 ) {
+
+
+
 
     Box(
         modifier = modifier
@@ -44,7 +48,6 @@ fun PrimaryButton(
                 enabled = enabled
             )
             .padding(paddingValues)
-
     ){
         Text(
             modifier = Modifier.fillMaxWidth(),
