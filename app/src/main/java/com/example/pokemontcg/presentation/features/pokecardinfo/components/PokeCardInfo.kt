@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -25,11 +26,12 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -38,37 +40,38 @@ import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterEnd
 import androidx.compose.ui.Alignment.Companion.CenterStart
 import androidx.compose.ui.Alignment.Companion.CenterVertically
-import androidx.compose.ui.Alignment.Companion.Start
 import androidx.compose.ui.Alignment.Companion.TopCenter
 import androidx.compose.ui.Alignment.Companion.TopEnd
 import androidx.compose.ui.Alignment.Companion.TopStart
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.pokemontcg.R
 import com.example.pokemontcg.data.remote.api.dto.cardinfodto.Attack
 import com.example.pokemontcg.domain.model.Symbol
 import com.example.pokemontcg.domain.model.cardinfo.PokeInfoCard
-import com.example.pokemontcg.util.myClickable
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
+import com.google.accompanist.pager.ExperimentalPagerApi
+import androidx.compose.material3.TabRowDefaults
+import androidx.compose.runtime.rememberCoroutineScope
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.myPagerTabIndicatorOffset
+import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun PokeCardInfo(
     pokeInfoCard : PokeInfoCard,
@@ -76,6 +79,8 @@ fun PokeCardInfo(
 ) {
 
 
+
+    println(pokeInfoCard)
 
     var sizeState by remember {
         mutableStateOf(1000.dp)
@@ -92,6 +97,11 @@ fun PokeCardInfo(
 
         sizeState = 200.dp
     }
+
+    val pagerState = rememberPagerState()
+    val scope = rememberCoroutineScope()
+
+
 
 
     LazyColumn(
@@ -117,8 +127,7 @@ fun PokeCardInfo(
                 modifier = Modifier
                     .align(CenterStart)
                     .clip(RoundedCornerShape(20.dp))
-                    .myClickable(
-                        color = Color.Black,
+                    .clickable(
                         onClick = { navController.popBackStack() }
                     )
                     .padding(10.dp)
@@ -134,7 +143,9 @@ fun PokeCardInfo(
             Image(
                 painter = painterResource(Symbol.fromString(pokeInfoCard.types?: "Colorless").drawable),
                 contentDescription = "",
-                modifier = Modifier.size(30.dp).align(CenterEnd)
+                modifier = Modifier
+                    .size(30.dp)
+                    .align(CenterEnd)
             )
         }
 
@@ -181,6 +192,7 @@ fun PokeCardInfo(
                 ,
                 contentAlignment = Alignment.Center
             ){
+
                 Image(
                     painter = rememberImagePainter(
                         data =
@@ -195,8 +207,8 @@ fun PokeCardInfo(
                 )
             }
 
-            Box(modifier = Modifier.fillMaxWidth()){
 
+            Box(modifier = Modifier.fillMaxWidth()){
                 val nationalDexString = stringWithThreeDigits(pokeInfoCard.nationalDex?: 0)
                 Text(
                     text = nationalDexString[0].toString(),
@@ -208,7 +220,7 @@ fun PokeCardInfo(
                         .padding(start = 20.dp)
                     ,
 
-                )
+                    )
                 Text(
                     text = nationalDexString[1].toString(),
                     fontSize = 150.sp,
@@ -226,20 +238,106 @@ fun PokeCardInfo(
                         .align(TopEnd)
                         .alpha(0.7f)
                         .padding(end = 20.dp)
+
                     ,
                 )
+
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Spacer(modifier = Modifier.height(10.dp))
                     Text(text = pokeInfoCard.description)
-                    Spacer(modifier = Modifier.height(70.dp))
+                    Spacer(modifier = Modifier.height(30.dp))
 
-                    AttacksBox(
-                        pokeInfoCard = pokeInfoCard,
-                        eeveeSize = 75.dp
-                    )
+                    val tabItems = listOf("Attack", "Evolution", "Misc")
+
+                    TabRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight()
+                            .background(Color.Transparent)
+                            .clip(RoundedCornerShape(30.dp))
+
+
+                        ,
+
+                        containerColor= Color(0xFF85A8CA),
+                        // Our selected tab is our current page
+                        selectedTabIndex = pagerState.currentPage,
+                        // Override the indicator, using the provided pagerTabIndicatorOffset modifier
+                        indicator = { tabPositions ->
+                            TabRowDefaults.Indicator(
+                                Modifier
+                                    .myPagerTabIndicatorOffset(pagerState, tabPositions)
+                                    .height(0.dp)
+                            )
+                        }
+                    ){
+
+
+                        tabItems.forEachIndexed{index, title->
+                            val color = remember {
+                                androidx.compose.animation.Animatable(Color(0xFF85A8CA))
+                            }
+                            LaunchedEffect(key1 = pagerState.currentPage==index){
+                                color.animateTo(if(pagerState.currentPage == index) Color(0xFFD2DBE4) else Color(0xFF85A8CA)
+                                )
+                            }
+                            Tab(
+                                text = {
+                                        Text(
+                                            text = title,
+                                            fontSize = 14.sp,
+                                            fontWeight = if(pagerState.currentPage == index) FontWeight.Bold else FontWeight.Normal,
+                                            color = if(pagerState.currentPage == index) Color(
+                                                0xFF326CCF
+                                            ) else Color(0xFF3D69B4)
+                                        )
+
+                                },
+                                selected = pagerState.currentPage == index,
+                                modifier = Modifier.background(
+                                    color = color.value,
+                                    shape = RoundedCornerShape(30.dp)
+                                ),
+                                onClick = {
+                                    scope.launch {
+                                        pagerState.animateScrollToPage(index)
+                                    }
+                                })
+
+
+                    }
+                }
+                    HorizontalPager(
+                        count = tabItems.size,
+
+                        state = pagerState,
+
+                    ) {page ->
+
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(5.dp)
+                        ) {
+                            Spacer(modifier = Modifier.height(50.dp))
+                            AttacksBox(
+                                pokeInfoCard = pokeInfoCard,
+                                eeveeSize = 75.dp
+                            )
+                            Spacer(modifier = Modifier.height(50.dp))
+
+                        }
+                            
+
+                    }
+
+
+
+                    
+
 
                 }
             }

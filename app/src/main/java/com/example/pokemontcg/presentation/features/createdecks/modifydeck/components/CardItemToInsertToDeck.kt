@@ -24,7 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
-import com.example.pokemontcg.util.myClickable
 
 @Composable
 fun CardItemToInsertToDeck(
@@ -70,7 +69,7 @@ fun CardItemToInsertToDeck(
                 modifier =
                 Modifier
                     .clip(RoundedCornerShape(10.dp))
-                    .myClickable(onClick = onDeleteCard)
+                    .clickable(onClick = onDeleteCard)
                     .padding(15.dp)
             )
             Text(
@@ -85,7 +84,7 @@ fun CardItemToInsertToDeck(
                 tint = MaterialTheme.colorScheme.onBackground ,
                 modifier = Modifier
                     .clip(RoundedCornerShape(10.dp))
-                    .myClickable(onClick = onAddCard)
+                    .clickable(onClick = onAddCard)
                     .padding(15.dp)
 
 

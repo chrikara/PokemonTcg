@@ -14,12 +14,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.pokemontcg.ui.theme.BlueAlpha
 import com.example.pokemontcg.ui.theme.BlueAlpha30
-import com.example.pokemontcg.util.myClickable
 
 @Composable
 fun PrimaryButton(
@@ -41,7 +39,7 @@ fun PrimaryButton(
                 color = BlueAlpha,
                 shape = RoundedCornerShape(25.dp)
             )
-            .myClickable(
+            .clickable(
                 onClick = onClick,
                 enabled = enabled
             )

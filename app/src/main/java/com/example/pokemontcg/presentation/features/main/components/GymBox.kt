@@ -41,7 +41,6 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.example.pokemontcg.ui.theme.BlueAlpha
 import com.example.pokemontcg.ui.theme.BlueAlpha30
-import com.example.pokemontcg.util.myClickable
 
 @Composable
 fun GymBox(
@@ -78,7 +77,7 @@ fun GymBox(
                 color = BlueAlpha,
                 shape = RoundedCornerShape(15.dp)
             )
-            .myClickable(
+            .clickable (
                 onClick = onClick,
                 enabled = isEnabled
             )

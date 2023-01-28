@@ -55,7 +55,10 @@ class PokeCardInfoViewModel @Inject constructor(
                                    weakness = data.weaknesses?.get(0)?.type,
                                    evolvesFrom = data.evolvesFrom,
                                    evolvesTo = data.evolvesTo?.get(0),
-                                   hp = data.hp
+                                   hp = data.hp,
+                                   retreatCost = data.retreatCost,
+                                   resistanceType = data.resistances?.get(0)?.type,
+                                   resistanceValue = data.resistances?.get(0)?.value
                                )
                            )
                        }

@@ -2,6 +2,7 @@ package com.example.pokemontcg.presentation.features.createdecks.chosendeck
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 
@@ -37,7 +38,6 @@ import com.example.pokemontcg.domain.model.DeckNumber
 import com.example.pokemontcg.presentation.features.createdecks.modifydeck.components.DeckNumberHeader
 import com.example.pokemontcg.presentation.features.welcome.PrimaryButton
 import com.example.pokemontcg.util.Screen
-import com.example.pokemontcg.util.myClickable
 
 @Composable
 fun ChosenDeckScreen(
@@ -146,9 +146,9 @@ private fun SavedImageInDeck(
             painter = rememberImagePainter(
                 data = cardSaved.pokemonImageUrl,
             ),
-            modifier = Modifier.size(350.dp).myClickable(onClick = {
+            modifier = Modifier.size(350.dp).clickable  {
                 navController.navigate(Screen.PokeCardInfo.route + "/${cardSaved.pokemonId}")
-            }),
+            },
             contentDescription ="",
 
         )
@@ -166,7 +166,7 @@ private fun SavedImageInDeck(
                     .padding(end = 40.dp)
                     .size(35.dp)
                     .alpha(0.7f)
-                    .myClickable(onClick = {
+                    .clickable(onClick = {
                         navController.navigate(Screen.PokeCardInfo.route + "/${cardSaved.pokemonId}")
                     })
                 ,
@@ -178,7 +178,7 @@ private fun SavedImageInDeck(
                 modifier = Modifier
                     .size(40.dp)
                     .alpha(0.7f)
-                    .myClickable(
+                    .clickable(
                         onClick = {
                             viewModel.deleteCardFromDeck(cardSaved)
                         }

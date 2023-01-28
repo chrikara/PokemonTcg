@@ -3,6 +3,7 @@ package com.example.pokemontcg.presentation.features.createdecks.alldecks.compon
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,7 +26,6 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.example.pokemontcg.ui.theme.BlueAlpha30
 import com.example.pokemontcg.util.TOTAL_DECK_CARDS_GLOBAL
-import com.example.pokemontcg.util.myClickable
 
 @Composable
 fun ChoosableDeck(
@@ -45,7 +45,7 @@ fun ChoosableDeck(
                 color = MaterialTheme.colorScheme.onBackground,
                 shape = RoundedCornerShape(15.dp)
             )
-            .myClickable (onClick = onClick)
+            .clickable { onClick() }
             .padding(vertical = 20.dp)
 
 

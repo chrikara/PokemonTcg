@@ -28,7 +28,6 @@ fun AllDecksScreen(
 ) {
     val paddingValue = 10.dp
     val state = viewModel.state
-    println("STT $state")
 
     Column(
         modifier = Modifier

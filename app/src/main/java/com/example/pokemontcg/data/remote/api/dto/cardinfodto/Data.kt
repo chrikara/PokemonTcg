@@ -28,6 +28,7 @@ data class Data(
     val tcgplayer: Tcgplayer,
     val types: List<String>?,
     val rules : List<String>?,
-    val weaknesses: List<Weaknesse>?
+    val weaknesses: List<Weaknesse>?,
+    val resistances: List<Resistances>?
 )
 

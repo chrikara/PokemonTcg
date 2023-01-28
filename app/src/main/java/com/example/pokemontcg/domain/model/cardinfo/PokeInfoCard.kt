@@ -18,7 +18,10 @@ data class PokeInfoCard(
     val types : String? = null,
     val attacks : List<Attack>? = listOf(),
     val weakness:  String? =  "",
-    val hp : String = ""
+    val hp : String = "",
+    val retreatCost : List<String>? = null,
+    val resistanceType : String? = null,
+    val resistanceValue : String? = null
 
 ) {
 }

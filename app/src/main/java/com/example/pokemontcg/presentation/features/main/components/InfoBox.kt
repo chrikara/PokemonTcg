@@ -35,7 +35,6 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.example.pokemontcg.ui.theme.BlueAlpha
 import com.example.pokemontcg.ui.theme.BlueAlpha30
-import com.example.pokemontcg.util.myClickable
 
 @Composable
 fun InfoBox(
@@ -57,7 +56,7 @@ fun InfoBox(
                 color = MaterialTheme.colorScheme.onBackground,
                 shape = RoundedCornerShape(15.dp)
             )
-            .myClickable (onClick = onClick)
+            .clickable {  onClick()}
             .padding(vertical = 20.dp)
 
 
