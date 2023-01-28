@@ -15,32 +15,37 @@ import com.example.pokemontcg.util.TOTAL_DECK_CARDS_GLOBAL
 @Composable
 fun DeckNumberGauge(
     modifier : Modifier = Modifier,
-    totalCards : Int
+    totalCards : Int,
+    initialRatio : Float = 0f,
+    onFinishedRatio : (Float) -> Unit = {}
 ) {
+
 
     val backgroundColor = MaterialTheme.colorScheme.onBackground
     val primaryColor = MaterialTheme.colorScheme.primary
     val errorColor = MaterialTheme.colorScheme.error
 
+
     val totalCardNumberRatio = remember {
-        Animatable(0f)
+        Animatable( initialValue = initialRatio)
     }
-
-
-
-    LaunchedEffect(key1 = totalCards) {
-        totalCardNumberRatio.animateTo(
-            targetValue = totalCards.toFloat()/ TOTAL_DECK_CARDS_GLOBAL,
-            animationSpec = tween(
-                durationMillis = 2000,
+        LaunchedEffect(key1 = totalCards) {
+            totalCardNumberRatio.animateTo(
+                targetValue = totalCards.toFloat()/ TOTAL_DECK_CARDS_GLOBAL,
+                animationSpec = tween(
+                    durationMillis = 2000,
+                )
             )
-        )
-    }
+            onFinishedRatio(totalCardNumberRatio.value)
+        }
+
+
+
+
 
     Canvas(modifier = modifier){
 
         if(totalCards<TOTAL_DECK_CARDS_GLOBAL){
-            val totalCardsWidth = totalCardNumberRatio.value *size.width
 
             drawRoundRect(
                 color = backgroundColor,
@@ -50,7 +55,7 @@ fun DeckNumberGauge(
             drawRoundRect(
                 color = primaryColor,
                 size = Size(
-                    width = totalCardsWidth,
+                    width = totalCardNumberRatio.value*size.width,
                     height = size.height
                 ),
                 cornerRadius = CornerRadius(100f)

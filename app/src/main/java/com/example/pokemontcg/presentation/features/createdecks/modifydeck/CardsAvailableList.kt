@@ -70,7 +70,11 @@ fun ModifyDeckScreen(
 
         DeckNumberHeader(
             modifier = Modifier.fillMaxWidth(),
-            totalCards = state.savedCardList.size
+            totalCards = state.savedCardList.size,
+            onFinishedRatio = { ratio ->
+                viewModel.onChangeRatio(ratio)
+            },
+            initialRatio = state.gaugeRatio
         )
 
         if(state.isLoading) {

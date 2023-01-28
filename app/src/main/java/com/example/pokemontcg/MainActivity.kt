@@ -50,7 +50,7 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(
                     navController = navController,
-                    startDestination = Screen.Main.route
+                    startDestination = Screen.Welcome.route
                 ){
                     composable(route = Screen.Welcome.route){
                         WelcomeScreen(onNavigate = navController::navigate)

@@ -76,26 +76,31 @@ import kotlinx.coroutines.launch
 fun PokeCardInfo(
     pokeInfoCard : PokeInfoCard,
     navController: NavController,
+    initialSize : Dp = 1000.dp,
+    onSize : (Dp) -> Unit
+
 ) {
 
 
 
-    println(pokeInfoCard)
 
     var sizeState by remember {
-        mutableStateOf(1000.dp)
+        mutableStateOf(initialSize)
     }
 
+    val size = animateDpAsState(
+        targetValue = sizeState,
+        tween(durationMillis = 500),
+        finishedListener = {
+            onSize(it)
+        }
 
-    val size by animateDpAsState(
-    targetValue = sizeState,
-        tween(durationMillis = 500)
     )
 
 
     LaunchedEffect(key1 = true){
-
         sizeState = 200.dp
+        println(sizeState)
     }
 
     val pagerState = rememberPagerState()
@@ -208,7 +213,7 @@ fun PokeCardInfo(
                         }
                     ),
                     contentDescription ="",
-                    modifier = Modifier.size(size)
+                    modifier = Modifier.size(size.value)
                 )
             }
 
@@ -320,8 +325,8 @@ fun PokeCardInfo(
                 }
                     HorizontalPager(
                         count = tabItems.size,
-
                         state = pagerState,
+                        userScrollEnabled = false
 
                     ) {page ->
 

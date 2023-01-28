@@ -37,6 +37,7 @@ class ChosenDeckViewModel @Inject constructor(
 
 
 
+
     fun onEvent(event : ChosenDeckEvent){
         when(event){
             is ChosenDeckEvent.GetAllCardsFromRoom ->{
@@ -55,6 +56,12 @@ class ChosenDeckViewModel @Inject constructor(
                 viewModelScope.launch {
                     _uiEvent.send(UiEvent.Navigate(Screen.DeckModify.route + "/${event.deckNumber}"))
                 }
+            }
+
+            is ChosenDeckEvent.onChangeGaugeRatio -> {
+                state = state.copy(
+                    gaugeRatio = event.ratio
+                )
             }
         }
     }

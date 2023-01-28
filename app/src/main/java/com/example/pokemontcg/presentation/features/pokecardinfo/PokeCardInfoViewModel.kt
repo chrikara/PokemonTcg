@@ -3,6 +3,7 @@ package com.example.pokemontcg.presentation.features.pokecardinfo
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokemontcg.data.remote.api.dto.cardoverviewdto.Data
@@ -30,6 +31,12 @@ class PokeCardInfoViewModel @Inject constructor(
 
     var count = 0
     private var a : Job? = null
+
+    fun onChangeSize(size : Dp){
+        state = state.copy(
+            initialAnimationSize = size
+        )
+    }
 
     fun getPokeCardInfoByPokemonIdFromAPI(pokemonId : String){
         a?.cancel()

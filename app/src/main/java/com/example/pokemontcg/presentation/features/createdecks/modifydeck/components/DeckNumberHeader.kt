@@ -30,7 +30,9 @@ import com.example.pokemontcg.util.TOTAL_DECK_CARDS_GLOBAL
 @Composable
 fun DeckNumberHeader(
     modifier : Modifier = Modifier,
-    totalCards : Int
+    totalCards : Int,
+    onFinishedRatio : (Float) -> Unit = {},
+    initialRatio : Float = 0.0f
 ) {
     Box(
         modifier = modifier
@@ -92,7 +94,11 @@ fun DeckNumberHeader(
                     totalCards = totalCards,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(20.dp)
+                        .height(20.dp),
+                    onFinishedRatio = {
+                        onFinishedRatio(it)
+                    },
+                    initialRatio = initialRatio
                 )
             }
             Spacer(modifier = Modifier.width(15.dp))

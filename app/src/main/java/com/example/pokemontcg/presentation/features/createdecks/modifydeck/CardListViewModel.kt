@@ -70,6 +70,12 @@ class CardListViewModel @Inject constructor(
 
         }
     }
+
+    fun onChangeRatio(ratio : Float){
+        state = state.copy(
+            gaugeRatio = ratio
+        )
+    }
     fun insertPokemonToDeck(
         deckToInsert : Int,
         card : CardOverview,

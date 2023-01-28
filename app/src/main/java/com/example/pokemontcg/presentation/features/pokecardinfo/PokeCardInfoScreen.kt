@@ -33,7 +33,14 @@ fun PokeCardInfoScreen(
 
 
         if(viewModel.state.pokeInfoCard!=null)
-            PokeCardInfo(pokeInfoCard = viewModel.state.pokeInfoCard!!, navController = navController)
+            PokeCardInfo(
+                pokeInfoCard = viewModel.state.pokeInfoCard!!,
+                navController = navController,
+                initialSize = viewModel.state.initialAnimationSize,
+                onSize = { dp ->
+                    viewModel.onChangeSize(dp)
+                }
+            )
 
         if(viewModel.state.isLoading)
             CircularProgressIndicator(modifier = Modifier.size(100.dp).align(Alignment.Center))

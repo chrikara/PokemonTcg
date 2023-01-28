@@ -10,4 +10,6 @@ sealed class ChosenDeckEvent {
     data class ShowCardInfo(val cardSaved: CardSaved) : ChosenDeckEvent()
     data class onModifyDeckClick(val deckNumber: Int) : ChosenDeckEvent()
 
+    data class onChangeGaugeRatio(val ratio : Float) : ChosenDeckEvent()
+
 }

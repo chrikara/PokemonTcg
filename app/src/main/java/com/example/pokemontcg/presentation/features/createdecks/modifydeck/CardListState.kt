@@ -8,5 +8,6 @@ data class CardListState(
     val savedCardList : List<CardSaved> = emptyList(),
     val cardList : List<CardOverview> = emptyList(),
     var isLoading : Boolean = false,
-    val error : String = ""
+    val error : String = "",
+    val gaugeRatio : Float = 0f
 )

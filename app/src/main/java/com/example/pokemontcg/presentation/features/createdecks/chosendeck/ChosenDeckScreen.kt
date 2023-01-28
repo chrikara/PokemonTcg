@@ -3,7 +3,9 @@ package com.example.pokemontcg.presentation.features.createdecks.chosendeck
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,16 +32,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.pokemontcg.domain.model.CardSaved
 import com.example.pokemontcg.domain.model.DeckNumber
 import com.example.pokemontcg.presentation.features.createdecks.modifydeck.components.DeckNumberHeader
 import com.example.pokemontcg.presentation.features.welcome.PrimaryButton
 import com.example.pokemontcg.util.UiEvent
-import com.example.pokemontcg.util.navigation.Screen
 
 @Composable
 fun ChosenDeckScreen(
@@ -47,6 +46,7 @@ fun ChosenDeckScreen(
     onNavigate: (UiEvent.Navigate) -> Unit,
     viewModel: ChosenDeckViewModel = hiltViewModel()
 ) {
+
 
     LaunchedEffect(key1 = true){
         viewModel.uiEvent.collect{event ->
@@ -64,91 +64,88 @@ fun ChosenDeckScreen(
     viewModel.onEvent(ChosenDeckEvent.GetAllCardsFromRoom(deckNumber = deckChosen))
 
     val state = viewModel.state
+    println(state.gaugeRatio)
 
 
-    ConstraintLayout(
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(MaterialTheme.colorScheme.background),
+        verticalArrangement = Arrangement.SpaceBetween
+
     ) {
-        val (header, lazyRow, button, textNoCards) = createRefs()
-
-
 
         DeckNumberHeader(
-            modifier = Modifier.constrainAs(header){
-                                                   top.linkTo(parent.top)
+            modifier = Modifier.fillMaxWidth(),
+            totalCards = state.cardsSaved.size,
+            onFinishedRatio = { ratio ->
+                viewModel.onEvent(ChosenDeckEvent.onChangeGaugeRatio(ratio))
             },
-            totalCards = state.cardsSaved.size
+            initialRatio = state.gaugeRatio
         )
 
-
-        if(state.cardsSaved.isEmpty())
-            TextForEmptyDeck(modifier = Modifier.constrainAs(textNoCards){
-                top.linkTo(header.bottom)
-                bottom.linkTo(button.top)
-            })
-
+        if(state.cardsSaved.isEmpty()){
+            TextForEmptyDeck(modifier = Modifier.weight(1f))
+        }
 
 
         LazyRow(
-            modifier = Modifier.constrainAs(lazyRow){
-                top.linkTo(header.bottom)
-                bottom.linkTo(button.top)
+        content = {
+            items(state.cardsSaved){cardSaved ->
+                SavedImageInDeck(
+                    viewModel = viewModel,
+                    cardSaved = cardSaved
+                )
             }
-            ,
-            content = {
-                items(state.cardsSaved){cardSaved ->
-                    SavedImageInDeck(
-                        viewModel = viewModel,
-                        cardSaved = cardSaved
-                    )
-                }
-            }
-        )
+        }
+    )
+
 
         PrimaryButton(
             modifier = Modifier
                 .padding(start = 15.dp, end = 15.dp, bottom = 15.dp)
-                .fillMaxWidth()
-                .constrainAs(button) {
-                    bottom.linkTo(parent.bottom)
-                }
-            ,
+                .fillMaxWidth(),
             text = "Modify Deck",
             textAlign = TextAlign.Center,
             onClick = {
                 viewModel.onEvent(ChosenDeckEvent.onModifyDeckClick(deckNumber))
             }
         )
-
+    }
 
 
 
     }
-}
+
+
+
 @Composable
 private fun TextForEmptyDeck(modifier : Modifier = Modifier){
-    Text(
-        buildAnnotatedString {
-            withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.onBackground)){
-                append("Η τράπουλα σου είναι άδεια. Πάτα στο")
-            }
-            withStyle(style = SpanStyle(
-                color = MaterialTheme.colorScheme.primary,
-                fontSize = 19.sp,
-                fontWeight = FontWeight.Bold
-            )
-            ){
-                append(" Modify Deck ")
-            }
-            withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.onBackground)){
-                append("για να προσθέσεις κάρτες!")
-            }
-        },
-        textAlign = TextAlign.Center,
-        modifier = modifier
-    )
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            buildAnnotatedString {
+                withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.onBackground)) {
+                    append("Η τράπουλα σου είναι άδεια. Πάτα στο")
+                }
+                withStyle(
+                    style = SpanStyle(
+                        color = MaterialTheme.colorScheme.primary,
+                        fontSize = 19.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                ) {
+                    append(" Modify Deck ")
+                }
+                withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.onBackground)) {
+                    append("για να προσθέσεις κάρτες!")
+                }
+            },
+            textAlign = TextAlign.Center,
+        )
+    }
 }
 
 @Composable
