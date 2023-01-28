@@ -9,7 +9,6 @@ import com.example.pokemontcg.domain.model.CardSaved
 import com.example.pokemontcg.domain.model.DeckNumber
 import com.example.pokemontcg.domain.use_cases.FilterOutDeckUseCase
 import com.example.pokemontcg.presentation.features.createdecks.use_cases.AllMyDeckUseCases
-import com.example.pokemontcg.presentation.features.createdecks.use_cases.GetPokemonFromDeckUseCase
 import com.example.pokemontcg.util.UiEvent
 import com.example.pokemontcg.util.navigation.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -52,13 +51,13 @@ class ChosenDeckViewModel @Inject constructor(
                     _uiEvent.send(UiEvent.Navigate(Screen.PokeCardInfo.route + "/${event.cardSaved.pokemonId}"))
                 }
             }
-            is ChosenDeckEvent.onModifyDeckClick -> {
+            is ChosenDeckEvent.OnModifyDeckClick -> {
                 viewModelScope.launch {
                     _uiEvent.send(UiEvent.Navigate(Screen.DeckModify.route + "/${event.deckNumber}"))
                 }
             }
 
-            is ChosenDeckEvent.onChangeGaugeRatio -> {
+            is ChosenDeckEvent.OnChangeGaugeRatio -> {
                 state = state.copy(
                     gaugeRatio = event.ratio
                 )

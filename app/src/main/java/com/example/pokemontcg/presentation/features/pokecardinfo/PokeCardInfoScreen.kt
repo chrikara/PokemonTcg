@@ -49,9 +49,5 @@ fun PokeCardInfoScreen(
             Text(modifier = Modifier.align(Alignment.Center), text = viewModel.state.error, textAlign = TextAlign.Center)
 
 
-        LaunchedEffect(key1 = true) {
-            viewModel.getPokeCardInfoByPokemonIdFromAPI(pokeId)
-        }
-
         }
 }

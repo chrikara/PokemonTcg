@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
@@ -38,9 +37,11 @@ import com.example.pokemontcg.util.navigation.Screen
 fun ModifyDeckScreen(
     snackbarHostState: SnackbarHostState,
     navController: NavController,
-    viewModel: CardListViewModel = hiltViewModel(),
+    viewModel: ModifyDeckViewModel = hiltViewModel(),
     deckNumber: Int
 ) {
+    val deck = DeckNumber.fromInt(deckNumber)
+
     LaunchedEffect(key1 = true){
         viewModel.uiEvent.collect{event ->
             when(event){
@@ -57,7 +58,7 @@ fun ModifyDeckScreen(
     }
 
     val state = viewModel.state
-    viewModel.getCardsForOneDeck(DeckNumber.fromInt(deckNumber))
+    viewModel.onEvent(ModifyDeckEvent.OnGetCardsForOneDeck(deckNumber = deck))
 
 
 
@@ -72,7 +73,7 @@ fun ModifyDeckScreen(
             modifier = Modifier.fillMaxWidth(),
             totalCards = state.savedCardList.size,
             onFinishedRatio = { ratio ->
-                viewModel.onChangeRatio(ratio)
+                viewModel.onEvent(ModifyDeckEvent.OnChangedGaugeRatio(ratio))
             },
             initialRatio = state.gaugeRatio
         )
@@ -97,8 +98,11 @@ fun ModifyDeckScreen(
                     image = cardOverview.imgString,
                     totalCounts = state.savedCardList.count{it.pokemonId == cardOverview.id },
                     onShowInfo = { navController.navigate(Screen.PokeCardInfo.route + "/${cardOverview.id}")},
-                    onAddCard = { viewModel.insertPokemonToDeck(deckNumber , cardOverview, snackbarHostState) },
-                    onDeleteCard = {viewModel.deletePokemonFromDeck(cardOverview)}
+                    onAddCard = { viewModel.onEvent(ModifyDeckEvent.OnInsertToChosenDeck(
+                        deck = deck ,
+                        cardOverview = cardOverview,
+                        snackbarHostState = snackbarHostState))},
+                    onDeleteCard = {viewModel.onEvent(ModifyDeckEvent.OnDeletePokemonFromDeck(cardOverview))}
                 )
 
             }

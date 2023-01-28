@@ -79,7 +79,7 @@ fun ChosenDeckScreen(
             modifier = Modifier.fillMaxWidth(),
             totalCards = state.cardsSaved.size,
             onFinishedRatio = { ratio ->
-                viewModel.onEvent(ChosenDeckEvent.onChangeGaugeRatio(ratio))
+                viewModel.onEvent(ChosenDeckEvent.OnChangeGaugeRatio(ratio))
             },
             initialRatio = state.gaugeRatio
         )
@@ -108,7 +108,7 @@ fun ChosenDeckScreen(
             text = "Modify Deck",
             textAlign = TextAlign.Center,
             onClick = {
-                viewModel.onEvent(ChosenDeckEvent.onModifyDeckClick(deckNumber))
+                viewModel.onEvent(ChosenDeckEvent.OnModifyDeckClick(deckNumber))
             }
         )
     }

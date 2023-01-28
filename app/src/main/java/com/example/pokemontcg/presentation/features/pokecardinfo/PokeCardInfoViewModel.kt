@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.Dp
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokemontcg.data.remote.api.dto.cardoverviewdto.Data
@@ -23,26 +24,28 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PokeCardInfoViewModel @Inject constructor(
-    private val allMyDeckUseCases: AllMyDeckUseCases
+    private val allMyDeckUseCases: AllMyDeckUseCases,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel(){
 
-    var state by mutableStateOf<PokeCardInfoStateScreen>(PokeCardInfoStateScreen())
+    var state by mutableStateOf(PokeCardInfoStateScreen())
         private set
 
-    var count = 0
     private var a : Job? = null
 
+    init {
+        val pokeId = savedStateHandle.get<String>("pokeId").orEmpty()
+        getPokeCardInfoByPokemonIdFromAPI(pokeId)
+    }
     fun onChangeSize(size : Dp){
         state = state.copy(
             initialAnimationSize = size
         )
     }
 
-    fun getPokeCardInfoByPokemonIdFromAPI(pokemonId : String){
+    private fun getPokeCardInfoByPokemonIdFromAPI(pokemonId : String){
         a?.cancel()
         a = allMyDeckUseCases.getPokemonInfoFromAPIUseCase(pokemonId).onEach { result->
-           count++
-           println(count)
            when(result){
                is Resource.Success ->{
                    val data = result.data!!
