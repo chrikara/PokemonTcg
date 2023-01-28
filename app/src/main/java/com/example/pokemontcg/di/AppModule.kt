@@ -6,6 +6,7 @@ import com.example.pokemontcg.data.local.PokemonTcgDatabase
 import com.example.pokemontcg.data.remote.api.PokemonTcgApi
 import com.example.pokemontcg.data.repository.PokemonCardsRepositoryImpl
 import com.example.pokemontcg.domain.repository.PokemonCardsRepository
+import com.example.pokemontcg.domain.use_cases.FilterOutDeckUseCase
 import com.example.pokemontcg.presentation.features.createdecks.use_cases.AllMyDeckUseCases
 import com.example.pokemontcg.presentation.features.createdecks.use_cases.DeletePokemonFromDeckUseCase
 import com.example.pokemontcg.presentation.features.createdecks.use_cases.GetPokemonFromDeckUseCase
@@ -85,5 +86,12 @@ object AppModule {
             getPokemonInfoFromAPIUseCase = GetPokemonInfoFromAPIUseCase(repository)
         )
 
+
+    }
+
+    @Singleton
+    @Provides
+    fun provideFilterOutDeck() : FilterOutDeckUseCase{
+        return FilterOutDeckUseCase()
     }
 }

@@ -131,12 +131,14 @@ fun PokeCardInfo(
                         onClick = { navController.popBackStack() }
                     )
                     .padding(10.dp)
-                    .size(30.dp)
+                    .size(30.dp),
+                tint = MaterialTheme.colorScheme.background
             )
             Text(
                 text = pokeInfoCard.name,
                 fontSize = 19.sp ,
                 fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.background,
                 modifier = Modifier.align(Center),
             )
 
@@ -166,7 +168,10 @@ fun PokeCardInfo(
                 mainAxisAlignment = FlowMainAxisAlignment.Center,
                 crossAxisAlignment = FlowCrossAxisAlignment.Center
             ){
-                Text("HP:${pokeInfoCard.hp}")
+                Text(
+                    text = "HP:${pokeInfoCard.hp}",
+                    color = MaterialTheme.colorScheme.background
+                )
                 Spacer(modifier = Modifier.width(10.dp))
 
                 repeat((pokeInfoCard.hp.toInt()/10)){
@@ -247,7 +252,10 @@ fun PokeCardInfo(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Spacer(modifier = Modifier.height(10.dp))
-                    Text(text = pokeInfoCard.description)
+                    Text(
+                        text = pokeInfoCard.description,
+                        color = MaterialTheme.colorScheme.background
+                    )
                     Spacer(modifier = Modifier.height(30.dp))
 
                     val tabItems = listOf("Attack", "Evolution", "Misc")
@@ -409,7 +417,7 @@ private fun Attack(attack: Attack){
 
                 if(attack.damage == "") attack.name
                 else "${attack.name} (${attack.damage}DMG)",
-
+                color = MaterialTheme.colorScheme.background,
                 fontSize = 20.sp
             )
             Row(
@@ -432,8 +440,10 @@ private fun Attack(attack: Attack){
         Divider(color = MaterialTheme.colorScheme.background)
 
         Text(
-            text = attack.text
-        )
+            text = attack.text,
+            color = MaterialTheme.colorScheme.background,
+
+            )
     }
 }
 

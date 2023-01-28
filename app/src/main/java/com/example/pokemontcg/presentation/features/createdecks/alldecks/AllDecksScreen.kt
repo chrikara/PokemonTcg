@@ -19,7 +19,7 @@ import com.example.pokemontcg.domain.model.DeckNumber
 import com.example.pokemontcg.domain.model.toInt
 import com.example.pokemontcg.presentation.features.createdecks.alldecks.components.ChoosableDeck
 import com.example.pokemontcg.presentation.features.createdecks.alldecks.components.PokeSprite
-import com.example.pokemontcg.util.Screen
+import com.example.pokemontcg.util.navigation.Screen
 
 @Composable
 fun AllDecksScreen(

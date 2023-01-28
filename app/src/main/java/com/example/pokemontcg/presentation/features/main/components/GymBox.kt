@@ -35,12 +35,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.example.pokemontcg.ui.theme.BlueAlpha
 import com.example.pokemontcg.ui.theme.BlueAlpha30
+import com.example.pokemontcg.ui.theme.LocalSpacing
+
 
 @Composable
 fun GymBox(
@@ -49,10 +52,12 @@ fun GymBox(
     onClick : () -> Unit,
     gymValue : String,
     gymName : String,
-    paddingValues: PaddingValues = PaddingValues(horizontal = 25.dp, vertical = 15.dp),
     leaderUrl : String,
     isCurrent : Boolean = false
     ) {
+
+    val spacing = LocalSpacing.current
+    val paddingValues = PaddingValues(spacing.paddingMedium)
 
     val infiniteTransition = rememberInfiniteTransition()
     val sizeOfBorder by infiniteTransition.animateValue(
@@ -70,12 +75,12 @@ fun GymBox(
         modifier = modifier
             .fillMaxWidth()
             .alpha(if (isEnabled) 1f else 0.3f)
-            .clip(RoundedCornerShape(15.dp))
+            .clip(RoundedCornerShape(spacing.clipSmall))
             .background(BlueAlpha30)
             .border(
                 width = 1.dp,
                 color = BlueAlpha,
-                shape = RoundedCornerShape(15.dp)
+                shape = RoundedCornerShape(spacing.clipSmall)
             )
             .clickable (
                 onClick = onClick,
@@ -87,7 +92,7 @@ fun GymBox(
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceAround
+            horizontalArrangement = Arrangement.SpaceAround,
         ){
             Box(modifier = Modifier
                 .size(80.dp)
@@ -107,7 +112,7 @@ fun GymBox(
                 )
                 Box(modifier = Modifier
                     .size(60.dp)
-                    .clip(RoundedCornerShape(80.dp))
+                    .clip(RoundedCornerShape(spacing.clipLarge))
                     .background(MaterialTheme.colorScheme.onBackground)
 
                 )
@@ -124,7 +129,7 @@ fun GymBox(
             }
 
 
-        Spacer(modifier = Modifier.width(15.dp))
+        Spacer(modifier = Modifier.width(spacing.spaceExtraSmall))
 
         Column(
             verticalArrangement = Arrangement.Center,
@@ -134,9 +139,10 @@ fun GymBox(
             Text(
                 text = gymName,
                 color = MaterialTheme.colorScheme.onBackground,
+                overflow = TextOverflow.Ellipsis
 
             )
-            Spacer(modifier = Modifier.width(2.dp))
+            Spacer(modifier = Modifier.width(spacing.spaceExtraSmall))
 
             Text(
                 text = "0 / 3",
@@ -144,7 +150,6 @@ fun GymBox(
                 modifier = Modifier.alpha(0.6f)
             )
         }
-            Spacer(modifier = Modifier.width(15.dp))
 
             Image(
                 painter = rememberImagePainter(

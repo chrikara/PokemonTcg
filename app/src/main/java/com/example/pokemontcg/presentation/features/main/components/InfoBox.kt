@@ -56,7 +56,7 @@ fun InfoBox(
                 color = MaterialTheme.colorScheme.onBackground,
                 shape = RoundedCornerShape(15.dp)
             )
-            .clickable {  onClick()}
+            .clickable(onClick = onClick)
             .padding(vertical = 20.dp)
 
 

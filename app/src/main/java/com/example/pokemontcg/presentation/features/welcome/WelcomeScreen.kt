@@ -1,40 +1,29 @@
 package com.example.pokemontcg.presentation.features.welcome
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.TopCenter
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import com.example.pokemontcg.R
 import com.example.pokemontcg.presentation.components.PokemonTcgLogo
-import com.example.pokemontcg.util.Screen
+import com.example.pokemontcg.ui.theme.LocalSpacing
+import com.example.pokemontcg.util.navigation.Screen
+import com.example.pokemontcg.util.UiEvent
 
 
 @Composable
 fun WelcomeScreen(
-    navController: NavController
+    onNavigate: (UiEvent.Navigate) -> Unit
 ) {
+    val spacing = LocalSpacing.current
 
     Box(modifier = Modifier
         .fillMaxSize()
@@ -52,20 +41,20 @@ fun WelcomeScreen(
                 text = "New Game",
                 modifier = Modifier
                     .align(CenterHorizontally)
-                    .padding(horizontal = 25.dp)
+                    .padding(horizontal = spacing.paddingLarge)
 
                 ,
-                onClick = { navController.navigate(Screen.Main.route) }
+                onClick = { onNavigate(UiEvent.Navigate(Screen.Main.route)) }
             )
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(spacing.spaceMedium))
 
             PrimaryButton(
                 text = "Continue",
                 enabled = false,
                 modifier = Modifier
                     .align(CenterHorizontally)
-                    .padding(horizontal = 25.dp)
+                    .padding(horizontal = spacing.paddingLarge)
                 ,
                 onClick = {}
             )

@@ -37,7 +37,7 @@ import com.example.pokemontcg.domain.model.CardSaved
 import com.example.pokemontcg.domain.model.DeckNumber
 import com.example.pokemontcg.presentation.features.createdecks.modifydeck.components.DeckNumberHeader
 import com.example.pokemontcg.presentation.features.welcome.PrimaryButton
-import com.example.pokemontcg.util.Screen
+import com.example.pokemontcg.util.navigation.Screen
 
 @Composable
 fun ChosenDeckScreen(

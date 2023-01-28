@@ -10,14 +10,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -28,19 +30,40 @@ import coil.annotation.ExperimentalCoilApi
 import com.example.pokemontcg.domain.model.DeckNumber
 import com.example.pokemontcg.presentation.features.createdecks.modifydeck.components.CardItemToInsertToDeck
 import com.example.pokemontcg.presentation.features.createdecks.modifydeck.components.DeckNumberHeader
-import com.example.pokemontcg.util.Screen
+import com.example.pokemontcg.util.UiEvent
+import com.example.pokemontcg.util.navigation.Screen
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
 fun ModifyDeckScreen(
+    snackbarHostState: SnackbarHostState,
     navController: NavController,
     viewModel: CardListViewModel = hiltViewModel(),
     deckNumber: Int
 ) {
+    LaunchedEffect(key1 = true){
+        viewModel.uiEvent.collect{event ->
+
+            when(event){
+                is UiEvent.ShowSnackBar -> {
+                    println("Before")
+                    snackbarHostState.showSnackbar(
+                        message = event.message
+                    )
+                    println("After")
+
+
+                }
+
+                else -> {}
+            }
+        }
+    }
+
     val state = viewModel.state
     viewModel.getCardsForOneDeck(DeckNumber.fromInt(deckNumber))
 
-    println(state)
+
 
 
     Column(modifier = Modifier
@@ -48,6 +71,7 @@ fun ModifyDeckScreen(
         .background(MaterialTheme.colorScheme.background),
     )
     {
+
 
 
         DeckNumberHeader(
@@ -75,7 +99,7 @@ fun ModifyDeckScreen(
                     image = cardOverview.imgString,
                     totalCounts = state.savedCardList.count{it.pokemonId == cardOverview.id },
                     onShowInfo = { navController.navigate(Screen.PokeCardInfo.route + "/${cardOverview.id}")},
-                    onAddCard = { viewModel.insertPokemonToDeck(deckNumber , cardOverview) },
+                    onAddCard = { viewModel.insertPokemonToDeck(deckNumber , cardOverview, snackbarHostState) },
                     onDeleteCard = {viewModel.deletePokemonFromDeck(cardOverview)}
                 )
 

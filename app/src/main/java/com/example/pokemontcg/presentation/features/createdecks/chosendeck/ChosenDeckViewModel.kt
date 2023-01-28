@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokemontcg.domain.model.CardSaved
 import com.example.pokemontcg.domain.model.DeckNumber
+import com.example.pokemontcg.domain.use_cases.FilterOutDeckUseCase
 import com.example.pokemontcg.presentation.features.createdecks.use_cases.AllMyDeckUseCases
 import com.example.pokemontcg.presentation.features.createdecks.use_cases.GetPokemonFromDeckUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChosenDeckViewModel @Inject constructor(
-    private val allMyDeckUseCases: AllMyDeckUseCases
+    private val allMyDeckUseCases: AllMyDeckUseCases,
+    private val filterOutDeckUseCase: FilterOutDeckUseCase
 ) : ViewModel() {
 
     var state by mutableStateOf<ChosenDeckState>(ChosenDeckState())
@@ -34,7 +36,10 @@ class ChosenDeckViewModel @Inject constructor(
         getCardsForOneDeckJob = allMyDeckUseCases.getPokemonFromDeckUseCase().onEach { cardsSaved ->
 
         state = state.copy(
-            cardsSaved = cardsSaved.filter { it.deckNumber == deckNumber } .sortedBy { it.nationalDex }
+            cardsSaved = filterOutDeckUseCase(
+                allCardsInRoom = cardsSaved,
+                deckNumber = deckNumber
+            )
         )
 
         }.launchIn(viewModelScope)
