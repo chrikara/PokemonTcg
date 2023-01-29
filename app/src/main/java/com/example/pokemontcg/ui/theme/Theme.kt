@@ -29,19 +29,13 @@ private val LightColorScheme = lightColorScheme(
     tertiary = Pink40,
     background = Color(0xFF1C1B1F),
     onBackground =  Color(0xFFFFFBFE),
-    surface = Color.Transparent
-
-    
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
+    surface = Color.Transparent,
     onPrimary = Color.White,
     onSecondary = Color.White,
     onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
     onSurface = Color(0xFF1C1B1F),
-    */
+
+
 )
 
 @Composable
@@ -51,7 +45,9 @@ fun PokemonTcgTheme(
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
+    println(Build.VERSION.SDK_INT)
     val colorScheme = when {
+
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)

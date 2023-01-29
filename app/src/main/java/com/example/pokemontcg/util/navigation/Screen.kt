@@ -2,7 +2,7 @@ package com.example.pokemontcg.util.navigation
 
 sealed class Screen(val route: String) {
 
-    object DeckModify : Screen(route = "deck_modify_screen")
+    object ModifyDeck : Screen(route = "deck_modify_screen")
     object Welcome: Screen(route = "welcome_screen")
     object Main : Screen(route = "main_screen")
     object AllDecks : Screen(route = "all_decks_screen")

@@ -22,15 +22,14 @@ import com.example.pokemontcg.presentation.features.pokecardinfo.components.Poke
 
 @Composable
 fun PokeCardInfoScreen(
-    pokeId : String,
     navController: NavController,
     viewModel : PokeCardInfoViewModel = hiltViewModel()
 ) {
 
-    Box(modifier = Modifier.fillMaxSize().background(Color(0xFFD2DBE4))){
-
-
-
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(Color(0xFFD2DBE4)))
+    {
 
         if(viewModel.state.pokeInfoCard!=null)
             PokeCardInfo(
@@ -43,11 +42,15 @@ fun PokeCardInfoScreen(
             )
 
         if(viewModel.state.isLoading)
-            CircularProgressIndicator(modifier = Modifier.size(100.dp).align(Alignment.Center))
+            CircularProgressIndicator(modifier = Modifier
+                .size(100.dp)
+                .align(Alignment.Center))
 
         if(viewModel.state.error!="")
-            Text(modifier = Modifier.align(Alignment.Center), text = viewModel.state.error, textAlign = TextAlign.Center)
-
-
+            Text(
+                modifier = Modifier
+                    .align(Alignment.Center),
+                text = viewModel.state.error,
+                textAlign = TextAlign.Center)
         }
 }

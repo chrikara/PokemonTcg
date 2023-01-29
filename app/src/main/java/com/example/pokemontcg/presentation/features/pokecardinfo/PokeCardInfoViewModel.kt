@@ -31,10 +31,8 @@ class PokeCardInfoViewModel @Inject constructor(
     var state by mutableStateOf(PokeCardInfoStateScreen())
         private set
 
-    private var a : Job? = null
-
     init {
-        val pokeId = savedStateHandle.get<String>("pokeId").orEmpty()
+        val pokeId = savedStateHandle.get<String>("pokeId") ?: "base1-1"
         getPokeCardInfoByPokemonIdFromAPI(pokeId)
     }
     fun onChangeSize(size : Dp){
@@ -44,9 +42,9 @@ class PokeCardInfoViewModel @Inject constructor(
     }
 
     private fun getPokeCardInfoByPokemonIdFromAPI(pokemonId : String){
-        a?.cancel()
-        a = allMyDeckUseCases.getPokemonInfoFromAPIUseCase(pokemonId).onEach { result->
-           when(result){
+
+        allMyDeckUseCases.getPokemonInfoFromAPIUseCase(pokemonId).onEach { result->
+            when(result){
                is Resource.Success ->{
                    val data = result.data!!
                    state = state.copy(isLoading = false)
@@ -72,7 +70,6 @@ class PokeCardInfoViewModel @Inject constructor(
                                )
                            )
                        }
-
                        SuperType.Energy -> {
                            state = state.copy(
                                energyInfoCard = EnergyInfoCard(
@@ -81,15 +78,7 @@ class PokeCardInfoViewModel @Inject constructor(
                                )
                            )
                        }
-                       SuperType.Trainer -> {
-                           state = state.copy(
-                               trainerInfoCard = TrainerInfoCard(
-                                   name = data.name,
-                                   imageUrl = data.images.large,
-                                   description = data.rules?.get(0)
-                               )
-                           )
-                       }
+                       else -> Unit
                    }
 
                }
@@ -98,8 +87,6 @@ class PokeCardInfoViewModel @Inject constructor(
                        error = result.message ?: "An error occured",
                        isLoading = false
                    )
-
-
                }
                is Resource.Loading -> {
                    state = state.copy(
@@ -108,6 +95,5 @@ class PokeCardInfoViewModel @Inject constructor(
                }
            }
        }.launchIn(viewModelScope)
-
     }
 }

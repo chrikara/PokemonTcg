@@ -81,7 +81,8 @@ fun ChosenDeckScreen(
             onFinishedRatio = { ratio ->
                 viewModel.onEvent(ChosenDeckEvent.OnChangeGaugeRatio(ratio))
             },
-            initialRatio = state.gaugeRatio
+            initialRatio = state.gaugeRatio,
+
         )
 
         if(state.cardsSaved.isEmpty()){

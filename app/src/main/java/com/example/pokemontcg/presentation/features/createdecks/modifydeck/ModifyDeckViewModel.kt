@@ -4,6 +4,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokemontcg.domain.model.CardOverview
@@ -29,28 +30,28 @@ import javax.inject.Inject
 class ModifyDeckViewModel @Inject constructor(
     private val getCardsUseCase: GetCardsUseCase,
     private val allMyDeckUseCases: AllMyDeckUseCases,
-    private val filterOutDeckUseCase: FilterOutDeckUseCase
+    private val filterOutDeckUseCase: FilterOutDeckUseCase,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     var state by mutableStateOf(ModifyDeckState())
         private set
 
-    var count = 0
+    var cardListFromAPIWithAllCards : List<CardOverview> = emptyList()
+
     private var getCardsForOneDeckJob: Job? = null
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
+        val deckNumber = DeckNumber.fromInt(savedStateHandle.get<Int>("deckNumber")!!)
+        getCardsForOneDeck(deckNumber)
         getAllAvailableCardsFromAPI()
     }
 
     fun onEvent(event : ModifyDeckEvent){
         when(event){
-            is ModifyDeckEvent.OnGetCardsForOneDeck ->{
-                getCardsForOneDeck(event.deckNumber)
-            }
-
             is ModifyDeckEvent.OnChangedGaugeRatio -> {
                 onChangeRatio(event.ratio)
             }
@@ -64,6 +65,46 @@ class ModifyDeckViewModel @Inject constructor(
                     card = event.cardOverview,
                     snackbarHostState = event.snackbarHostState
                 )
+            }
+
+            is ModifyDeckEvent.OnFocused -> {
+                state = state.copy(
+                    isHintVisible = !event.focusState.isFocused && state.query.isBlank()
+                )
+            }
+            is ModifyDeckEvent.OnSearch -> {
+
+                if(event.query.isBlank()){
+                    state = state.copy(
+                        cardList = cardListFromAPIWithAllCards
+                    )
+                } else{
+                    state = state.copy(
+                        cardList = cardListFromAPIWithAllCards.filter {card->
+                            card.name.lowercase().contains(event.query.lowercase())
+                        }
+                    )
+                }
+
+
+            }
+            is ModifyDeckEvent.OnTextFieldChange -> {
+                state = state.copy(
+                    query = event.query
+                )
+            }
+
+            is ModifyDeckEvent.OnSearchBarExpanded -> {
+                state = state.copy(
+                    isSearchBarExpanded = !state.isSearchBarExpanded
+                )
+
+                if(!state.isSearchBarExpanded){
+                    state = state.copy(
+                        query = "",
+                        cardList = cardListFromAPIWithAllCards
+                    )
+                }
             }
         }
     }
@@ -137,6 +178,8 @@ class ModifyDeckViewModel @Inject constructor(
                     }
                         .filter { card -> card.superType != SuperType.Trainer }
                         .sortedBy { it.nationalDex }
+
+                    cardListFromAPIWithAllCards = newResult
 
                     state = state.copy(
                         cardList = newResult,

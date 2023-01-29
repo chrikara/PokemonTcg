@@ -23,7 +23,6 @@ import com.example.pokemontcg.presentation.features.main.MainScreen
 import com.example.pokemontcg.presentation.features.pokecardinfo.PokeCardInfoScreen
 import com.example.pokemontcg.presentation.features.welcome.WelcomeScreen
 import com.example.pokemontcg.ui.theme.PokemonTcgTheme
-import com.example.pokemontcg.util.UiEvent
 import com.example.pokemontcg.util.navigation.Screen
 import com.example.pokemontcg.util.navigation.navigate
 import dagger.hilt.android.AndroidEntryPoint
@@ -80,7 +79,7 @@ class MainActivity : ComponentActivity() {
                             onNavigate = navController::navigate
                         )
                     }
-                    composable(route = Screen.DeckModify.route + "/{deckNumber}",
+                    composable(route = Screen.ModifyDeck.route + "/{deckNumber}",
                         arguments = listOf(
                             navArgument("deckNumber"){
                                 type = NavType.IntType
@@ -102,11 +101,7 @@ class MainActivity : ComponentActivity() {
                             }
                         )
                     ){
-                        val pokeId = it.arguments?.getString("pokeId") ?: ""
-                        PokeCardInfoScreen(
-                            navController = navController,
-                            pokeId = pokeId
-                        )
+                        PokeCardInfoScreen(navController = navController)
                     }
 
                 }

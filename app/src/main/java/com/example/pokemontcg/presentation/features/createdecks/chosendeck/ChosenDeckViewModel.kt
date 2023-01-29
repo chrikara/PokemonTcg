@@ -53,7 +53,7 @@ class ChosenDeckViewModel @Inject constructor(
             }
             is ChosenDeckEvent.OnModifyDeckClick -> {
                 viewModelScope.launch {
-                    _uiEvent.send(UiEvent.Navigate(Screen.DeckModify.route + "/${event.deckNumber}"))
+                    _uiEvent.send(UiEvent.Navigate(Screen.ModifyDeck.route + "/${event.deckNumber}"))
                 }
             }
 

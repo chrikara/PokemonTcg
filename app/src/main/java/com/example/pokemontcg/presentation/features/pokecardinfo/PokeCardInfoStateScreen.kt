@@ -8,7 +8,6 @@ import com.example.pokemontcg.domain.model.cardinfo.TrainerInfoCard
 
 data class PokeCardInfoStateScreen(
 
-    val trainerInfoCard: TrainerInfoCard? = null,
     val pokeInfoCard: PokeInfoCard? = null,
     val energyInfoCard: EnergyInfoCard? = null,
     val isLoading : Boolean = false,

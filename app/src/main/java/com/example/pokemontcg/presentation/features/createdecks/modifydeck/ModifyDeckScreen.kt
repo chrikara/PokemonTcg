@@ -58,10 +58,6 @@ fun ModifyDeckScreen(
     }
 
     val state = viewModel.state
-    viewModel.onEvent(ModifyDeckEvent.OnGetCardsForOneDeck(deckNumber = deck))
-
-
-
 
     Column(modifier = Modifier
         .fillMaxSize()
@@ -75,7 +71,21 @@ fun ModifyDeckScreen(
             onFinishedRatio = { ratio ->
                 viewModel.onEvent(ModifyDeckEvent.OnChangedGaugeRatio(ratio))
             },
-            initialRatio = state.gaugeRatio
+            initialRatio = state.gaugeRatio,
+            hasSearchBar = true,
+            isSearchBarExpanded = state.isSearchBarExpanded,
+            query = viewModel.state.query,
+            onValueChange = {
+                viewModel.onEvent(ModifyDeckEvent.OnTextFieldChange(it))
+                viewModel.onEvent(ModifyDeckEvent.OnSearch(it))
+            },
+            onFocusChange = {
+                viewModel.onEvent(ModifyDeckEvent.OnFocused(it))
+            },
+            isHintVisible = state.isHintVisible,
+            onSearchBarToggled = {
+                viewModel.onEvent(ModifyDeckEvent.OnSearchBarExpanded)
+            }
         )
 
         if(state.isLoading) {
@@ -104,13 +114,8 @@ fun ModifyDeckScreen(
                         snackbarHostState = snackbarHostState))},
                     onDeleteCard = {viewModel.onEvent(ModifyDeckEvent.OnDeletePokemonFromDeck(cardOverview))}
                 )
-
             }
-            }
-
-
-
-
+        }
     }
 }
 

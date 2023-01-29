@@ -9,5 +9,9 @@ data class ModifyDeckState(
     val cardList : List<CardOverview> = emptyList(),
     var isLoading : Boolean = false,
     val error : String = "",
-    val gaugeRatio : Float = 0f
+    val gaugeRatio : Float = 0f,
+
+    val query : String = "",
+    val isHintVisible : Boolean = true,
+    val isSearchBarExpanded: Boolean = false
 )
