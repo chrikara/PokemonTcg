@@ -11,7 +11,7 @@ data class PokeCardInfoStateScreen(
 
     val pokeInfoCard: PokeInfoCard? = null,
     val energyInfoCard: EnergyInfoCard? = null,
-    val evolution: Evolution = Evolution.None,
+    val evolution: Evolution = Evolution.None(""),
     val isLoading : Boolean = false,
     val error : String = "",
 

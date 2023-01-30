@@ -74,7 +74,7 @@ class PokeCardInfoViewModel @Inject constructor(
                                    resistanceValue = data.resistances?.get(0)?.value
                                )
                            )
-                           println("MPIKE 1")
+
                        }
                        SuperType.Energy -> {
                            state = state.copy(
@@ -101,13 +101,14 @@ class PokeCardInfoViewModel @Inject constructor(
                         val initialName = result.data?.name!!
                         val evolvesToName = result.data.evolvesTo?.get(0)
 
-
+                        println(evolvesFromName)
                         val evolution = Evolution.returnEvolution(evolvesFromName,evolvesToName)
 
                         println(evolution)
                         when(evolution){
-                            is Evolution.None -> state = state.copy(evolution = Evolution.None)
+                            is Evolution.None -> state = state.copy(evolution = Evolution.None(initial = evolveUrl(initialName)))
                             is Evolution.Both -> state = state.copy(evolution = Evolution.Both(
+
                                 from = evolveUrl(evolvesFromName!!),
                                 to = evolveUrl(evolvesToName!!),
                                 initial = evolveUrl(initialName)
@@ -135,7 +136,7 @@ class PokeCardInfoViewModel @Inject constructor(
                                                 )
                                                 )
                                                 else -> state = state.copy(evolution = Evolution.From(
-                                                    from =  evolveUrl(evolvesFromName2!!),
+                                                    from =  evolveUrl(result2.data?.name!!),
                                                     initial = evolveUrl(initialName)
                                                 ))
                                             }
@@ -146,14 +147,17 @@ class PokeCardInfoViewModel @Inject constructor(
                             }
 
                             is Evolution.To -> {
-                                val baseId = getKeyByPokemonName(pokedexBaseIdtoNameHash, evolvesFromName!! ) ?: kotlin.run {
-                                    state = state.copy(evolution = Evolution.None)
+                                val baseId = getKeyByPokemonName(pokedexBaseIdtoNameHash, evolvesToName!! ) ?: kotlin.run {
+                                    state = state.copy(evolution = Evolution.None(
+                                        initial = evolveUrl(initialName))
+                                    )
                                    return@flatMapConcat flowOf(Unit)
                                 }
                                 allMyDeckUseCases.getPokemonInfoFromAPIUseCase(baseId).onEach { result2 ->
                                     when (result2){
                                         is Resource.Success ->{
                                             val evolvesFromName2 = result2.data?.evolvesFrom
+                                            println(evolvesFromName2)
                                             val evolvesToName2 = result2.data?.evolvesTo?.get(0)
                                             val evolution2 = Evolution.returnEvolution(
                                                 evolvesFromName2,
@@ -167,8 +171,8 @@ class PokeCardInfoViewModel @Inject constructor(
                                                     to = evolveUrl(evolvesToName2!!),
                                                 ))
                                                 else -> state = state.copy(evolution = Evolution.To(
-                                                    initial = initialName,
-                                                    to =  evolveUrl(evolvesToName2!!),
+                                                    initial = evolveUrl(initialName),
+                                                    to =  evolveUrl(result2.data?.name!!),
                                                     )
                                                 )
                                             }

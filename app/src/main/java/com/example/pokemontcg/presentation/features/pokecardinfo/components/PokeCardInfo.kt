@@ -68,6 +68,7 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.runtime.rememberCoroutineScope
 import com.example.pokemontcg.domain.model.Evolution
 import com.example.pokemontcg.presentation.features.createdecks.use_cases.AllMyDeckUseCases
+import com.example.pokemontcg.ui.theme.LocalSpacing
 import com.example.pokemontcg.util.Pokedex
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.myPagerTabIndicatorOffset
@@ -81,6 +82,7 @@ fun PokeCardInfo(
     navController: NavController,
     initialSize : Dp = 1000.dp,
     onSize : (Dp) -> Unit,
+    evolution: Evolution
 
 ) {
 
@@ -99,6 +101,8 @@ fun PokeCardInfo(
         }
 
     )
+
+
 
 
     LaunchedEffect(key1 = true){
@@ -352,24 +356,16 @@ fun PokeCardInfo(
                                     modifier = Modifier
                                         .fillMaxSize()
                                         .padding(5.dp)){
-
+                                    EvolutionBox(
+                                        modifier = Modifier.fillMaxSize(),
+                                        evolution = evolution)
                                 }
                             }
-
                         }
-
-                            
-
                     }
-
-
-
-                    
-
-
                 }
             }
-    }
+        }
     }
 
 
@@ -378,7 +374,7 @@ fun PokeCardInfo(
 private fun AttacksBox(pokeInfoCard : PokeInfoCard, eeveeSize : Dp){
 
         Box(
-            modifier = Modifier
+            modifier = Modifier,
         ){
             Box(
                 modifier = Modifier
@@ -470,18 +466,139 @@ private fun Attack(attack: Attack){
 @Composable
 private fun EvolutionBox(
     modifier : Modifier = Modifier,
-    pokeInfoCard: PokeInfoCard,
     evolution: Evolution
 ){
 
-    Column(
-        modifier = modifier
-    ) {
+    val localSpacing = LocalSpacing.current
+    val spaceEvolutions = localSpacing.spaceSmall
+    val eggSize = 60.dp
 
+    Spacer(modifier = Modifier.height(50.dp))
+    Box(
 
+    ){
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(20.dp))
+                .background(Color(0x99008A5B))
+                .padding(horizontal = 20.dp, vertical = 20.dp)
+        ){
+            Column(
+                modifier = modifier,
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Spacer(modifier = Modifier.height(spaceEvolutions))
+                if(evolution is Evolution.From || evolution is Evolution.To ||evolution is Evolution.Both){
+                    Image(
+                        painter = rememberImagePainter(
+                            data = when(evolution){
+                                is Evolution.To -> evolution.initial
+                                is Evolution.From -> evolution.from
+                                is Evolution.Both -> evolution.from
+                                else -> Unit
+                            }
+                        ),
+                        contentDescription = "",
+                        modifier = Modifier.size(100.dp),
+                    )
+                    Spacer(modifier = Modifier.height(spaceEvolutions))
+                    Image(
+                        painter = painterResource(id = R.drawable.arrow_down),
+                        contentDescription = "" ,
+                        modifier = Modifier
+                            .size(40.dp)
+                            .graphicsLayer {
+                                rotationZ = -20f
+                            }
+                    )
+                    Spacer(modifier = Modifier.height(spaceEvolutions))
+
+                }
+
+                Image(
+                    painter = rememberImagePainter(
+                        data = when(evolution){
+                            is Evolution.To -> evolution.to
+                            is Evolution.Both -> evolution.initial
+                            is Evolution.None -> evolution.initial
+                            is Evolution.From -> evolution.initial
+                        }
+                    ),
+                    contentDescription = "",
+                    modifier = Modifier.size(110.dp)
+
+                )
+
+                if(evolution is Evolution.Both){
+                    Spacer(modifier = Modifier.height(spaceEvolutions))
+
+                    Image(
+                        painter = painterResource(id = R.drawable.arrow_down),
+                        contentDescription = "" ,
+                        modifier = Modifier
+                            .size(40.dp)
+                            .graphicsLayer {
+                                rotationY = 180f
+                                rotationZ = -20f
+                            }
+                    )
+
+                    Spacer(modifier = Modifier.height(spaceEvolutions))
+
+                    Image(
+                        painter = rememberImagePainter(
+                            data = evolution.to
+                        ),
+                        contentDescription = "",
+                        modifier = Modifier.size(130.dp)
+
+                    )
+                }
+                Spacer(modifier = Modifier.height(spaceEvolutions))
+
+            }
         }
 
+
+        Image(
+            painter = painterResource(id = R.drawable.egg),
+            contentDescription ="",
+            modifier = Modifier
+                .padding(end = localSpacing.paddingMedium)
+                .size(eggSize)
+                .align(TopEnd)
+                .offset(y = -eggSize / 2)
+                .graphicsLayer {
+                    rotationZ = 10f
+                }
+        )
+        Image(
+            painter = painterResource(id = R.drawable.egg),
+            contentDescription ="",
+            modifier = Modifier
+                .padding(start = localSpacing.paddingMedium)
+                .size(eggSize)
+                .align(TopStart)
+                .offset(y = -eggSize / 2)
+                .graphicsLayer {
+                    rotationZ = -10f
+                }
+        )
+//        Text(
+//            text = "Evolutions",
+//            fontSize = 20.sp,
+//            color = MaterialTheme.colorScheme.background,
+//            modifier = Modifier
+//                .align(TopStart)
+//                .graphicsLayer {
+//                    rotationZ = -20f
+//                }
+//        )
     }
+
+}
 
 
 

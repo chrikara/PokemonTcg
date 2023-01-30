@@ -230,7 +230,7 @@ val pokedexBaseIdtoNameHash = hashMapOf(
 
     fun getKeyByPokemonName(map: HashMap<String, String>, value: String): String? {
         for (entry in map.entries) {
-            if (entry.value == value) {
+            if (entry.value.replace(" ", "") == value.replace(" ", "")) {
                 return entry.key
             }
         }

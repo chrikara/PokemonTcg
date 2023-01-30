@@ -13,11 +13,13 @@ sealed class Evolution(){
     data class To(
         val initial : String?,
         val to : String?): Evolution()
-    object None : Evolution()
+    data class None (
+        val initial : String?
+    ) : Evolution()
+
 
     companion object{
         var initial = ""
-
         fun initialEvolution(newInitial: String) {
             initial = newInitial
         }
@@ -27,7 +29,7 @@ sealed class Evolution(){
                 from != null && to != null -> Both(from ,initial , to)
                 from != null -> From(from, initial)
                 to!= null -> To(to, initial)
-                else -> None
+                else -> None(initial)
             }
 
         }

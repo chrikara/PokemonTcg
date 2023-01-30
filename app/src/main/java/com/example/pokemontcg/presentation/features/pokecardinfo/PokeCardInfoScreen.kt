@@ -49,7 +49,7 @@ fun PokeCardInfoScreen(
                 onSize = { dp ->
                     viewModel.onChangeSize(dp)
                 },
-
+                evolution = viewModel.state.evolution
             )
 
         if(viewModel.state.isLoading)
