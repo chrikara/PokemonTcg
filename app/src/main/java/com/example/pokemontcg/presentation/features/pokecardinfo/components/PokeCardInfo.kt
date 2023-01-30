@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,7 +19,9 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -66,6 +69,10 @@ import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.pager.ExperimentalPagerApi
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment.Companion.Start
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.unit.Constraints
 import com.example.pokemontcg.domain.model.Evolution
 import com.example.pokemontcg.presentation.features.createdecks.use_cases.AllMyDeckUseCases
 import com.example.pokemontcg.ui.theme.LocalSpacing
@@ -276,10 +283,7 @@ fun PokeCardInfo(
                             .wrapContentHeight()
                             .background(Color.Transparent)
                             .clip(RoundedCornerShape(30.dp))
-
-
                         ,
-
                         containerColor= Color(0xFF85A8CA),
                         // Our selected tab is our current page
                         selectedTabIndex = pagerState.currentPage,
@@ -292,8 +296,6 @@ fun PokeCardInfo(
                             )
                         }
                     ){
-
-
                         tabItems.forEachIndexed{index, title->
                             val color = remember {
                                 androidx.compose.animation.Animatable(Color(0xFF85A8CA))
@@ -328,37 +330,40 @@ fun PokeCardInfo(
 
                     }
                 }
+                    Spacer(modifier = Modifier.height(40.dp))
                     HorizontalPager(
                         count = tabItems.size,
                         state = pagerState,
                         userScrollEnabled = false
 
                     ) {page ->
+                        Column(
+                            modifier = Modifier
+                                .defaultMinSize(minHeight = 600.dp)
+                                .padding(5.dp)
 
-                        when(page){
-                            0 ->{
-                                Column(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .padding(5.dp)
-                                ) {
-                                    Spacer(modifier = Modifier.height(50.dp))
+                            , verticalArrangement = Arrangement.Top
+                        ){
+
+
+
+                            when(page){
+                                0 ->{
                                     AttacksBox(
                                         pokeInfoCard = pokeInfoCard,
                                         eeveeSize = 75.dp
                                     )
-                                    Spacer(modifier = Modifier.height(50.dp))
-
                                 }
-                            }
-                            else ->{
-                                Column(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .padding(5.dp)){
+                                1 ->{
                                     EvolutionBox(
                                         modifier = Modifier.fillMaxSize(),
                                         evolution = evolution)
+                                }
+                                else -> {
+                                    MiscBox(
+                                        modifier = Modifier.fillMaxSize(),
+                                        card = pokeInfoCard
+                                    )
                                 }
                             }
                         }
@@ -367,14 +372,12 @@ fun PokeCardInfo(
             }
         }
     }
-
-
 }
 @Composable
-private fun AttacksBox(pokeInfoCard : PokeInfoCard, eeveeSize : Dp){
+private fun AttacksBox(modifier : Modifier = Modifier,pokeInfoCard : PokeInfoCard, eeveeSize : Dp){
 
         Box(
-            modifier = Modifier,
+            modifier = modifier,
         ){
             Box(
                 modifier = Modifier
@@ -473,7 +476,6 @@ private fun EvolutionBox(
     val spaceEvolutions = localSpacing.spaceSmall
     val eggSize = 60.dp
 
-    Spacer(modifier = Modifier.height(50.dp))
     Box(
 
     ){
@@ -598,10 +600,141 @@ private fun EvolutionBox(
 //        )
     }
 
+
 }
 
+@Composable
+private fun MiscBox(
+    modifier: Modifier = Modifier,
+    card: PokeInfoCard)
+{
 
 
+    Box(
+        modifier = modifier
+    ){
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(20.dp))
+                .background(Color(0x802FA6EB))
+                .padding(horizontal = 15.dp, vertical = 20.dp)
+                .padding(bottom = 15.dp)
+        ){
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                MiscColumn(
+                    modifier = Modifier.weight(1f),
+                    description = "Weakness",
+                    card = card
+                )
+                MiscColumn(
+                    modifier = Modifier
+                        .weight(1f)
+
+                    ,
+                    description = "Resistance",
+                    card = card
+                )
+                MiscColumn(
+                    modifier = Modifier.weight(1f),
+                    description = "Retreat cost",
+                    card = card
+                )
+
+            }
+
+        }
+    }
+}
+@Composable
+private fun MiscColumn(
+    modifier : Modifier = Modifier,
+    description: String,
+    card: PokeInfoCard){
+    Box(){
+        Column(
+            modifier = modifier,
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            val typeSize = 20.dp
+            val spacerDp = LocalSpacing.current.spaceExtraSmall
+
+
+            Text(
+                text = description,
+                color = MaterialTheme.colorScheme.background,
+                fontSize = 14.sp,
+                letterSpacing = 0.1.sp
+
+                )
+            Spacer(modifier = Modifier.height(spacerDp))
+            when(description){
+                "Weakness"->{
+                   if(card.weakness!=null){
+                        Image(
+                            painter = painterResource(id = Symbol.fromString(card.weakness).drawable),
+                            contentDescription = "",
+                            modifier = Modifier.size(typeSize)
+                        )
+                    }else {
+                       Spacer(modifier = Modifier.size(typeSize))
+
+                   }
+                }
+                "Resistance" -> {
+                    if(card.resistanceType!=null && card.resistanceValue!=null){
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            Image(
+                                painter =painterResource(id = Symbol.fromString(card.resistanceType).drawable),
+                                contentDescription = "",
+                                modifier = Modifier.size(typeSize)
+                            )
+                            Spacer(modifier = Modifier.width(5.dp))
+
+                            Text(
+                              
+                                text = card.resistanceValue,
+                                color = MaterialTheme.colorScheme.background,
+                                fontSize = 14.sp
+                            )
+
+                        }
+                    }else{
+                        Spacer(modifier = Modifier.size(typeSize))
+                    }
+                }
+                else -> {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ){
+                        if(card.retreatCost!=null) {
+                            card.retreatCost.forEach {type ->
+                                Image(
+                                    painter = painterResource(id = Symbol.fromString(type).drawable),
+                                    contentDescription = "",
+                                    modifier = Modifier.size(typeSize)
+                                )
+                            }
+                        }else{
+                            Spacer(modifier = Modifier.size(typeSize))
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+}
 
 fun stringWithThreeDigits(number : Int):String{
     return when (number.toString().length){

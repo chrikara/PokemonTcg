@@ -35,8 +35,7 @@ class PokeCardInfoViewModel @Inject constructor(
         private set
 
     init {
-        val pokeId = savedStateHandle.get<String>("pokeId") ?: "base1-1"
-        println(pokeId)
+        val pokeId = savedStateHandle.get<String>("pokeId") ?: "base1-4"
         getPokeCardInfoByPokemonIdFromAPI(pokeId)
     }
     fun onChangeSize(size : Dp){
