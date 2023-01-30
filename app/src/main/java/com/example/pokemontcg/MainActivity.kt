@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(
                     navController = navController,
-                    startDestination = Screen.Welcome.route
+                    startDestination = Screen.ModifyDeck.route + "/{deckNumber}"
                 ){
                     composable(route = Screen.Welcome.route){
                         WelcomeScreen(onNavigate = navController::navigate)

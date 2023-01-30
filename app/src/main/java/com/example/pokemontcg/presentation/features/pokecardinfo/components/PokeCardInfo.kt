@@ -66,6 +66,9 @@ import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.pager.ExperimentalPagerApi
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.runtime.rememberCoroutineScope
+import com.example.pokemontcg.domain.model.Evolution
+import com.example.pokemontcg.presentation.features.createdecks.use_cases.AllMyDeckUseCases
+import com.example.pokemontcg.util.Pokedex
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.myPagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
@@ -77,7 +80,7 @@ fun PokeCardInfo(
     pokeInfoCard : PokeInfoCard,
     navController: NavController,
     initialSize : Dp = 1000.dp,
-    onSize : (Dp) -> Unit
+    onSize : (Dp) -> Unit,
 
 ) {
 
@@ -100,7 +103,6 @@ fun PokeCardInfo(
 
     LaunchedEffect(key1 = true){
         sizeState = 200.dp
-        println(sizeState)
     }
 
     val pagerState = rememberPagerState()
@@ -112,8 +114,7 @@ fun PokeCardInfo(
     LazyColumn(
         modifier = Modifier
             .background(Color(0xFFD2DBE4))
-            .fillMaxSize()
-            .padding(10.dp),
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ){
 
@@ -330,19 +331,27 @@ fun PokeCardInfo(
 
                     ) {page ->
 
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(5.dp)
-                        ) {
-                            Spacer(modifier = Modifier.height(50.dp))
-                            AttacksBox(
-                                pokeInfoCard = pokeInfoCard,
-                                eeveeSize = 75.dp
-                            )
-                            Spacer(modifier = Modifier.height(50.dp))
+                        when(page){
+                            0 ->{
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(5.dp)
+                                ) {
+                                    Spacer(modifier = Modifier.height(50.dp))
+                                    AttacksBox(
+                                        pokeInfoCard = pokeInfoCard,
+                                        eeveeSize = 75.dp
+                                    )
+                                    Spacer(modifier = Modifier.height(50.dp))
+
+                                }
+                            }
+                            else ->{
+                            }
 
                         }
+
                             
 
                     }
@@ -451,6 +460,37 @@ private fun Attack(attack: Attack){
             )
     }
 }
+
+@Composable
+private fun EvolutionBox(
+    modifier : Modifier = Modifier,
+    pokeInfoCard: PokeInfoCard,
+    onApiCall : (String) -> Boolean
+){
+    var evolution = Evolution.returnEvolution(pokeInfoCard.evolvesFrom, pokeInfoCard.evolvesTo)
+    Column(
+        modifier = modifier
+    ) {
+
+        if(evolution is Evolution.From){
+            val evolvesToPokemon = pokeInfoCard.evolvesTo
+            val baseIdOfNextEvolution = Pokedex.getKeyByPokemonName(Pokedex.pokedexBaseIdtoNameHash, evolvesToPokemon!!)!!
+
+            onApiCall(baseIdOfNextEvolution)
+
+            println(onApiCall(baseIdOfNextEvolution))
+
+        }
+
+
+
+
+        }
+
+    }
+
+
+
 
 fun stringWithThreeDigits(number : Int):String{
     return when (number.toString().length){

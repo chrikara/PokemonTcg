@@ -45,7 +45,7 @@ class ModifyDeckViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
-        val deckNumber = DeckNumber.fromInt(savedStateHandle.get<Int>("deckNumber")!!)
+        val deckNumber = DeckNumber.fromInt(savedStateHandle.get<Int>("deckNumber") ?: 1)
         getCardsForOneDeck(deckNumber)
         getAllAvailableCardsFromAPI()
     }
