@@ -41,6 +41,7 @@ fun ModifyDeckScreen(
     deckNumber: Int
 ) {
     val deck = DeckNumber.fromInt(deckNumber)
+    println(deckNumber)
 
     LaunchedEffect(key1 = true){
         viewModel.uiEvent.collect{event ->
@@ -108,7 +109,9 @@ fun ModifyDeckScreen(
                     image = cardOverview.imgString,
                     totalCounts = state.savedCardList.count{it.pokemonId == cardOverview.id },
                     onShowInfo = { navController.navigate(Screen.PokeCardInfo.route + "/${cardOverview.id}")},
-                    onAddCard = { viewModel.onEvent(ModifyDeckEvent.OnInsertToChosenDeck(
+                    onAddCard = {
+
+                        viewModel.onEvent(ModifyDeckEvent.OnInsertToChosenDeck(
                         deck = deck ,
                         cardOverview = cardOverview,
                         snackbarHostState = snackbarHostState))},

@@ -29,8 +29,8 @@ class PokemonCardsRepositoryImpl(
         return dao.deletePokemonFromDeck(cardSaved.toPokemonEntity())
     }
 
-    override suspend fun insertCardPokemonToDeck(entity: PokemonEntity) {
-        return dao.insertPokemonToDeck(entity)
+    override suspend fun insertCardPokemonToDeck(cardSaved: PokemonEntity) {
+        return dao.insertPokemonToDeck(cardSaved)
     }
 
     override fun getPokemonFromDeck(): Flow<List<CardSaved>> {

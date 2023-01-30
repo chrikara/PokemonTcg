@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(
                     navController = navController,
-                    startDestination = Screen.ModifyDeck.route + "/{deckNumber}"
+                    startDestination = Screen.PokeCardInfo.route + "/{pokeId}"
                 ){
                     composable(route = Screen.Welcome.route){
                         WelcomeScreen(onNavigate = navController::navigate)
@@ -73,7 +73,6 @@ class MainActivity : ComponentActivity() {
                         )
                     ){
                         val deckNumber = it.arguments?.getInt("deckNumber") ?: 1
-                        println("DeckNumber $deckNumber")
                         ChosenDeckScreen(
                             deckNumber = deckNumber,
                             onNavigate = navController::navigate

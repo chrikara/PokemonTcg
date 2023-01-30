@@ -60,6 +60,7 @@ class ModifyDeckViewModel @Inject constructor(
                 deletePokemonFromDeck(cardOverview = event.cardOverview)
             }
             is ModifyDeckEvent.OnInsertToChosenDeck -> {
+                println(state.savedCardList)
                 insertPokemonToDeck(
                     deckNumber = event.deck,
                     card = event.cardOverview,
@@ -149,6 +150,7 @@ class ModifyDeckViewModel @Inject constructor(
     ){
         viewModelScope.launch {
                 if(state.savedCardList.size  <  TOTAL_DECK_CARDS_GLOBAL){
+                    println("MPIKE")
                     insertToDeck(
                         deckNumber = deckNumber,
                         card = card,

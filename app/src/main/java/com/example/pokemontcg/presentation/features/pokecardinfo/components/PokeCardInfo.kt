@@ -348,6 +348,12 @@ fun PokeCardInfo(
                                 }
                             }
                             else ->{
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(5.dp)){
+
+                                }
                             }
 
                         }
@@ -465,24 +471,12 @@ private fun Attack(attack: Attack){
 private fun EvolutionBox(
     modifier : Modifier = Modifier,
     pokeInfoCard: PokeInfoCard,
-    onApiCall : (String) -> Boolean
+    evolution: Evolution
 ){
-    var evolution = Evolution.returnEvolution(pokeInfoCard.evolvesFrom, pokeInfoCard.evolvesTo)
+
     Column(
         modifier = modifier
     ) {
-
-        if(evolution is Evolution.From){
-            val evolvesToPokemon = pokeInfoCard.evolvesTo
-            val baseIdOfNextEvolution = Pokedex.getKeyByPokemonName(Pokedex.pokedexBaseIdtoNameHash, evolvesToPokemon!!)!!
-
-            onApiCall(baseIdOfNextEvolution)
-
-            println(onApiCall(baseIdOfNextEvolution))
-
-        }
-
-
 
 
         }

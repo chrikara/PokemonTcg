@@ -7,13 +7,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pokemontcg.data.remote.api.dto.cardoverviewdto.Data
-import com.example.pokemontcg.domain.model.CardOverview
 import com.example.pokemontcg.domain.model.Evolution
 import com.example.pokemontcg.domain.model.cardinfo.EnergyInfoCard
 import com.example.pokemontcg.domain.model.cardinfo.PokeInfoCard
 import com.example.pokemontcg.domain.model.cardinfo.SuperType
-import com.example.pokemontcg.domain.model.cardinfo.TrainerInfoCard
 import com.example.pokemontcg.presentation.features.createdecks.use_cases.AllMyDeckUseCases
 import com.example.pokemontcg.util.Pokedex
 import com.example.pokemontcg.util.Pokedex.getKeyByPokemonName
@@ -21,15 +18,11 @@ import com.example.pokemontcg.util.Pokedex.pokedexBaseIdtoNameHash
 import com.example.pokemontcg.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.flatMap
 import kotlinx.coroutines.flow.flatMapConcat
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
 
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,6 +36,7 @@ class PokeCardInfoViewModel @Inject constructor(
 
     init {
         val pokeId = savedStateHandle.get<String>("pokeId") ?: "base1-1"
+        println(pokeId)
         getPokeCardInfoByPokemonIdFromAPI(pokeId)
     }
     fun onChangeSize(size : Dp){
@@ -102,24 +96,48 @@ class PokeCardInfoViewModel @Inject constructor(
             flow.flatMapConcat {result ->
                 when(result){
                     is Resource.Success ->{
-                        val evolution = Evolution.returnEvolution(result.data?.evolvesFrom,result.data?.evolvesTo?.get(0))
+
+                        val evolvesFromName = result.data?.evolvesFrom
+                        val initialName = result.data?.name!!
+                        val evolvesToName = result.data.evolvesTo?.get(0)
+
+
+                        val evolution = Evolution.returnEvolution(evolvesFromName,evolvesToName)
 
                         println(evolution)
                         when(evolution){
                             is Evolution.None -> state = state.copy(evolution = Evolution.None)
-                            is Evolution.Both -> state = state.copy(evolution = Evolution.Both)
+                            is Evolution.Both -> state = state.copy(evolution = Evolution.Both(
+                                from = evolveUrl(evolvesFromName!!),
+                                to = evolveUrl(evolvesToName!!),
+                                initial = evolveUrl(initialName)
+                            ))
                             is Evolution.From ->{
-                                val evolvesFrom = result.data?.evolvesFrom
 
-                                val baseId = getKeyByPokemonName(pokedexBaseIdtoNameHash, evolvesFrom!! )!!
-                                allMyDeckUseCases.getPokemonInfoFromAPIUseCase(baseId).onEach {
-                                    when (it){
+
+
+                                val baseId = getKeyByPokemonName(pokedexBaseIdtoNameHash, evolvesFromName!! )!!
+                                allMyDeckUseCases.getPokemonInfoFromAPIUseCase(baseId).onEach { result2->
+                                    when (result2){
                                         is Resource.Success ->{
-                                            val evolution2 = Evolution.returnEvolution(it.data?.evolvesFrom,it.data?.evolvesTo?.get(0))
+                                            val evolvesFromName2 = result2.data?.evolvesFrom
+                                            val evolvesToName2 = result2.data?.evolvesTo?.get(0)
+                                            val evolution2 = Evolution.returnEvolution(
+                                                evolvesFromName2,
+                                                evolvesToName2
+                                            )
 
                                             when(evolution2){
-                                                is Evolution.Both -> state = state.copy(evolution = Evolution.Both)
-                                                else -> state = state.copy(evolution = Evolution.From)
+                                                is Evolution.Both -> state = state.copy(evolution = Evolution.Both(
+                                                    from = evolveUrl(evolvesFromName2!!),
+                                                    initial = evolveUrl(result2.data.name),
+                                                    to = evolveUrl(evolvesToName2!!),
+                                                )
+                                                )
+                                                else -> state = state.copy(evolution = Evolution.From(
+                                                    from =  evolveUrl(evolvesFromName2!!),
+                                                    initial = evolveUrl(initialName)
+                                                ))
                                             }
                                         }
                                         else -> {}
@@ -128,19 +146,31 @@ class PokeCardInfoViewModel @Inject constructor(
                             }
 
                             is Evolution.To -> {
-                                val evolvesTo = result.data?.evolvesTo?.get(0)
-                                val baseId = getKeyByPokemonName(pokedexBaseIdtoNameHash, evolvesTo!!)?: kotlin.run {
+                                val baseId = getKeyByPokemonName(pokedexBaseIdtoNameHash, evolvesFromName!! ) ?: kotlin.run {
                                     state = state.copy(evolution = Evolution.None)
                                    return@flatMapConcat flowOf(Unit)
                                 }
-                                allMyDeckUseCases.getPokemonInfoFromAPIUseCase(baseId).onEach {
-                                    when (it){
+                                allMyDeckUseCases.getPokemonInfoFromAPIUseCase(baseId).onEach { result2 ->
+                                    when (result2){
                                         is Resource.Success ->{
-                                            val evolution2 = Evolution.returnEvolution(it.data?.evolvesFrom,it.data?.evolvesTo?.get(0))
+                                            val evolvesFromName2 = result2.data?.evolvesFrom
+                                            val evolvesToName2 = result2.data?.evolvesTo?.get(0)
+                                            val evolution2 = Evolution.returnEvolution(
+                                                evolvesFromName2,
+                                                evolvesToName2
+                                            )
 
                                             when(evolution2){
-                                                is Evolution.Both -> state = state.copy(evolution = Evolution.Both)
-                                                else -> state = state.copy(evolution = Evolution.To)
+                                                is Evolution.Both -> state = state.copy(evolution = Evolution.Both(
+                                                    from = evolveUrl(evolvesFromName2!!),
+                                                    initial = evolveUrl(result2.data.name),
+                                                    to = evolveUrl(evolvesToName2!!),
+                                                ))
+                                                else -> state = state.copy(evolution = Evolution.To(
+                                                    initial = initialName,
+                                                    to =  evolveUrl(evolvesToName2!!),
+                                                    )
+                                                )
                                             }
                                         }
                                         else -> {}
@@ -166,4 +196,24 @@ class PokeCardInfoViewModel @Inject constructor(
             }
         }.launchIn(viewModelScope)
     }
+
 }
+
+
+private fun evolveUrl(pokeName : String) : String{
+
+    val dexString = getKeyByPokemonName(Pokedex.pokedexNationaltoNameHash,pokeName )!!
+
+    return when(dexString.length){
+        1 -> "https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/00$dexString.png"
+        2 -> "https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/0$dexString.png"
+        else ->"https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/$dexString.png"
+    }
+}
+//private fun evolveUrl(dexString: String) : String{
+//    return when(dexString.length){
+//        1 -> "https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/00$dexString.png"
+//        2 -> "https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/0$dexString.png"
+//        else ->"https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/$dexString.png"
+//    }
+//}
