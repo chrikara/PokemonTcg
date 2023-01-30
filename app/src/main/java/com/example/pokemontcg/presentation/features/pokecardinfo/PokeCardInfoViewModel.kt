@@ -101,18 +101,28 @@ class PokeCardInfoViewModel @Inject constructor(
                         val initialName = result.data?.name!!
                         val evolvesToName = result.data.evolvesTo?.get(0)
 
-                        println(evolvesFromName)
                         val evolution = Evolution.returnEvolution(evolvesFromName,evolvesToName)
 
-                        println(evolution)
+
                         when(evolution){
                             is Evolution.None -> state = state.copy(evolution = Evolution.None(initial = evolveUrl(initialName)))
-                            is Evolution.Both -> state = state.copy(evolution = Evolution.Both(
+                            is Evolution.Both -> {
+                                val baseId = getKeyByPokemonName(pokedexBaseIdtoNameHash, evolvesToName!! ) ?: kotlin.run {
+                                    state = state.copy(
+                                        evolution = Evolution.From(
+                                            from = evolveUrl(evolvesFromName!!),
+                                            initial = evolveUrl(initialName)
+                                        )
+                                    )
+                                    return@flatMapConcat flowOf(Unit)
+                                }
+                                state = state.copy(evolution = Evolution.Both(
 
-                                from = evolveUrl(evolvesFromName!!),
-                                to = evolveUrl(evolvesToName!!),
-                                initial = evolveUrl(initialName)
-                            ))
+                                    from = evolveUrl(evolvesFromName!!),
+                                    to = evolveUrl(evolvesToName),
+                                    initial = evolveUrl(initialName)
+                                ))
+                            }
                             is Evolution.From ->{
 
 
@@ -129,6 +139,7 @@ class PokeCardInfoViewModel @Inject constructor(
                                             )
 
                                             when(evolution2){
+
                                                 is Evolution.Both -> state = state.copy(evolution = Evolution.Both(
                                                     from = evolveUrl(evolvesFromName2!!),
                                                     initial = evolveUrl(result2.data.name),
@@ -157,19 +168,33 @@ class PokeCardInfoViewModel @Inject constructor(
                                     when (result2){
                                         is Resource.Success ->{
                                             val evolvesFromName2 = result2.data?.evolvesFrom
-                                            println(evolvesFromName2)
                                             val evolvesToName2 = result2.data?.evolvesTo?.get(0)
                                             val evolution2 = Evolution.returnEvolution(
                                                 evolvesFromName2,
                                                 evolvesToName2
                                             )
 
+
+
                                             when(evolution2){
-                                                is Evolution.Both -> state = state.copy(evolution = Evolution.Both(
-                                                    from = evolveUrl(evolvesFromName2!!),
-                                                    initial = evolveUrl(result2.data.name),
-                                                    to = evolveUrl(evolvesToName2!!),
-                                                ))
+                                                is Evolution.Both -> {
+                                                    evolveUrl(evolvesToName2!!) ?: kotlin.run {
+                                                        state = state.copy(
+                                                            evolution = Evolution.To(
+                                                                initial = evolveUrl(evolvesFromName2!!),
+                                                                to = evolveUrl(result2.data.name),
+                                                            )
+                                                        )
+                                                        return@onEach
+                                                    }
+
+                                                    state = state.copy(evolution = Evolution.Both(
+                                                        from = evolveUrl(evolvesFromName2!!),
+                                                        initial = evolveUrl(result2.data.name),
+                                                        to = evolveUrl(evolvesToName2!!),
+                                                    )
+                                                    )
+                                                }
                                                 else -> state = state.copy(evolution = Evolution.To(
                                                     initial = evolveUrl(initialName),
                                                     to =  evolveUrl(result2.data?.name!!),
@@ -204,9 +229,9 @@ class PokeCardInfoViewModel @Inject constructor(
 }
 
 
-private fun evolveUrl(pokeName : String) : String{
+private fun evolveUrl(pokeName : String) : String?{
 
-    val dexString = getKeyByPokemonName(Pokedex.pokedexNationaltoNameHash,pokeName )!!
+    val dexString = getKeyByPokemonName(Pokedex.pokedexNationaltoNameHash,pokeName ) ?: return null
 
     return when(dexString.length){
         1 -> "https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/00$dexString.png"
