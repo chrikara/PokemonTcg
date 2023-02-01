@@ -330,7 +330,7 @@ fun PokeCardInfo(
 
                     }
                 }
-                    Spacer(modifier = Modifier.height(40.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
                     HorizontalPager(
                         count = tabItems.size,
                         state = pagerState,
@@ -349,12 +349,14 @@ fun PokeCardInfo(
 
                             when(page){
                                 0 ->{
+                                    Spacer(modifier = Modifier.height(30.dp))
                                     AttacksBox(
                                         pokeInfoCard = pokeInfoCard,
                                         eeveeSize = 75.dp
                                     )
                                 }
                                 1 ->{
+                                    Spacer(modifier = Modifier.height(30.dp))
                                     EvolutionBox(
                                         modifier = Modifier.fillMaxSize(),
                                         evolution = evolution)
