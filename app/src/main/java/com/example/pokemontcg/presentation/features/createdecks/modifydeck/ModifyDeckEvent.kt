@@ -18,6 +18,8 @@ sealed class ModifyDeckEvent(){
 
     data class OnSearch(val query : String) : ModifyDeckEvent()
     data class OnFocused(val focusState : FocusState) : ModifyDeckEvent()
+    data class OnSearchBarClicked(val focusState: FocusState) : ModifyDeckEvent()
+    object OnBackPressed : ModifyDeckEvent()
     data class OnTextFieldChange(val query : String) : ModifyDeckEvent()
     object OnSearchBarExpanded : ModifyDeckEvent()
 

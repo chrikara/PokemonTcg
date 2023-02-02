@@ -2,7 +2,9 @@
 
 package com.example.pokemontcg.presentation.features.createdecks.modifydeck
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,6 +23,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -40,8 +44,9 @@ fun ModifyDeckScreen(
     viewModel: ModifyDeckViewModel = hiltViewModel(),
     deckNumber: Int
 ) {
+    val focusManager = LocalFocusManager.current
+
     val deck = DeckNumber.fromInt(deckNumber)
-    println(deckNumber)
 
     LaunchedEffect(key1 = true){
         viewModel.uiEvent.collect{event ->
@@ -59,6 +64,7 @@ fun ModifyDeckScreen(
     }
 
     val state = viewModel.state
+    println(state)
 
     Column(modifier = Modifier
         .fillMaxSize()
@@ -82,11 +88,26 @@ fun ModifyDeckScreen(
             },
             onFocusChange = {
                 viewModel.onEvent(ModifyDeckEvent.OnFocused(it))
+                viewModel.onEvent(ModifyDeckEvent.OnSearchBarClicked(it))
             },
             isHintVisible = state.isHintVisible,
-            onSearchBarToggled = {
+            isHeaderVisible = state.isHeaderVisible,
+            onSearchIconClicked = {
                 viewModel.onEvent(ModifyDeckEvent.OnSearchBarExpanded)
+            },
+            onBackPressed = {
+                viewModel.onEvent(ModifyDeckEvent.OnBackPressed)
+                focusManager.clearFocus()
             }
+        )
+
+        BackHandler(
+            enabled = !state.isHeaderVisible,
+            onBack = {
+                viewModel.onEvent(ModifyDeckEvent.OnBackPressed)
+                focusManager.clearFocus()
+            }
+
         )
 
         if(state.isLoading) {
@@ -101,7 +122,18 @@ fun ModifyDeckScreen(
         }
 
         LazyVerticalGrid(
-            columns = GridCells.Fixed(2)){
+            modifier = Modifier
+                .alpha(if(!state.isHeaderVisible && state.query.isBlank()) 0.5f else 1f)
+                .clickable(
+                    enabled = !state.isHeaderVisible && state.query.isBlank(),
+                    onClick = {
+                        viewModel.onEvent(ModifyDeckEvent.OnBackPressed)
+                        focusManager.clearFocus()
+                    }
+                )
+            ,
+            columns = GridCells.Fixed(2)
+        ){
 
             items(state.cardList){ cardOverview ->
 

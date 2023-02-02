@@ -13,5 +13,6 @@ data class ModifyDeckState(
 
     val query : String = "",
     val isHintVisible : Boolean = true,
-    val isSearchBarExpanded: Boolean = false
+    val isSearchBarExpanded: Boolean = false,
+    val isHeaderVisible : Boolean  = true
 )

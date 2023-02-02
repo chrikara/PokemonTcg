@@ -87,7 +87,6 @@ class ModifyDeckViewModel @Inject constructor(
                     )
                 }
 
-
             }
             is ModifyDeckEvent.OnTextFieldChange -> {
                 state = state.copy(
@@ -106,6 +105,20 @@ class ModifyDeckViewModel @Inject constructor(
                         cardList = cardListFromAPIWithAllCards
                     )
                 }
+            }
+
+            is ModifyDeckEvent.OnSearchBarClicked -> {
+                state = state.copy(
+                    isHeaderVisible = !event.focusState.isFocused
+                )
+            }
+
+            ModifyDeckEvent.OnBackPressed -> {
+                state = state.copy(
+                    isHeaderVisible = true,
+                    query = "",
+                    cardList = cardListFromAPIWithAllCards
+                )
             }
         }
     }

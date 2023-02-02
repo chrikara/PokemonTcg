@@ -54,6 +54,7 @@ fun SearchTextField(
                 .padding(horizontal = 20.dp, vertical = 10.dp)
                 .onFocusChanged { onFocusChange(it) }
             ,
+
             singleLine = true
         )
 
