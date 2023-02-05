@@ -26,6 +26,12 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    fun onNextGymClick(){
+        viewModelScope.launch {
+            _uiEvent.send(UiEvent.Navigate(Screen.Gym.route))
+        }
+    }
+
 
 
 }

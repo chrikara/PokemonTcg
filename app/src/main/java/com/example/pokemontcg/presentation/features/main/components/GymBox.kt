@@ -1,9 +1,7 @@
 package com.example.pokemontcg.presentation.features.main.components
 
-import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.VectorConverter
-import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateValue
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
@@ -18,7 +16,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -32,7 +29,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -41,7 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.example.pokemontcg.ui.theme.BlueAlpha
-import com.example.pokemontcg.ui.theme.BlueAlpha30
+import com.example.pokemontcg.ui.theme.BlueAlpha20
 import com.example.pokemontcg.ui.theme.LocalSpacing
 
 
@@ -76,7 +72,7 @@ fun GymBox(
             .fillMaxWidth()
             .alpha(if (isEnabled) 1f else 0.3f)
             .clip(RoundedCornerShape(spacing.clipSmall))
-            .background(BlueAlpha30)
+            .background(BlueAlpha20)
             .border(
                 width = 1.dp,
                 color = BlueAlpha,

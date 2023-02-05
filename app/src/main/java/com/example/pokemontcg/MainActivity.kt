@@ -19,10 +19,12 @@ import androidx.navigation.navArgument
 import com.example.pokemontcg.presentation.features.createdecks.chosendeck.ChosenDeckScreen
 import com.example.pokemontcg.presentation.features.createdecks.modifydeck.ModifyDeckScreen
 import com.example.pokemontcg.presentation.features.createdecks.alldecks.AllDecksScreen
+import com.example.pokemontcg.presentation.features.gyms.GymScreen
 import com.example.pokemontcg.presentation.features.main.MainScreen
 import com.example.pokemontcg.presentation.features.pokecardinfo.PokeCardInfoScreen
 import com.example.pokemontcg.presentation.features.welcome.WelcomeScreen
 import com.example.pokemontcg.ui.theme.PokemonTcgTheme
+import com.example.pokemontcg.util.navigation.EnterAnimation
 import com.example.pokemontcg.util.navigation.Screen
 import com.example.pokemontcg.util.navigation.navigate
 import dagger.hilt.android.AndroidEntryPoint
@@ -47,64 +49,74 @@ class MainActivity : ComponentActivity() {
                 ) {
 
 
-                NavHost(
-                    navController = navController,
-                    startDestination = Screen.Welcome.route
-                ){
-                    composable(route = Screen.Welcome.route){
-                        WelcomeScreen(onNavigate = navController::navigate)
-                    }
-
-                    composable(route = Screen.Main.route){
-                        MainScreen(onNavigate = { event ->
-                            navController.navigate(event)
-                        })
-                    }
-
-                    composable(route = Screen.AllDecks.route){
-                        AllDecksScreen(navController = navController)
-                    }
-                    composable(
-                        route = Screen.ChosenDeck.route + "/{deckNumber}",
-                        arguments = listOf(
-                            navArgument("deckNumber"){
-                                type = NavType.IntType
-                            }
-                        )
+                    NavHost(
+                        navController = navController,
+                        startDestination = Screen.Gym.route
                     ){
-                        val deckNumber = it.arguments?.getInt("deckNumber") ?: 1
-                        ChosenDeckScreen(
-                            deckNumber = deckNumber,
-                            onNavigate = navController::navigate
-                        )
-                    }
-                    composable(route = Screen.ModifyDeck.route + "/{deckNumber}",
-                        arguments = listOf(
-                            navArgument("deckNumber"){
-                                type = NavType.IntType
+
+                        composable(route = Screen.Welcome.route){
+
+                            WelcomeScreen(onNavigate = navController::navigate)
+
+
+                        }
+
+                        composable(route = Screen.Main.route){
+
+                                MainScreen(onNavigate = { event ->
+                                    navController.navigate(event)
+                                })
                             }
-                        )
+
+
+                        composable(route = Screen.AllDecks.route){
+                            AllDecksScreen(navController = navController)
+                        }
+                        composable(
+                            route = Screen.ChosenDeck.route + "/{deckNumber}",
+                            arguments = listOf(
+                                navArgument("deckNumber"){
+                                    type = NavType.IntType
+                                }
+                            )
                         ){
-                        val deckNumber = it.arguments?.getInt("deckNumber") ?: 1
-                        ModifyDeckScreen(
-                            snackbarHostState = snackbarHostState,
-                            navController = navController,
-                            deckNumber = deckNumber
-                        )
-                    }
+                            val deckNumber = it.arguments?.getInt("deckNumber") ?: 1
+                            ChosenDeckScreen(
+                                deckNumber = deckNumber,
+                                onNavigate = navController::navigate
+                            )
+                        }
+                        composable(route = Screen.ModifyDeck.route + "/{deckNumber}",
+                            arguments = listOf(
+                                navArgument("deckNumber"){
+                                    type = NavType.IntType
+                                }
+                            )
+                            ){
+                            val deckNumber = it.arguments?.getInt("deckNumber") ?: 1
+                            ModifyDeckScreen(
+                                snackbarHostState = snackbarHostState,
+                                navController = navController,
+                                deckNumber = deckNumber
+                            )
+                        }
 
-                    composable(route = Screen.PokeCardInfo.route + "/{pokeId}",
-                        arguments = listOf(
-                            navArgument("pokeId"){
-                                type = NavType.StringType
-                            }
-                        )
-                    ){
-                        PokeCardInfoScreen(navController = navController)
-                    }
+                        composable(route = Screen.PokeCardInfo.route + "/{pokeId}",
+                            arguments = listOf(
+                                navArgument("pokeId"){
+                                    type = NavType.StringType
+                                }
+                            )
+                        ){
+                            PokeCardInfoScreen(navController = navController)
+                        }
 
+                        composable(route = Screen.Gym.route){
+                            GymScreen()
+                        }
+
+                    }
                 }
-            }
             }
         }
     }

@@ -17,8 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.pokemontcg.ui.theme.BlueAlpha
-import com.example.pokemontcg.ui.theme.BlueAlpha30
-import kotlin.time.TimeSource
+import com.example.pokemontcg.ui.theme.BlueAlpha20
 
 @Composable
 fun PrimaryButton(
@@ -37,7 +36,7 @@ fun PrimaryButton(
         modifier = modifier
             .alpha(if(enabled) 1f else 0.4f)
             .clip(RoundedCornerShape(25.dp))
-            .background(BlueAlpha30)
+            .background(BlueAlpha20)
             .border(
                 width = 1.dp,
                 color = BlueAlpha,

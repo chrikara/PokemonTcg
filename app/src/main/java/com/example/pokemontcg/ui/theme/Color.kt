@@ -10,8 +10,13 @@ val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
+val GreenButtonColor = Color(0xFF48CA12)
+
 val BlueAlpha = Color(0xFF1F81E9)
-val BlueAlpha30 = Color(0x331F81E9)
+val BlueAlpha20 = Color(0x331F81E9)
+val BlueAlpha40 = Color(0x661F81E9)
+val BlueAlpha60 = Color(0x991F81E9)
+val BlueAlpha80 = Color(0xCC1F81E9)
 
 val TypeColorless = Color(0xFFA8A77A)
 val TypeFire = Color(0xFFEE8130)

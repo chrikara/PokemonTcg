@@ -24,7 +24,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
-import com.example.pokemontcg.ui.theme.BlueAlpha30
+import com.example.pokemontcg.ui.theme.BlueAlpha20
 import com.example.pokemontcg.util.TOTAL_DECK_CARDS_GLOBAL
 
 @Composable
@@ -39,7 +39,7 @@ fun ChoosableDeck(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(15.dp))
-            .background(BlueAlpha30)
+            .background(BlueAlpha20)
             .border(
                 width = 1.dp,
                 color = MaterialTheme.colorScheme.onBackground,

@@ -101,7 +101,7 @@ fun MainScreen(
             }
             items(defaultGyms){gym ->
                 GymBox(
-                    onClick = {},
+                    onClick = viewModel::onNextGymClick,
                     gymValue = gym.value,
                     gymName = gym.name ,
                     isEnabled = gym.enabled,

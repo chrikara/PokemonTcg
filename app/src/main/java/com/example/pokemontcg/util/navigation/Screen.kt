@@ -8,4 +8,5 @@ sealed class Screen(val route: String) {
     object AllDecks : Screen(route = "all_decks_screen")
     object ChosenDeck : Screen(route = "my_deck_screen")
     object PokeCardInfo : Screen(route = "poke_card_info_screen")
+    object Gym : Screen(route = "gym_screen")
 }

@@ -14,11 +14,14 @@ data class Dimensions(
     val spaceMegaLarge : Dp = 40.dp,
     val spaceMegaMegaLarge : Dp = 60.dp,
 
+    val paddingExtraExtraSmall: Dp = 2.dp,
+    val paddingExtraSmall: Dp = 5.dp,
     val paddingSmall: Dp = 10.dp,
     val paddingMedium : Dp = 15.dp,
     val paddingLarge : Dp = 20.dp,
     val paddingMegaLarge : Dp = 40.dp,
 
+    val clipExtraSmall : Dp = 10.dp,
     val clipSmall : Dp = 20.dp,
     val clipMedium : Dp = 40.dp,
     val clipLarge : Dp = 80.dp

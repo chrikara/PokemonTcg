@@ -86,10 +86,9 @@ fun DeckNumberHeader(
             )
             .background(MaterialTheme.colorScheme.secondary)
     ){
+
         Column {
-
             AnimatedVisibility(visible = isHeaderVisible) {
-
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
@@ -118,7 +117,6 @@ fun DeckNumberHeader(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
                             .weight(1f)
-
                     ) {
                         Text(
                             text = when{
@@ -135,7 +133,6 @@ fun DeckNumberHeader(
                         )
                         Spacer(modifier = Modifier.height(10.dp))
 
-
                         DeckNumberGauge(
                             totalCards = totalCards,
                             modifier = Modifier
@@ -147,12 +144,12 @@ fun DeckNumberHeader(
                             initialRatio = initialRatio
                         )
                     }
+
                     Spacer(modifier = Modifier.width(15.dp))
 
                     if(hasSearchBar){
                         Image(
-                            imageVector = Icons.Default.Search
-                            ,
+                            imageVector = Icons.Default.Search,
                             contentDescription = "",
                             modifier = Modifier
                                 .size(70.dp)
@@ -161,9 +158,7 @@ fun DeckNumberHeader(
                                 )
                                 .clickable { onSearchIconClicked() }
                                 .background(if (isSearchBarExpanded) Color(0x26FFFFFF) else Color.Transparent)
-                                .padding(spacing.paddingMedium)
-
-                            ,
+                                .padding(spacing.paddingMedium),
                             colorFilter = ColorFilter.tint(Color.White)
                         )
                     }else{
@@ -173,7 +168,6 @@ fun DeckNumberHeader(
                             contentDescription = "",
                             modifier = Modifier
                                 .size(70.dp)
-                            ,
                         )
                     }
 
