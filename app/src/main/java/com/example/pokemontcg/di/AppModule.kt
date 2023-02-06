@@ -1,10 +1,14 @@
 package com.example.pokemontcg.di
 
 import android.app.Application
+import android.content.Context.MODE_PRIVATE
+import android.content.SharedPreferences
 import androidx.room.Room
 import com.example.pokemontcg.data.local.PokemonTcgDatabase
+import com.example.pokemontcg.data.preferences.DefaultPreferences
 import com.example.pokemontcg.data.remote.api.PokemonTcgApi
 import com.example.pokemontcg.data.repository.PokemonCardsRepositoryImpl
+import com.example.pokemontcg.domain.preferences.Preferences
 import com.example.pokemontcg.domain.repository.PokemonCardsRepository
 import com.example.pokemontcg.domain.use_cases.FilterOutDeckUseCase
 import com.example.pokemontcg.domain.use_cases.AllMyDeckUseCases
@@ -26,6 +30,25 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+
+    @Provides
+    @Singleton
+    fun provideSharedPreferences(
+        app: Application
+    ): SharedPreferences {
+
+        return app.getSharedPreferences("shared_prefs", MODE_PRIVATE)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDefaultPreferences(
+        sharedPreferences: SharedPreferences
+    ): Preferences {
+
+        return DefaultPreferences(sharedPreferences)
+    }
 
     @Provides
     @Singleton

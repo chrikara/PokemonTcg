@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.TopCenter
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.pokemontcg.presentation.components.PokemonTcgLogo
 import com.example.pokemontcg.ui.theme.LocalSpacing
 import com.example.pokemontcg.util.navigation.Screen
@@ -21,9 +22,11 @@ import com.example.pokemontcg.util.UiEvent
 
 @Composable
 fun WelcomeScreen(
-    onNavigate: (UiEvent.Navigate) -> Unit
-) {
+    onNavigate: (UiEvent.Navigate) -> Unit,
+    viewModel: WelcomeViewModel = hiltViewModel()
+)  {
     val spacing = LocalSpacing.current
+    val state = viewModel.state
 
     Box(modifier = Modifier
         .fillMaxSize()
@@ -44,14 +47,17 @@ fun WelcomeScreen(
                     .padding(horizontal = spacing.paddingLarge)
 
                 ,
-                onClick = { onNavigate(UiEvent.Navigate(Screen.Main.route)) }
+                onClick = {
+                    onNavigate(UiEvent.Navigate(Screen.Main.route))
+                    viewModel.onStartNewGame()
+                }
             )
 
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
 
             PrimaryButton(
                 text = "Continue",
-                enabled = false,
+                enabled = state.hasAlreadyGame,
                 modifier = Modifier
                     .align(CenterHorizontally)
                     .padding(horizontal = spacing.paddingLarge)

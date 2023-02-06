@@ -16,7 +16,6 @@ class InsertPokemonToDeckUseCase @Inject constructor(
         nationalDex : Int
 
     ){
-        println("MPIKEEE $deckNumber")
         repository.insertCardPokemonToDeck(
             PokemonEntity(
                 deckNumber = deckNumber,
