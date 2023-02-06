@@ -18,6 +18,7 @@ val BlueAlpha40 = Color(0x661F81E9)
 val BlueAlpha60 = Color(0x991F81E9)
 val BlueAlpha80 = Color(0xCC1F81E9)
 
+
 val TypeColorless = Color(0xFFA8A77A)
 val TypeFire = Color(0xFFEE8130)
 val TypeWater = Color(0xFF6390F0)

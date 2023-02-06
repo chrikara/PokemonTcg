@@ -36,7 +36,8 @@ import com.example.pokemontcg.ui.theme.GreenButtonColor
 fun ButtonArrow(
     modifier: Modifier = Modifier,
     rotate : Float = 0f,
-    onClick : () -> Unit = {}
+    onClick : () -> Unit,
+    isEnabled : Boolean
 ) {
 
     var isPressed by remember {
@@ -44,7 +45,7 @@ fun ButtonArrow(
     }
     Box(
         modifier = modifier
-            .alpha(if(isPressed) 0.5f else 1f)
+            .alpha(if(isPressed || !isEnabled) 0.5f else 1f)
             .graphicsLayer {
                 rotationZ = rotate
                            },
@@ -53,7 +54,7 @@ fun ButtonArrow(
         Canvas(
             modifier = Modifier
                 .fillMaxSize()
-                .pointerInput(Unit) {
+                .pointerInput(isEnabled) {
                     detectTapGestures(
                         onPress = {
                             isPressed = true

@@ -51,7 +51,7 @@ class MainActivity : ComponentActivity() {
 
                     NavHost(
                         navController = navController,
-                        startDestination = Screen.Gym.route
+                        startDestination = Screen.Welcome.route
                     ){
 
                         composable(route = Screen.Welcome.route){

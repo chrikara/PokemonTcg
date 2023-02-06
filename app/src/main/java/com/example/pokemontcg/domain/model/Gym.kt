@@ -54,3 +54,4 @@ val defaultGyms = listOf<Gym>(
         value = "VIII"
     ),
 )
+
