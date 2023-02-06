@@ -23,14 +23,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -47,8 +45,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import com.example.pokemontcg.domain.model.DeckNumber
-import com.example.pokemontcg.domain.model.defaultPewterOpponents
-import com.example.pokemontcg.domain.model.toInt
+import com.example.pokemontcg.domain.model.defaultOpponents
 import com.example.pokemontcg.domain.model.toNumberString
 import com.example.pokemontcg.presentation.components.ButtonSecondary
 import com.example.pokemontcg.presentation.features.gyms.components.ButtonArrow
@@ -57,7 +54,6 @@ import com.example.pokemontcg.ui.theme.BlueAlpha40
 import com.example.pokemontcg.ui.theme.BlueAlpha80
 import com.example.pokemontcg.ui.theme.LocalSpacing
 import com.example.pokemontcg.util.UiEvent
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -159,7 +155,7 @@ fun GymScreen(
                 AnimatedContent(
                     targetState = state.selectedOpponent,
                     transitionSpec = {
-                        if(defaultPewterOpponents.indexOf(targetState) > defaultPewterOpponents.indexOf(initialState) ){
+                        if(defaultOpponents.indexOf(targetState) > defaultOpponents.indexOf(initialState) ){
                             slideInHorizontally( initialOffsetX = {
                                 it
                             }) with slideOutHorizontally(targetOffsetX = {

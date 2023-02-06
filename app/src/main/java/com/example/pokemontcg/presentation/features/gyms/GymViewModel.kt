@@ -5,11 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pokemontcg.domain.model.CardSaved
-import com.example.pokemontcg.domain.model.DeckNumber
-import com.example.pokemontcg.domain.model.defaultGyms
-import com.example.pokemontcg.domain.model.defaultPewterOpponents
-import com.example.pokemontcg.domain.repository.PokemonCardsRepository
+import com.example.pokemontcg.domain.model.defaultOpponents
 import com.example.pokemontcg.domain.use_cases.AllMyDeckUseCases
 import com.example.pokemontcg.domain.use_cases.FilterOutDeckUseCase
 import com.example.pokemontcg.util.TOTAL_DECK_CARDS_GLOBAL
@@ -39,7 +35,7 @@ class GymViewModel @Inject constructor(
         getCardsFromDb()
 
         state = state.copy(
-            selectedOpponent = defaultPewterOpponents.first(),
+            selectedOpponent = defaultOpponents.first(),
             selectedDeck = defaultDecks.first()
         )
     }
@@ -47,30 +43,30 @@ class GymViewModel @Inject constructor(
     fun onEvent(event: GymEvent){
         when(event){
             is GymEvent.OnNextOpponent ->{
-                if(state.selectedOpponent == defaultPewterOpponents.last()){
+                if(state.selectedOpponent == defaultOpponents.last()){
                     return
                 }
 
-                val currentOpponentIndex = defaultPewterOpponents.indexOf(state.selectedOpponent)
+                val currentOpponentIndex = defaultOpponents.indexOf(state.selectedOpponent)
 
                 state = state.copy(
-                    selectedOpponent = defaultPewterOpponents[currentOpponentIndex + 1],
+                    selectedOpponent = defaultOpponents[currentOpponentIndex + 1],
                     isPreviousOpponentEnabled = true,
-                    isNextOpponentEnabled = if(defaultPewterOpponents[currentOpponentIndex + 1] == defaultPewterOpponents.last()) false else true
+                    isNextOpponentEnabled = if(defaultOpponents[currentOpponentIndex + 1] == defaultOpponents.last()) false else true
                 )
             }
             GymEvent.OnPreviousOpponent -> {
-                if(state.selectedOpponent == defaultPewterOpponents.first()){
+                if(state.selectedOpponent == defaultOpponents.first()){
                     return
                 }
 
-                val currentOpponentIndex = defaultPewterOpponents.indexOf(state.selectedOpponent)
+                val currentOpponentIndex = defaultOpponents.indexOf(state.selectedOpponent)
 
 
 
                 state = state.copy(
-                    selectedOpponent = defaultPewterOpponents[currentOpponentIndex - 1],
-                    isPreviousOpponentEnabled = if(defaultPewterOpponents[currentOpponentIndex-1] == defaultPewterOpponents.first()) false else true,
+                    selectedOpponent = defaultOpponents[currentOpponentIndex - 1],
+                    isPreviousOpponentEnabled = if(defaultOpponents[currentOpponentIndex-1] == defaultOpponents.first()) false else true,
                     isNextOpponentEnabled = true
 
                 )

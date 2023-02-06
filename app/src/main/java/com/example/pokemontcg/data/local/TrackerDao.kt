@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.example.pokemontcg.domain.model.GymOpponent
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -23,5 +24,19 @@ interface TrackerDao {
          """
     )
     fun getPokemonFromDeck() : Flow<List<PokemonEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertGymOpponentToDb(entity: GymOpponentEntity)
+
+    @Delete
+    suspend fun deleteGymOpponentFromDb(entity: GymOpponentEntity)
+
+    @Query(
+        """
+            SELECT *
+            FROM gymopponententity
+         """
+    )
+    fun getAllGymOpponents() : Flow<List<GymOpponentEntity>>
 
 }

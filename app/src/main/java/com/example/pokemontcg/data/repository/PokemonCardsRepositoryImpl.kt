@@ -3,10 +3,13 @@ package com.example.pokemontcg.data.repository
 import com.example.pokemontcg.data.local.entity.PokemonEntity
 import com.example.pokemontcg.data.local.entity.TrackerDao
 import com.example.pokemontcg.data.local.entity.toCardSaved
+import com.example.pokemontcg.data.local.entity.toGymOpponent
+import com.example.pokemontcg.data.local.entity.toGymOpponentEntity
 import com.example.pokemontcg.data.remote.api.PokemonTcgApi
 import com.example.pokemontcg.data.remote.api.dto.cardinfodto.CardInfoDto
 import com.example.pokemontcg.data.remote.api.dto.cardoverviewdto.Cards
 import com.example.pokemontcg.domain.model.CardSaved
+import com.example.pokemontcg.domain.model.GymOpponent
 import com.example.pokemontcg.domain.model.toPokemonEntity
 
 import com.example.pokemontcg.domain.repository.PokemonCardsRepository
@@ -36,6 +39,20 @@ class PokemonCardsRepositoryImpl(
     override fun getPokemonFromDeck(): Flow<List<CardSaved>> {
         return dao.getPokemonFromDeck().map { entities->
             entities.map { it.toCardSaved() }
+        }
+    }
+
+    override suspend fun insertGymOpponent(opponent: GymOpponent) {
+        dao.insertGymOpponentToDb(opponent.toGymOpponentEntity())
+    }
+
+    override suspend fun deleteGymOpponent(opponent: GymOpponent) {
+        dao.deleteGymOpponentFromDb(opponent.toGymOpponentEntity())
+    }
+
+    override fun getAllGymOpponents(): Flow<List<GymOpponent>> {
+        return dao.getAllGymOpponents().map {
+            it.map { entity -> entity.toGymOpponent() }
         }
     }
 }
