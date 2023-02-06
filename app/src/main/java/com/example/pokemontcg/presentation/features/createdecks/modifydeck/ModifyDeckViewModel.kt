@@ -13,7 +13,7 @@ import com.example.pokemontcg.domain.model.cardinfo.SuperType
 import com.example.pokemontcg.domain.model.toInt
 import com.example.pokemontcg.domain.use_cases.FilterOutDeckUseCase
 import com.example.pokemontcg.domain.use_cases.GetCardsUseCase
-import com.example.pokemontcg.presentation.features.createdecks.use_cases.AllMyDeckUseCases
+import com.example.pokemontcg.domain.use_cases.AllMyDeckUseCases
 import com.example.pokemontcg.util.Resource
 import com.example.pokemontcg.util.TOTAL_DECK_CARDS_GLOBAL
 import com.example.pokemontcg.util.UiEvent

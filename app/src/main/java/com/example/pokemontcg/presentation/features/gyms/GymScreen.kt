@@ -26,8 +26,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -54,18 +56,34 @@ import com.example.pokemontcg.presentation.features.gyms.components.GymOpponentB
 import com.example.pokemontcg.ui.theme.BlueAlpha40
 import com.example.pokemontcg.ui.theme.BlueAlpha80
 import com.example.pokemontcg.ui.theme.LocalSpacing
+import com.example.pokemontcg.util.UiEvent
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun GymScreen(
+    snackbarHostState : SnackbarHostState,
     viewModel: GymViewModel = hiltViewModel()
 ) {
 
     val spacing = LocalSpacing.current
     val state = viewModel.state
+    println(state)
 
+    LaunchedEffect(key1 = true){
+        viewModel.uiEvent.collect{event ->
+            when(event){
+                is UiEvent.ShowSnackBar ->{
 
+                    snackbarHostState.showSnackbar(
+                        message = event.message,
+                        withDismissAction = true
+                    )
+                }
+                else -> Unit
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -320,7 +338,8 @@ fun GymScreen(
 
         ButtonSecondary(
             text = "Παίξε!",
-            fontSize = 25.sp
+            fontSize = 25.sp,
+            onClick = { viewModel.onEvent(GymEvent.OnPlay) }
         )
         Spacer(modifier = Modifier.height(spacing.spaceMedium))
 

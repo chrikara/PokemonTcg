@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.pokemontcg.domain.model.CardSaved
 import com.example.pokemontcg.domain.model.DeckNumber
 import com.example.pokemontcg.domain.use_cases.FilterOutDeckUseCase
-import com.example.pokemontcg.presentation.features.createdecks.use_cases.AllMyDeckUseCases
+import com.example.pokemontcg.domain.use_cases.AllMyDeckUseCases
 import com.example.pokemontcg.util.UiEvent
 import com.example.pokemontcg.util.navigation.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -12,5 +12,7 @@ sealed class GymEvent {
     object OnNextDeck : GymEvent()
     object OnPreviousDeck : GymEvent()
 
+    object OnPlay : GymEvent()
+
     data class OnDeckClicked(val deckNumber: DeckNumber) : GymEvent()
 }

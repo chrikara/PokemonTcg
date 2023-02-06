@@ -1,9 +1,13 @@
 package com.example.pokemontcg.presentation.features.gyms
 
+import com.example.pokemontcg.domain.model.CardSaved
 import com.example.pokemontcg.domain.model.DeckNumber
 import com.example.pokemontcg.domain.model.GymOpponent
 
 data class GymState(
+
+
+    val savedCardList : List<CardSaved> = emptyList(),
 
     val isNextOpponentEnabled : Boolean = true,
     val isPreviousOpponentEnabled : Boolean = false,

@@ -33,6 +33,6 @@ val defaultPewterOpponents = listOf<GymOpponent>(
         symbolImage = Symbol.fromString("Fighting").drawable,
         isBoss = true,
         isBeaten = false,
-        isPlayable = true
+        isPlayable = false
     )
 )

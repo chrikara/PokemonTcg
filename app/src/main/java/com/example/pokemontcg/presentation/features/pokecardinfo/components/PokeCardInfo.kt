@@ -19,9 +19,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -69,14 +67,8 @@ import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.pager.ExperimentalPagerApi
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment.Companion.Start
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.unit.Constraints
 import com.example.pokemontcg.domain.model.Evolution
-import com.example.pokemontcg.presentation.features.createdecks.use_cases.AllMyDeckUseCases
 import com.example.pokemontcg.ui.theme.LocalSpacing
-import com.example.pokemontcg.util.Pokedex
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.myPagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState

@@ -112,9 +112,10 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable(route = Screen.Gym.route){
-                            GymScreen()
+                            GymScreen(
+                                snackbarHostState = snackbarHostState
+                            )
                         }
-
                     }
                 }
             }

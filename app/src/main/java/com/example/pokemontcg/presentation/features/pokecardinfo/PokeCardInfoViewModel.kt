@@ -11,7 +11,7 @@ import com.example.pokemontcg.domain.model.Evolution
 import com.example.pokemontcg.domain.model.cardinfo.EnergyInfoCard
 import com.example.pokemontcg.domain.model.cardinfo.PokeInfoCard
 import com.example.pokemontcg.domain.model.cardinfo.SuperType
-import com.example.pokemontcg.presentation.features.createdecks.use_cases.AllMyDeckUseCases
+import com.example.pokemontcg.domain.use_cases.AllMyDeckUseCases
 import com.example.pokemontcg.util.Pokedex
 import com.example.pokemontcg.util.Pokedex.getKeyByPokemonName
 import com.example.pokemontcg.util.Pokedex.pokedexBaseIdtoNameHash
