@@ -8,6 +8,9 @@ data class GymState(
 
 
     val savedCardList : List<CardSaved> = emptyList(),
+    val opponentsForThisGym: List<GymOpponent> = emptyList(),
+
+    val isLoadingDb : Boolean = true,
 
     val isNextOpponentEnabled : Boolean = true,
     val isPreviousOpponentEnabled : Boolean = false,

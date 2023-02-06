@@ -10,8 +10,13 @@ import com.example.pokemontcg.data.remote.api.PokemonTcgApi
 import com.example.pokemontcg.data.repository.PokemonCardsRepositoryImpl
 import com.example.pokemontcg.domain.preferences.Preferences
 import com.example.pokemontcg.domain.repository.PokemonCardsRepository
+import com.example.pokemontcg.domain.use_cases.AllGymOpponentsUseCases
 import com.example.pokemontcg.domain.use_cases.FilterOutDeckUseCase
 import com.example.pokemontcg.domain.use_cases.AllMyDeckUseCases
+import com.example.pokemontcg.domain.use_cases.DeleteAllPokemonCardsUseCase
+import com.example.pokemontcg.domain.use_cases.DeleteOpponentFromDbUseCase
+import com.example.pokemontcg.domain.use_cases.GetAllGymOpponentsUseCase
+import com.example.pokemontcg.domain.use_cases.InsertGymOpponentUseCase
 import com.example.pokemontcg.presentation.features.createdecks.use_cases.DeletePokemonFromDeckUseCase
 import com.example.pokemontcg.presentation.features.createdecks.use_cases.GetPokemonFromDeckUseCase
 import com.example.pokemontcg.presentation.features.createdecks.use_cases.GetPokemonInfoFromAPIUseCase
@@ -106,10 +111,22 @@ object AppModule {
             getPokemonFromDeckUseCase = GetPokemonFromDeckUseCase(repository),
             insertPokemonToDeckUseCase = InsertPokemonToDeckUseCase(repository),
             deletePokemonFromDeckUseCase = DeletePokemonFromDeckUseCase(repository),
-            getPokemonInfoFromAPIUseCase = GetPokemonInfoFromAPIUseCase(repository)
+            deleteAllPokemonCardsUseCase = DeleteAllPokemonCardsUseCase(repository),
+            getPokemonInfoFromAPIUseCase = GetPokemonInfoFromAPIUseCase(repository),
         )
+    }
 
+    @Singleton
+    @Provides
+    fun provideAllGymOpponentsUseCases(
+        repository: PokemonCardsRepository,
+    ): AllGymOpponentsUseCases {
+        return AllGymOpponentsUseCases(
 
+            deleteOpponentFromDbUseCase = DeleteOpponentFromDbUseCase(repository),
+            getAllGymOpponentsUseCase = GetAllGymOpponentsUseCase(repository),
+            insertGymOpponentUseCase = InsertGymOpponentUseCase(repository)
+        )
     }
 
     @Singleton

@@ -46,8 +46,12 @@ class PokemonCardsRepositoryImpl(
         dao.insertGymOpponentToDb(opponent.toGymOpponentEntity())
     }
 
-    override suspend fun deleteGymOpponent(opponent: GymOpponent) {
-        dao.deleteGymOpponentFromDb(opponent.toGymOpponentEntity())
+    override suspend fun deleteAllGymOpponents() {
+        dao.deleteAllGymOpponents()
+    }
+
+    override suspend fun deleteAllPokemonCards() {
+        dao.deleteAllPokemonSavedCards()
     }
 
     override fun getAllGymOpponents(): Flow<List<GymOpponent>> {

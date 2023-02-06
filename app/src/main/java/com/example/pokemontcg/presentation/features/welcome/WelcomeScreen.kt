@@ -50,6 +50,7 @@ fun WelcomeScreen(
                 onClick = {
                     onNavigate(UiEvent.Navigate(Screen.Main.route))
                     viewModel.onStartNewGame()
+                    viewModel.deleteAndInsertDefaultOpponentsInDb()
                 }
             )
 
@@ -62,7 +63,9 @@ fun WelcomeScreen(
                     .align(CenterHorizontally)
                     .padding(horizontal = spacing.paddingLarge)
                 ,
-                onClick = {}
+                onClick = {
+                    onNavigate(UiEvent.Navigate(Screen.Main.route))
+                }
             )
         }
     }

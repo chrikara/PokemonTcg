@@ -19,7 +19,11 @@ interface PokemonCardsRepository {
     fun getPokemonFromDeck() : Flow<List<CardSaved>>
 
     suspend fun insertGymOpponent(opponent: GymOpponent)
-    suspend fun deleteGymOpponent(opponent: GymOpponent)
+    suspend fun deleteAllGymOpponents()
+
+    suspend fun deleteAllPokemonCards()
 
     fun getAllGymOpponents() : Flow<List<GymOpponent>>
+
+
 }

@@ -8,7 +8,7 @@ import com.example.pokemontcg.data.local.entity.TrackerDao
 
 @Database(
     entities = [PokemonEntity::class, GymOpponentEntity::class],
-    version = 1
+    version = 2
 )
 abstract class PokemonTcgDatabase : RoomDatabase() {
 

@@ -3,9 +3,11 @@ package com.example.pokemontcg.presentation.features.gyms
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokemontcg.domain.model.defaultOpponents
+import com.example.pokemontcg.domain.use_cases.AllGymOpponentsUseCases
 import com.example.pokemontcg.domain.use_cases.AllMyDeckUseCases
 import com.example.pokemontcg.domain.use_cases.FilterOutDeckUseCase
 import com.example.pokemontcg.util.TOTAL_DECK_CARDS_GLOBAL
@@ -21,7 +23,9 @@ import javax.inject.Inject
 @HiltViewModel
 class GymViewModel @Inject constructor(
     private val allMyDeckUseCases: AllMyDeckUseCases,
-    private val filterOutDeckUseCase: FilterOutDeckUseCase
+    private val allGymOpponentsUseCases: AllGymOpponentsUseCases,
+    private val filterOutDeckUseCase: FilterOutDeckUseCase,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel(){
 
     var state by mutableStateOf<GymState>(GymState())
@@ -32,41 +36,55 @@ class GymViewModel @Inject constructor(
 
 
     init {
+        val selectedGymName = savedStateHandle.get<String>("gymName") ?: "base1-4"
+
         getCardsFromDb()
+        getOpponentsFromDb(selectedGymName)
 
         state = state.copy(
-            selectedOpponent = defaultOpponents.first(),
             selectedDeck = defaultDecks.first()
         )
+    }
+
+    private fun getOpponentsFromDb(selectedGymName : String) {
+        allGymOpponentsUseCases.getAllGymOpponentsUseCase().onEach { allOpponents->
+            val opponentsForSelectedGym = allOpponents.filter { it.gymName == selectedGymName }
+
+            state = state.copy(
+                opponentsForThisGym = opponentsForSelectedGym,
+                selectedOpponent = opponentsForSelectedGym.first(),
+                isLoadingDb = false
+                )
+        }.launchIn(viewModelScope)
     }
 
     fun onEvent(event: GymEvent){
         when(event){
             is GymEvent.OnNextOpponent ->{
-                if(state.selectedOpponent == defaultOpponents.last()){
+                if(state.selectedOpponent == state.opponentsForThisGym.last()){
                     return
                 }
 
-                val currentOpponentIndex = defaultOpponents.indexOf(state.selectedOpponent)
+                val currentOpponentIndex = state.opponentsForThisGym.indexOf(state.selectedOpponent)
 
                 state = state.copy(
-                    selectedOpponent = defaultOpponents[currentOpponentIndex + 1],
+                    selectedOpponent = state.opponentsForThisGym[currentOpponentIndex + 1],
                     isPreviousOpponentEnabled = true,
-                    isNextOpponentEnabled = if(defaultOpponents[currentOpponentIndex + 1] == defaultOpponents.last()) false else true
+                    isNextOpponentEnabled = if(state.opponentsForThisGym[currentOpponentIndex + 1] == state.opponentsForThisGym.last()) false else true
                 )
             }
             GymEvent.OnPreviousOpponent -> {
-                if(state.selectedOpponent == defaultOpponents.first()){
+                if(state.selectedOpponent == state.opponentsForThisGym.first()){
                     return
                 }
 
-                val currentOpponentIndex = defaultOpponents.indexOf(state.selectedOpponent)
+                val currentOpponentIndex = state.opponentsForThisGym.indexOf(state.selectedOpponent)
 
 
 
                 state = state.copy(
-                    selectedOpponent = defaultOpponents[currentOpponentIndex - 1],
-                    isPreviousOpponentEnabled = if(defaultOpponents[currentOpponentIndex-1] == defaultOpponents.first()) false else true,
+                    selectedOpponent = state.opponentsForThisGym[currentOpponentIndex - 1],
+                    isPreviousOpponentEnabled = if(state.opponentsForThisGym[currentOpponentIndex-1] == state.opponentsForThisGym.first()) false else true,
                     isNextOpponentEnabled = true
 
                 )
@@ -124,6 +142,12 @@ class GymViewModel @Inject constructor(
                         ))
                     }
                     return
+                }
+
+                viewModelScope.launch {
+                    _uiEvent.send(UiEvent.ShowSnackBar(
+                        message = " Ήρθε η ώρα να παίξεις!"
+                    ))
                 }
             }
         }

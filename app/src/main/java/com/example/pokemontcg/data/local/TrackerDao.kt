@@ -28,8 +28,11 @@ interface TrackerDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertGymOpponentToDb(entity: GymOpponentEntity)
 
-    @Delete
-    suspend fun deleteGymOpponentFromDb(entity: GymOpponentEntity)
+    @Query("Delete from gymopponententity")
+    suspend fun deleteAllGymOpponents()
+
+    @Query("Delete from pokemonentity")
+    suspend fun deleteAllPokemonSavedCards()
 
     @Query(
         """

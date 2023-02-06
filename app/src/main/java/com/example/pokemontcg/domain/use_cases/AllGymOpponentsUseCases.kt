@@ -5,10 +5,8 @@ import com.example.pokemontcg.presentation.features.createdecks.use_cases.GetPok
 import com.example.pokemontcg.presentation.features.createdecks.use_cases.GetPokemonInfoFromAPIUseCase
 import com.example.pokemontcg.presentation.features.createdecks.use_cases.InsertPokemonToDeckUseCase
 
-data class AllMyDeckUseCases(
-    val getPokemonInfoFromAPIUseCase: GetPokemonInfoFromAPIUseCase,
-    val getPokemonFromDeckUseCase: GetPokemonFromDeckUseCase,
-    val insertPokemonToDeckUseCase: InsertPokemonToDeckUseCase,
-    val deletePokemonFromDeckUseCase: DeletePokemonFromDeckUseCase,
-    val deleteAllPokemonCardsUseCase : DeleteAllPokemonCardsUseCase
+data class AllGymOpponentsUseCases(
+    val getAllGymOpponentsUseCase: GetAllGymOpponentsUseCase,
+    val insertGymOpponentUseCase: InsertGymOpponentUseCase,
+    val deleteOpponentFromDbUseCase: DeleteOpponentFromDbUseCase
 )

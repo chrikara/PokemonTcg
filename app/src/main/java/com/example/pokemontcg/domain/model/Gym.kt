@@ -12,15 +12,12 @@ val defaultGyms = listOf<Gym>(
     Gym(
         name = "Pewter",
         value = "I",
-        enabled = true,
-        isCurrent = true,
         leaderUrl = "https://www.serebii.net/pokearth//trainers/frlg/30.png",
     ),
     Gym(
         name = "Cerulean",
         value = "II",
         leaderUrl = "https://www.serebii.net/pokearth//trainers/frlg/31.png",
-        enabled = false,
 
     ),
     Gym(

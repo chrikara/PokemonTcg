@@ -111,7 +111,13 @@ class MainActivity : ComponentActivity() {
                             PokeCardInfoScreen(navController = navController)
                         }
 
-                        composable(route = Screen.Gym.route){
+                        composable(route = Screen.Gym.route + "/{gymName}",
+                        arguments = listOf(
+                            navArgument("gymName"){
+                                type = NavType.StringType
+                            }
+                        )
+                        ){
                             GymScreen(
                                 snackbarHostState = snackbarHostState
                             )

@@ -45,11 +45,12 @@ import com.example.pokemontcg.ui.theme.LocalSpacing
 fun GymBox(
     modifier : Modifier = Modifier,
     isEnabled : Boolean = true,
-    onClick : () -> Unit,
+    onClick : (String) -> Unit,
     gymValue : String,
     gymName : String,
     leaderUrl : String,
-    isCurrent : Boolean = false
+    isCurrent : Boolean = false,
+    totalTrainersBeaten : Int
     ) {
 
     val spacing = LocalSpacing.current
@@ -79,7 +80,9 @@ fun GymBox(
                 shape = RoundedCornerShape(spacing.clipSmall)
             )
             .clickable (
-                onClick = onClick,
+                onClick = {
+                    onClick(gymName)
+                },
                 enabled = isEnabled
             )
             .padding(paddingValues)
@@ -141,7 +144,7 @@ fun GymBox(
             Spacer(modifier = Modifier.width(spacing.spaceExtraSmall))
 
             Text(
-                text = "0 / 3",
+                text = "$totalTrainersBeaten / 3",
                 color = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.alpha(0.6f)
             )

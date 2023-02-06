@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CutCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -45,7 +46,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import com.example.pokemontcg.domain.model.DeckNumber
-import com.example.pokemontcg.domain.model.defaultOpponents
 import com.example.pokemontcg.domain.model.toNumberString
 import com.example.pokemontcg.presentation.components.ButtonSecondary
 import com.example.pokemontcg.presentation.features.gyms.components.ButtonArrow
@@ -79,6 +79,11 @@ fun GymScreen(
                 else -> Unit
             }
         }
+    }
+
+    if(state.isLoadingDb){
+        CircularProgressIndicator()
+        return
     }
 
     Column(
@@ -155,7 +160,7 @@ fun GymScreen(
                 AnimatedContent(
                     targetState = state.selectedOpponent,
                     transitionSpec = {
-                        if(defaultOpponents.indexOf(targetState) > defaultOpponents.indexOf(initialState) ){
+                        if(state.opponentsForThisGym.indexOf(targetState) > state.opponentsForThisGym.indexOf(initialState) ){
                             slideInHorizontally( initialOffsetX = {
                                 it
                             }) with slideOutHorizontally(targetOffsetX = {

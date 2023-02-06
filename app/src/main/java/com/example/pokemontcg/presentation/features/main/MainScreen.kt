@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.pokemontcg.R
+import com.example.pokemontcg.data.local.entity.toGymOpponentEntity
 import com.example.pokemontcg.domain.model.defaultGyms
 import com.example.pokemontcg.presentation.features.createdecks.alldecks.components.PokeSprite
 import com.example.pokemontcg.presentation.features.main.components.GymBox
@@ -40,6 +41,8 @@ fun MainScreen(
 ) {
 
     val spacing = LocalSpacing.current
+    val state = viewModel.state
+
 
     LaunchedEffect(key1 = true){
         viewModel.uiEvent.collect{event ->
@@ -101,12 +104,15 @@ fun MainScreen(
             }
             items(defaultGyms){gym ->
                 GymBox(
-                    onClick = viewModel::onNextGymClick,
+                    onClick = {gymName ->
+                              viewModel.onNextGymClick(gymName)
+                    },
                     gymValue = gym.value,
                     gymName = gym.name ,
-                    isEnabled = gym.enabled,
                     leaderUrl = gym.leaderUrl,
-                    isCurrent = gym.isCurrent
+                    isEnabled = isGymEnabled(gymName = gym.name, bossesBeaten = state.opponentsList.count { it.isBoss && it.isBeaten }),
+                    isCurrent = isCurrentGym(gymName = gym.name, bossesBeaten = state.opponentsList.count { it.isBoss && it.isBeaten }),
+                    totalTrainersBeaten = state.opponentsList.count{it.gymName == gym.name && it.isBeaten}
                 )
                 Spacer(modifier = Modifier.height(14.dp))
             }
@@ -126,4 +132,32 @@ fun MainScreen(
         }
     )
 
+
+}
+
+private fun isGymEnabled(gymName : String, bossesBeaten : Int) : Boolean{
+    return when(gymName){
+        "Pewter" -> true
+        "Cerulean" -> bossesBeaten >= 1
+        "Vermillion" -> bossesBeaten >= 2
+        "Celadon" -> bossesBeaten >= 3
+        "Fuschia" -> bossesBeaten >= 4
+        "Saffron" -> bossesBeaten >= 5
+        "Cinnabar" -> bossesBeaten >= 6
+        else -> bossesBeaten >= 7
+    }
+}
+
+private fun isCurrentGym(gymName : String, bossesBeaten : Int) : Boolean{
+    return when(gymName){
+        "Pewter" -> bossesBeaten == 0
+        "Cerulean" -> bossesBeaten == 1
+        "Vermillion" -> bossesBeaten  == 2
+        "Celadon" -> bossesBeaten  == 3
+        "Fuschia" -> bossesBeaten  == 4
+        "Saffron" -> bossesBeaten  == 5
+        "Cinnabar" -> bossesBeaten  == 6
+        "Viridian" -> bossesBeaten == 7
+        else -> false
+    }
 }
