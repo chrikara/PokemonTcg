@@ -9,7 +9,6 @@ data class GymOpponent(
     val symbolImage : Int,
     val isBoss : Boolean ,
     val isBeaten : Boolean ,
-    val isPlayable : Boolean,
     val id: Int? = null
 )
 
@@ -21,7 +20,6 @@ val defaultOpponents = listOf<GymOpponent>(
         symbolImage = Symbol.fromString("Fighting").drawable,
         isBoss = false,
         isBeaten = false,
-        isPlayable = true
     ),
     GymOpponent(
         gymName = "Pewter",
@@ -30,7 +28,6 @@ val defaultOpponents = listOf<GymOpponent>(
         symbolImage = Symbol.fromString("Fighting").drawable,
         isBoss = false,
         isBeaten = false,
-        isPlayable = true
 
 
     ),
@@ -41,7 +38,6 @@ val defaultOpponents = listOf<GymOpponent>(
         symbolImage = Symbol.fromString("Fighting").drawable,
         isBoss = true,
         isBeaten = false,
-        isPlayable = false
     ),
     GymOpponent(
         gymName = "Cerulean",
@@ -50,6 +46,5 @@ val defaultOpponents = listOf<GymOpponent>(
         symbolImage = Symbol.fromString("Water").drawable,
         isBoss = true,
         isBeaten = false,
-        isPlayable = false
     )
 )

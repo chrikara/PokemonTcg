@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CutCornerShape
@@ -31,6 +32,10 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -49,6 +54,7 @@ import coil.compose.rememberImagePainter
 import com.example.pokemontcg.domain.model.DeckNumber
 import com.example.pokemontcg.domain.model.toNumberString
 import com.example.pokemontcg.presentation.components.ButtonSecondary
+import com.example.pokemontcg.presentation.features.createdecks.modifydeck.components.calcDominantColor
 import com.example.pokemontcg.presentation.features.gyms.components.ButtonArrow
 import com.example.pokemontcg.presentation.features.gyms.components.GymOpponentBox
 import com.example.pokemontcg.ui.theme.BlueAlpha40
@@ -65,7 +71,10 @@ fun GymScreen(
 
     val spacing = LocalSpacing.current
     val state = viewModel.state
-    println(state)
+    var dominantColor by remember {
+        mutableStateOf(Color.Blue)
+    }
+    println("1 $dominantColor")
 
     LaunchedEffect(key1 = true){
         viewModel.uiEvent.collect{event ->
@@ -85,7 +94,7 @@ fun GymScreen(
     if(state.isLoadingDb) return
 
 
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .background(BlueAlpha40)
@@ -94,274 +103,282 @@ fun GymScreen(
         verticalArrangement = Arrangement.SpaceBetween
 
     ){
-        Spacer(modifier = Modifier.height(spacing.spaceMedium))
+        item {
+            Spacer(modifier = Modifier.height(spacing.spaceMedium))
 
-        AnimatedVisibility(visible = state.messageError.isNotBlank()) {
-            ErrorBox(text = state.messageError)
-        }
-
-        Spacer(modifier = Modifier.height(spacing.spaceMedium))
-
-        Column(modifier = Modifier){
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(
-                        CutCornerShape(
-                            topStart = spacing.spaceMedium,
-                            topEnd = spacing.spaceMedium
-                        )
-                    )
-                    .background(BlueAlpha80)
-                    .padding(spacing.paddingSmall)
-            ) {
-                Text(
-                    text = "Διάλεξε αντίπαλο",
-                    fontWeight = FontWeight.Bold,
-                    fontSize =  20.sp,
-                    style = MaterialTheme.typography.displaySmall.copy(
-                        shadow = Shadow(
-                            color = Color.Black,
-                            offset = Offset(x =5f, y = 7f),
-                            blurRadius = 10f,
-                        )
-                    )
-
-                )
+            AnimatedVisibility(visible = state.messageError.isNotBlank()) {
+                ErrorBox(text = state.messageError)
             }
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .size(200.dp)
-                    .background(Color(0x3307121F))
-                    .drawBehind {
-                        val strokeWidth = 1f * density
-                        val y = size.height - strokeWidth / 2
-                        val x = size.width - strokeWidth / 2
 
-                        drawLine(
-                            BlueAlpha80,
-                            Offset(0f, y),
-                            Offset(size.width, y),
-                            strokeWidth
-                        )
-                        drawLine(
-                            BlueAlpha80,
-                            Offset(strokeWidth / 2, 0f),
-                            Offset(strokeWidth / 2, y),
-                            strokeWidth
-                        )
+            Spacer(modifier = Modifier.height(spacing.spaceMedium))
 
-                        drawLine(
-                            BlueAlpha80,
-                            Offset(size.width - strokeWidth / 2, y),
-                            Offset(size.width - strokeWidth / 2, 0f),
-                            strokeWidth
-                        )
-                    }
-                    .padding(horizontal = spacing.paddingSmall),
-                contentAlignment = Alignment.Center
-            ) {
-                AnimatedContent(
-                    targetState = state.selectedOpponent,
-                    transitionSpec = {
-                        if(state.opponentsForThisGym.indexOf(targetState) > state.opponentsForThisGym.indexOf(initialState) ){
-                            slideInHorizontally( initialOffsetX = {
-                                it
-                            }) with slideOutHorizontally(targetOffsetX = {
-                                -it
-                            })
-                        } else {
-                            slideInHorizontally( initialOffsetX = {
-                                -it
-                            }) with slideOutHorizontally(targetOffsetX = {
-                                it
-                            })
-                        }
-                    }
-                ) {
-
-                    GymOpponentBox(
-                        modifier =
-                        Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = 50.dp, vertical = 20.dp),
-                        opponent = it!!
-                    )
-                }
-
-
+            Column(modifier = Modifier){
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                ){
-                    ButtonArrow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(
+                            CutCornerShape(
+                                topStart = spacing.spaceMedium,
+                                topEnd = spacing.spaceMedium
+                            )
+                        )
+                        .background(BlueAlpha80)
+                        .padding(spacing.paddingSmall)
+                ) {
+                    Text(
+                        text = "Διάλεξε αντίπαλο",
+                        fontWeight = FontWeight.Bold,
+                        fontSize =  20.sp,
+                        style = MaterialTheme.typography.displaySmall.copy(
+                            shadow = Shadow(
+                                color = Color.Black,
+                                offset = Offset(x =5f, y = 7f),
+                                blurRadius = 10f,
+                            )
+                        )
 
-                        modifier = Modifier.size(
-                            width = 30.dp,
-                            height = 40.dp
-                        ),
-                        onClick = {
-                            viewModel.onEvent(GymEvent.OnPreviousOpponent)
-                            viewModel.onEvent(GymEvent.OnErrorTextChange)
-                        },
-                        rotate = 180f,
-                        isEnabled = state.isPreviousOpponentEnabled
-                    )
-
-
-                    ButtonArrow(
-                        modifier = Modifier
-                            .size(
-                                width = 30.dp,
-                                height = 40.dp
-                            ),
-                        onClick = {
-                            viewModel.onEvent(GymEvent.OnNextOpponent)
-                            viewModel.onEvent(GymEvent.OnErrorTextChange)
-                        },
-                        isEnabled = state.isNextOpponentEnabled
                     )
                 }
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .size(200.dp)
+                        .background(Color(0x3307121F))
+                        .drawBehind {
+                            val strokeWidth = 1f * density
+                            val y = size.height - strokeWidth / 2
+                            val x = size.width - strokeWidth / 2
 
+                            drawLine(
+                                BlueAlpha80,
+                                Offset(0f, y),
+                                Offset(size.width, y),
+                                strokeWidth
+                            )
+                            drawLine(
+                                BlueAlpha80,
+                                Offset(strokeWidth / 2, 0f),
+                                Offset(strokeWidth / 2, y),
+                                strokeWidth
+                            )
 
+                            drawLine(
+                                BlueAlpha80,
+                                Offset(size.width - strokeWidth / 2, y),
+                                Offset(size.width - strokeWidth / 2, 0f),
+                                strokeWidth
+                            )
+                        }
+                        .padding(horizontal = spacing.paddingSmall),
+                    contentAlignment = Alignment.Center
+                ) {
+                    AnimatedContent(
+                        targetState = state.selectedOpponent,
+                        transitionSpec = {
+                            if(state.opponentsForThisGym.indexOf(targetState) > state.opponentsForThisGym.indexOf(initialState) ){
+                                slideInHorizontally( initialOffsetX = {
+                                    it
+                                }) with slideOutHorizontally(targetOffsetX = {
+                                    -it
+                                })
+                            } else {
+                                slideInHorizontally( initialOffsetX = {
+                                    -it
+                                }) with slideOutHorizontally(targetOffsetX = {
+                                    it
+                                })
+                            }
+                        }
+                    ) {
 
-            }
-
-        }
-        Spacer(modifier = Modifier.height(spacing.spaceMedium))
-        Column(modifier = Modifier.weight(1f)){
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(
-                        CutCornerShape(
-                            topStart = spacing.spaceMedium,
-                            topEnd = spacing.spaceMedium
-                        )
-                    )
-                    .background(BlueAlpha80)
-                    .padding(spacing.paddingSmall)
-            ) {
-                Text(
-                    text = "Διάλεξε τράπουλα",
-                    fontWeight = FontWeight.Bold,
-                    fontSize =  20.sp,
-                    style = MaterialTheme.typography.displaySmall.copy(
-                        shadow = Shadow(
-                            color = Color.Black,
-                            offset = Offset(x =5f, y = 7f),
-                            blurRadius = 10f,
-                        )
-                    )
-
-                )
-            }
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .size(300.dp)
-                    .background(Color(0x3307121F))
-                    .drawBehind {
-                        val strokeWidth = 1f * density
-                        val y = size.height - strokeWidth / 2
-                        val x = size.width - strokeWidth / 2
-
-                        drawLine(
-                            BlueAlpha80,
-                            Offset(0f, y),
-                            Offset(size.width, y),
-                            strokeWidth
-                        )
-                        drawLine(
-                            BlueAlpha80,
-                            Offset(strokeWidth / 2, 0f),
-                            Offset(strokeWidth / 2, y),
-                            strokeWidth
-                        )
-
-                        drawLine(
-                            BlueAlpha80,
-                            Offset(size.width - strokeWidth / 2, y),
-                            Offset(size.width - strokeWidth / 2, 0f),
-                            strokeWidth
-                        )
-                    }
-                    .padding(horizontal = spacing.paddingSmall),
-                contentAlignment = Alignment.Center
-            ) {
-
-                LazyRow(
-                    Modifier
-                        .fillMaxSize(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                ){
-                    items(defaultDecks){ deck ->
-                        CardBox(
-                            isSelected = state.selectedDeck == deck,
-                            deckNumber = deck,
-                            onClick = {
-                                viewModel.onEvent(GymEvent.OnDeckClicked(deckNumber = deck))
-                                viewModel.onEvent(GymEvent.OnErrorTextChange)
-
+                        GymOpponentBox(
+                            modifier =
+                            Modifier
+                                .fillMaxSize()
+                                .padding(horizontal = 50.dp, vertical = 20.dp),
+                            opponent = it!!,
+                            normalTrainersBeaten = state.opponentsForThisGym.count { opponentAtGym ->
+                                opponentAtGym.isBeaten && !opponentAtGym.isBoss
                             }
                         )
+                    }
 
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                    ){
+                        ButtonArrow(
+
+                            modifier = Modifier.size(
+                                width = 30.dp,
+                                height = 40.dp
+                            ),
+                            onClick = {
+                                viewModel.onEvent(GymEvent.OnPreviousOpponent)
+                                viewModel.onEvent(GymEvent.OnErrorTextChange)
+                            },
+                            rotate = 180f,
+                            isEnabled = state.isPreviousOpponentEnabled
+                        )
+
+
+                        ButtonArrow(
+                            modifier = Modifier
+                                .size(
+                                    width = 30.dp,
+                                    height = 40.dp
+                                ),
+                            onClick = {
+                                viewModel.onEvent(GymEvent.OnNextOpponent)
+                                viewModel.onEvent(GymEvent.OnErrorTextChange)
+                            },
+                            isEnabled = state.isNextOpponentEnabled
+                        )
+                    }
+
+
+
+                }
+
+            }
+            Spacer(modifier = Modifier.height(spacing.spaceMedium))
+
+            ButtonSecondary(
+                text = "Παίξε!",
+                fontSize = 25.sp,
+                onClick = { viewModel.onEvent(GymEvent.OnPlay) },
+                isEnabled = state.isButtonEnabled
+            )
+            Spacer(modifier = Modifier.height(spacing.spaceMedium))
+            Column(modifier = Modifier){
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(
+                            CutCornerShape(
+                                topStart = spacing.spaceMedium,
+                                topEnd = spacing.spaceMedium
+                            )
+                        )
+                        .background(BlueAlpha80)
+                        .padding(spacing.paddingSmall)
+                ) {
+                    Text(
+                        text = "Διάλεξε τράπουλα",
+                        fontWeight = FontWeight.Bold,
+                        fontSize =  20.sp,
+                        style = MaterialTheme.typography.displaySmall.copy(
+                            shadow = Shadow(
+                                color = Color.Black,
+                                offset = Offset(x =5f, y = 7f),
+                                blurRadius = 10f,
+                            )
+                        )
+
+                    )
+                }
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .size(300.dp)
+                        .background(Color(0x3307121F))
+                        .drawBehind {
+                            val strokeWidth = 1f * density
+                            val y = size.height - strokeWidth / 2
+                            val x = size.width - strokeWidth / 2
+
+                            drawLine(
+                                BlueAlpha80,
+                                Offset(0f, y),
+                                Offset(size.width, y),
+                                strokeWidth
+                            )
+                            drawLine(
+                                BlueAlpha80,
+                                Offset(strokeWidth / 2, 0f),
+                                Offset(strokeWidth / 2, y),
+                                strokeWidth
+                            )
+
+                            drawLine(
+                                BlueAlpha80,
+                                Offset(size.width - strokeWidth / 2, y),
+                                Offset(size.width - strokeWidth / 2, 0f),
+                                strokeWidth
+                            )
+                        }
+                        .padding(horizontal = spacing.paddingSmall),
+                    contentAlignment = Alignment.Center
+                ) {
+
+                    LazyRow(
+                        Modifier
+                            .fillMaxSize(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ){
+                        items(defaultDecks){ deck ->
+                            CardBox(
+                                isSelected = state.selectedDeck == deck,
+                                deckNumber = deck,
+                                onClick = {
+                                    viewModel.onEvent(GymEvent.OnDeckClicked(deckNumber = deck))
+                                    viewModel.onEvent(GymEvent.OnErrorTextChange)
+
+                                }
+                            )
+
+                        }
+
+                    }
+
+
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                    ){
+                        ButtonArrow(
+
+                            modifier = Modifier.size(
+                                width = 30.dp,
+                                height = 40.dp
+                            ),
+                            onClick = {
+                                viewModel.onEvent(GymEvent.OnPreviousDeck)
+                                viewModel.onEvent(GymEvent.OnErrorTextChange)
+
+                            },
+                            rotate = 180f,
+                            isEnabled = state.isPreviousDeckEnabled
+                        )
+
+
+                        ButtonArrow(
+                            modifier = Modifier
+                                .size(
+                                    width = 30.dp,
+                                    height = 40.dp
+                                ),
+                            onClick = {
+                                viewModel.onEvent(GymEvent.OnNextDeck)
+                                viewModel.onEvent(GymEvent.OnErrorTextChange)
+                            },
+                            isEnabled = state.isNextDeckEnabled
+                        )
                     }
 
                 }
 
-
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                ){
-                    ButtonArrow(
-
-                        modifier = Modifier.size(
-                            width = 30.dp,
-                            height = 40.dp
-                        ),
-                        onClick = {
-                            viewModel.onEvent(GymEvent.OnPreviousDeck)
-                            viewModel.onEvent(GymEvent.OnErrorTextChange)
-
-                        },
-                        rotate = 180f,
-                        isEnabled = state.isPreviousDeckEnabled
-                    )
-
-
-                    ButtonArrow(
-                        modifier = Modifier
-                            .size(
-                                width = 30.dp,
-                                height = 40.dp
-                            ),
-                        onClick = {
-                            viewModel.onEvent(GymEvent.OnNextDeck)
-                            viewModel.onEvent(GymEvent.OnErrorTextChange)
-                        },
-                        isEnabled = state.isNextDeckEnabled
-                    )
-                }
-
             }
+            Spacer(modifier = Modifier.height(spacing.spaceMedium))
 
-            }
-        Spacer(modifier = Modifier.height(spacing.spaceMedium))
 
-        ButtonSecondary(
-            text = "Παίξε!",
-            fontSize = 25.sp,
-            onClick = { viewModel.onEvent(GymEvent.OnPlay) },
-            isEnabled = state.isButtonEnabled
-        )
-        Spacer(modifier = Modifier.height(spacing.spaceMedium))
+        }
+
 
     }
 
@@ -375,7 +392,7 @@ private fun CardBox(
     deckNumber: DeckNumber,
     onClick : (DeckNumber) -> Unit
 ){
-    val borderWidth = 0.7.dp
+    val borderWidth = 0.5.dp
     Column(
         modifier = Modifier
             .alpha(if (isSelected) 1f else 0.3f)
@@ -391,23 +408,24 @@ private fun CardBox(
 
                 )
             )
-            .padding(1.dp)
+            .padding(2.dp)
             .clip(
                 CutCornerShape(
                     topStart = 5.dp,
                     bottomEnd = 5.dp
                 )
             )
-            .border(
-                width = borderWidth,
-                shape = CutCornerShape(
-                    topStart = 5.dp,
-                    bottomEnd = 5.dp
 
-                ),
-                color = Color.Black
-            )
-            .background(BlueAlpha80)
+            .background(
+                brush = Brush.radialGradient(
+                    listOf(
+                        MaterialTheme.colorScheme.primary,
+                        Color.Transparent
+                    )
+                ,
+                    radius = 1050f
+                )
+                )
             ,
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally

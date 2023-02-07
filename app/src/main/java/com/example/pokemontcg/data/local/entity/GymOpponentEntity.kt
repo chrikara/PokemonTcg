@@ -12,7 +12,6 @@ class GymOpponentEntity(
     val symbolImage : Int,
     val isBoss:Boolean,
     val isBeaten:Boolean,
-    val isPlayable:Boolean,
     @PrimaryKey val id: Int? = null
 
 )
@@ -25,7 +24,6 @@ fun GymOpponentEntity.toGymOpponent() : GymOpponent{
         symbolImage = this.symbolImage,
         isBoss = this.isBoss,
         isBeaten = this.isBeaten,
-        isPlayable = this.isPlayable,
         id = id
     )
 }
@@ -38,7 +36,6 @@ fun GymOpponent.toGymOpponentEntity() : GymOpponentEntity{
         symbolImage = this.symbolImage,
         isBoss = this.isBoss,
         isBeaten = this.isBeaten,
-        isPlayable = this.isPlayable,
         id = id
     )
 }

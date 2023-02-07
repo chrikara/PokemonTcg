@@ -1,6 +1,8 @@
 package com.example.pokemontcg.presentation.features.createdecks.modifydeck.components
 
+import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import androidx.compose.foundation.Image
@@ -28,7 +30,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -39,14 +44,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.palette.graphics.Palette
 import coil.compose.AsyncImage
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
-import com.example.pokemontcg.ui.theme.BlueAlpha40
-import com.example.pokemontcg.ui.theme.BlueAlpha60
-import com.example.pokemontcg.ui.theme.BlueAlpha80
+import com.example.pokemontcg.R
 
 @Composable
 fun CardItemToInsertToDeck(
@@ -76,7 +80,7 @@ fun CardItemToInsertToDeck(
             .shadow(
                 elevation = 3.dp,
 
-            )
+                )
             .padding(3.dp)
             .background(
                 Brush.radialGradient(
@@ -88,6 +92,7 @@ fun CardItemToInsertToDeck(
                 )
             )
     ) {
+
         Box {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
@@ -164,9 +169,26 @@ fun CardItemToInsertToDeck(
 fun calcDominantColor(drawable: Drawable, onFinish:(Color) -> Unit){
     val bmp = (drawable as BitmapDrawable).bitmap.copy(Bitmap.Config.ARGB_8888, true)
 
+
+
     Palette.from(bmp).generate{
         it?.dominantSwatch?.rgb?.let { colorValue ->
             onFinish(Color(colorValue))
         }
     }
+}
+
+fun calcDominantColor(context : Context, drawable: Int, onFinish: (Color) -> Unit) {
+
+
+
+    val bmp = BitmapFactory.decodeResource(context.resources, drawable).copy(Bitmap.Config.ARGB_8888, true)
+
+    Palette.from(bmp).generate{
+
+        it?.dominantSwatch?.rgb?.let { colorValue ->
+            onFinish(Color(colorValue))
+        }
+    }
+
 }
