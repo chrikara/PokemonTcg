@@ -26,3 +26,5 @@ val TypeElectric = Color(0xFFF7D02C)
 val TypeGrass = Color(0xFF7AC74C)
 val TypeFighting = Color(0xFFC22E28)
 val TypePsychic = Color(0xFFF95587)
+
+val DarkDialog =  Color(0xFF1F1E1E)

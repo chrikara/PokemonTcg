@@ -13,8 +13,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.TopCenter
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.pokemontcg.presentation.components.CustomDialog
 import com.example.pokemontcg.presentation.components.PokemonTcgLogo
+import com.example.pokemontcg.ui.theme.DarkDialog
 import com.example.pokemontcg.ui.theme.LocalSpacing
 import com.example.pokemontcg.util.navigation.Screen
 import com.example.pokemontcg.util.UiEvent
@@ -34,6 +37,25 @@ fun WelcomeScreen(
         ,
     ){
 
+        if(state.isDialogShown){
+            CustomDialog(
+                title = "Διαγραφή",
+                backgroundColor = DarkDialog,
+                text = "Αυτό θα διαγράψει όλα σου τα δεδομένα!",
+                modifier = Modifier.height(200.dp),
+                onDismiss = {
+                    viewModel.onDialog()
+                },
+                onClickOk = {
+                    onNavigate(UiEvent.Navigate(Screen.Main.route))
+                    viewModel.onStartNewGame()
+                    viewModel.deleteAllDataAndInsertDefaultOpponentsInDb()
+                }
+            )
+        }
+
+
+
         PokemonTcgLogo(modifier = Modifier.align(TopCenter))
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -48,9 +70,14 @@ fun WelcomeScreen(
 
                 ,
                 onClick = {
+                    if(state.hasAlreadyGame){
+                        viewModel.onDialog()
+                        return@PrimaryButton
+                    }
+
                     onNavigate(UiEvent.Navigate(Screen.Main.route))
                     viewModel.onStartNewGame()
-                    viewModel.deleteAndInsertDefaultOpponentsInDb()
+                    viewModel.deleteAllDataAndInsertDefaultOpponentsInDb()
                 }
             )
 
