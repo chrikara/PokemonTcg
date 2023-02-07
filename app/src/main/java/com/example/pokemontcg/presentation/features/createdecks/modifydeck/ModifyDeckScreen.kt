@@ -131,6 +131,7 @@ fun ModifyDeckScreen(
                         focusManager.clearFocus()
                     }
                 )
+                .padding(horizontal = 5.dp)
             ,
             columns = GridCells.Fixed(2)
         ){
