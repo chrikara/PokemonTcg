@@ -12,10 +12,13 @@ data class GymState(
 
     val isLoadingDb : Boolean = true,
 
+    val messageError : String = "" ,
+
     val isNextOpponentEnabled : Boolean = true,
     val isPreviousOpponentEnabled : Boolean = false,
     val isNextDeckEnabled : Boolean = true,
     val isPreviousDeckEnabled : Boolean = false,
+    val isButtonEnabled : Boolean = false,
     val selectedOpponent : GymOpponent? = null,
     val selectedDeck : DeckNumber = DeckNumber.First
 

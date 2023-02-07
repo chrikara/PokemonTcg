@@ -14,6 +14,7 @@ import com.example.pokemontcg.util.TOTAL_DECK_CARDS_GLOBAL
 import com.example.pokemontcg.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -24,7 +25,6 @@ import javax.inject.Inject
 class GymViewModel @Inject constructor(
     private val allMyDeckUseCases: AllMyDeckUseCases,
     private val allGymOpponentsUseCases: AllGymOpponentsUseCases,
-    private val filterOutDeckUseCase: FilterOutDeckUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel(){
 
@@ -36,26 +36,30 @@ class GymViewModel @Inject constructor(
 
 
     init {
-        val selectedGymName = savedStateHandle.get<String>("gymName") ?: "base1-4"
+        val selectedGymName = savedStateHandle.get<String>("gymName") ?: "Pewter"
 
         getCardsFromDb()
         getOpponentsFromDb(selectedGymName)
 
-        state = state.copy(
-            selectedDeck = defaultDecks.first()
-        )
     }
 
     private fun getOpponentsFromDb(selectedGymName : String) {
-        allGymOpponentsUseCases.getAllGymOpponentsUseCase().onEach { allOpponents->
-            val opponentsForSelectedGym = allOpponents.filter { it.gymName == selectedGymName }
 
-            state = state.copy(
-                opponentsForThisGym = opponentsForSelectedGym,
-                selectedOpponent = opponentsForSelectedGym.first(),
-                isLoadingDb = false
+            allGymOpponentsUseCases.getAllGymOpponentsUseCase().onEach { allOpponents->
+                if(allOpponents.isEmpty()){
+                    return@onEach
+                }
+
+                delay(20L)
+                val opponentsForSelectedGym = allOpponents.filter { it.gymName == selectedGymName }
+
+                state = state.copy(
+                    opponentsForThisGym = opponentsForSelectedGym,
+                    selectedOpponent = opponentsForSelectedGym.first(),
+                    isLoadingDb = false
                 )
-        }.launchIn(viewModelScope)
+                onEvent(GymEvent.OnErrorTextChange)
+            }.launchIn(viewModelScope)
     }
 
     fun onEvent(event: GymEvent){
@@ -150,13 +154,43 @@ class GymViewModel @Inject constructor(
                     ))
                 }
             }
+
+            is GymEvent.OnErrorTextChange -> {
+                if(!state.selectedOpponent!!.isPlayable){
+                    state = state.copy(
+                        messageError = "Χρειάζεσαι 2 νίκες για να νικήσεις τον ${state.selectedOpponent!!.name}",
+                        isButtonEnabled = false
+                    )
+                    return
+                }
+
+                val totalCardsSelectedDeck = state.savedCardList.filter { it.deckNumber == state.selectedDeck }.size
+                println(totalCardsSelectedDeck)
+                if(totalCardsSelectedDeck < TOTAL_DECK_CARDS_GLOBAL){
+                        state = state.copy(
+                            messageError = "Χρειάζεσαι $TOTAL_DECK_CARDS_GLOBAL κάρτες και έχεις $totalCardsSelectedDeck!",
+                            isButtonEnabled = false
+                        )
+                    return
+                }
+
+                state = state.copy(
+                    messageError = "",
+                    isButtonEnabled = true
+                )
+
+
+            }
         }
     }
+
 
     private fun getCardsFromDb() {
         allMyDeckUseCases.getPokemonFromDeckUseCase().onEach { savedCardList ->
             state = state.copy(
-                savedCardList = savedCardList
+                savedCardList = savedCardList,
+                selectedDeck = defaultDecks.first()
+
             )
         }.launchIn(viewModelScope)
     }

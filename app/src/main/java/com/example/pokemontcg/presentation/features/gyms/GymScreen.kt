@@ -1,6 +1,7 @@
 package com.example.pokemontcg.presentation.features.gyms
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
@@ -81,10 +82,8 @@ fun GymScreen(
         }
     }
 
-    if(state.isLoadingDb){
-        CircularProgressIndicator()
-        return
-    }
+    if(state.isLoadingDb) return
+
 
     Column(
         modifier = Modifier
@@ -95,6 +94,12 @@ fun GymScreen(
         verticalArrangement = Arrangement.SpaceBetween
 
     ){
+        Spacer(modifier = Modifier.height(spacing.spaceMedium))
+
+        AnimatedVisibility(visible = state.messageError.isNotBlank()) {
+            ErrorBox(text = state.messageError)
+        }
+
         Spacer(modifier = Modifier.height(spacing.spaceMedium))
 
         Column(modifier = Modifier){
@@ -197,7 +202,10 @@ fun GymScreen(
                             width = 30.dp,
                             height = 40.dp
                         ),
-                        onClick = {viewModel.onEvent(GymEvent.OnPreviousOpponent)},
+                        onClick = {
+                            viewModel.onEvent(GymEvent.OnPreviousOpponent)
+                            viewModel.onEvent(GymEvent.OnErrorTextChange)
+                        },
                         rotate = 180f,
                         isEnabled = state.isPreviousOpponentEnabled
                     )
@@ -209,7 +217,10 @@ fun GymScreen(
                                 width = 30.dp,
                                 height = 40.dp
                             ),
-                        onClick = {viewModel.onEvent(GymEvent.OnNextOpponent)},
+                        onClick = {
+                            viewModel.onEvent(GymEvent.OnNextOpponent)
+                            viewModel.onEvent(GymEvent.OnErrorTextChange)
+                        },
                         isEnabled = state.isNextOpponentEnabled
                     )
                 }
@@ -293,6 +304,8 @@ fun GymScreen(
                             deckNumber = deck,
                             onClick = {
                                 viewModel.onEvent(GymEvent.OnDeckClicked(deckNumber = deck))
+                                viewModel.onEvent(GymEvent.OnErrorTextChange)
+
                             }
                         )
 
@@ -313,7 +326,11 @@ fun GymScreen(
                             width = 30.dp,
                             height = 40.dp
                         ),
-                        onClick = {viewModel.onEvent(GymEvent.OnPreviousDeck)},
+                        onClick = {
+                            viewModel.onEvent(GymEvent.OnPreviousDeck)
+                            viewModel.onEvent(GymEvent.OnErrorTextChange)
+
+                        },
                         rotate = 180f,
                         isEnabled = state.isPreviousDeckEnabled
                     )
@@ -327,7 +344,8 @@ fun GymScreen(
                             ),
                         onClick = {
                             viewModel.onEvent(GymEvent.OnNextDeck)
-                                  },
+                            viewModel.onEvent(GymEvent.OnErrorTextChange)
+                        },
                         isEnabled = state.isNextDeckEnabled
                     )
                 }
@@ -340,7 +358,8 @@ fun GymScreen(
         ButtonSecondary(
             text = "Παίξε!",
             fontSize = 25.sp,
-            onClick = { viewModel.onEvent(GymEvent.OnPlay) }
+            onClick = { viewModel.onEvent(GymEvent.OnPlay) },
+            isEnabled = state.isButtonEnabled
         )
         Spacer(modifier = Modifier.height(spacing.spaceMedium))
 
@@ -451,3 +470,35 @@ val defaultDecks = listOf<DeckNumber>(
     DeckNumber.Second,
     DeckNumber.Third,
 )
+
+@Composable
+private fun ErrorBox(text : String){
+    val spacing = LocalSpacing.current
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .shadow(
+                elevation = 2.dp,
+                shape = CutCornerShape(
+                    topStart = spacing.spaceMedium,
+                    bottomEnd = spacing.spaceMedium
+                )
+            )
+            .padding(2.dp)
+            .clip(
+                CutCornerShape(
+                    topStart = spacing.spaceMedium,
+                    bottomEnd = spacing.spaceMedium
+                )
+            )
+            .background(MaterialTheme.colorScheme.error)
+            .padding(10.dp)
+    ){
+        Text(
+            fontSize = 15.sp,
+            text = text,
+            style = MaterialTheme.typography.titleLarge,
+            lineHeight = 20.sp
+        )
+    }
+}

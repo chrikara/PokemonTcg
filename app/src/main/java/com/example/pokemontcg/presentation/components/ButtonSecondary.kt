@@ -2,6 +2,7 @@ package com.example.pokemontcg.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,6 +11,7 @@ import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.clearCompositionErrors
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,30 +45,16 @@ fun ButtonSecondary(
     paddingValues: PaddingValues = PaddingValues(
         horizontal = 55.dp,
         vertical = 15.dp
-    )
+    ),
+    isEnabled : Boolean
 ) {
 
     val spacing = LocalSpacing.current
-    var isPressed by remember {
-        mutableStateOf(false)
-    }
+
 
     Box(
         modifier = modifier
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onPress = {
-                        isPressed = true
-                        if(!this.tryAwaitRelease()){
-                            isPressed = false
-                            return@detectTapGestures
-                        }
-                        awaitRelease()
-                        onClick()
-                        isPressed = false
-                    }
-                )
-            }
+
             .shadow(
                 elevation = 4.dp,
                 shape = CutCornerShape(
@@ -81,7 +69,10 @@ fun ButtonSecondary(
                     bottomEnd = spacing.clipExtraSmall
                 )
             )
-
+            .clickable(
+                enabled = isEnabled,
+                onClick = onClick
+            )
             .border(
                 width = 1.dp,
                 color = MaterialTheme.colorScheme.background,
@@ -90,7 +81,7 @@ fun ButtonSecondary(
                     bottomEnd = spacing.clipExtraSmall
                 )
             )
-            .alpha(if(isPressed) 0.4f else 1f)
+            .alpha(if(isEnabled) 1f else 0.4f)
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
