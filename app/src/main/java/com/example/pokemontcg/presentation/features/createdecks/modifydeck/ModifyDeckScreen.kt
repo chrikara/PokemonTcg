@@ -34,6 +34,7 @@ import coil.annotation.ExperimentalCoilApi
 import com.example.pokemontcg.domain.model.DeckNumber
 import com.example.pokemontcg.presentation.features.createdecks.modifydeck.components.CardItemToInsertToDeck
 import com.example.pokemontcg.presentation.features.createdecks.modifydeck.components.DeckNumberHeader
+import com.example.pokemontcg.ui.theme.DarkDialog
 import com.example.pokemontcg.util.UiEvent
 import com.example.pokemontcg.util.navigation.Screen
 
@@ -69,7 +70,7 @@ fun ModifyDeckScreen(
 
     Column(modifier = Modifier
         .fillMaxSize()
-        .background(Color.DarkGray),
+        .background(if(state.isLoading)DarkDialog else Color.DarkGray),
     )
     {
 

@@ -42,7 +42,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.palette.graphics.Palette
 import coil.compose.AsyncImage
-import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.example.pokemontcg.ui.theme.BlueAlpha40
@@ -51,7 +50,6 @@ import com.example.pokemontcg.ui.theme.BlueAlpha80
 
 @Composable
 fun CardItemToInsertToDeck(
-    modifier : Modifier = Modifier,
     image: String,
     totalCounts : Int,
     onShowInfo : () -> Unit,
@@ -79,7 +77,6 @@ fun CardItemToInsertToDeck(
                 elevation = 3.dp,
 
             )
-
             .padding(3.dp)
             .background(
                 Brush.radialGradient(
