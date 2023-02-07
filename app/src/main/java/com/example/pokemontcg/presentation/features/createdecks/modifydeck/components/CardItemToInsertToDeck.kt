@@ -1,5 +1,8 @@
 package com.example.pokemontcg.presentation.features.createdecks.modifydeck.components
 
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -25,15 +28,23 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.TileMode
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.palette.graphics.Palette
+import coil.compose.AsyncImage
 import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
 import com.example.pokemontcg.ui.theme.BlueAlpha40
 import com.example.pokemontcg.ui.theme.BlueAlpha60
 import com.example.pokemontcg.ui.theme.BlueAlpha80
@@ -44,59 +55,79 @@ fun CardItemToInsertToDeck(
     image: String,
     totalCounts : Int,
     onShowInfo : () -> Unit,
-    onAddCard : () -> Unit,
-    onDeleteCard: () -> Unit,
+    onAddCard : () -> Unit = {},
+    onDeleteCard: () -> Unit = {},
 
     )
 {
+    val defaultDominantColor =  Color.Transparent
+    var dominantColor by remember {
+        mutableStateOf(defaultDominantColor)
+    }
+
+    var isLoading by remember {
+        mutableStateOf(false)
+    }
 
 
     Column(
         modifier = Modifier
-        .fillMaxHeight()
-        .padding(vertical = 2.dp)
-        .padding(horizontal = 2.dp)
-        .shadow(
-            elevation = 2.dp,
-            shape = CutCornerShape(
-                topStart = 5.dp,
-                bottomEnd = 5.dp
+            .fillMaxHeight()
+            .padding(vertical = 2.dp)
+            .padding(horizontal = 2.dp)
+            .shadow(
+                elevation = 3.dp,
+
             )
-        )
-        .padding(1.dp)
-        .border(
-            width = 1.dp,
 
-            color = Color.Black
-        )
-        .background(BlueAlpha40)
+            .padding(3.dp)
+            .background(
+                Brush.radialGradient(
+                    listOf(
+                        dominantColor,
+                        Color.Transparent,
+                    ),
+                    radius = 760f,
+                )
+            )
     ) {
-        Box(){
-            Image(
-                painter = rememberImagePainter(
-                    data = image,
-                    builder = {
-                              CircularProgressIndicator(
-                                  modifier = Modifier.align(Alignment.Center)
-                              )
+        Box {
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(image)
+                    .crossfade(true)
+                    .build(),
+                onSuccess = {
+                    isLoading = false
+                    calcDominantColor(it.result.drawable) { color ->
+                        dominantColor = color
 
-                    },
-                ),
+                    }
+                },
+
+                onLoading = {
+                    isLoading = true
+                },
+                contentScale = ContentScale.Fit,
                 contentDescription = "",
                 modifier = Modifier
                     .size(285.dp)
-                    .padding(10.dp)
-                    .background(Color.Transparent)
-                    .padding(horizontal = 10.dp)
                     .clickable(
                         onClick = onShowInfo
-                    ),
+                    )
+                    .clip(RoundedCornerShape(50.dp))
+                    .padding(horizontal = 10.dp),
 
                 )
+            if(isLoading){
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+            }
         }
 
         Row(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 5.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 5.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
@@ -131,4 +162,14 @@ fun CardItemToInsertToDeck(
         }
     }
 
+}
+
+fun calcDominantColor(drawable: Drawable, onFinish:(Color) -> Unit){
+    val bmp = (drawable as BitmapDrawable).bitmap.copy(Bitmap.Config.ARGB_8888, true)
+
+    Palette.from(bmp).generate{
+        it?.dominantSwatch?.rgb?.let { colorValue ->
+            onFinish(Color(colorValue))
+        }
+    }
 }

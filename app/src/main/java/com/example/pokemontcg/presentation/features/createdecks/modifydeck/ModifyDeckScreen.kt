@@ -24,6 +24,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -68,7 +69,7 @@ fun ModifyDeckScreen(
 
     Column(modifier = Modifier
         .fillMaxSize()
-        .background(MaterialTheme.colorScheme.background),
+        .background(Color.DarkGray),
     )
     {
 
@@ -148,7 +149,9 @@ fun ModifyDeckScreen(
                         deck = deck ,
                         cardOverview = cardOverview,
                         snackbarHostState = snackbarHostState))},
-                    onDeleteCard = {viewModel.onEvent(ModifyDeckEvent.OnDeletePokemonFromDeck(cardOverview))}
+                    onDeleteCard = {viewModel.onEvent(ModifyDeckEvent.OnDeletePokemonFromDeck(cardOverview)) },
+
+
                 )
             }
         }
