@@ -19,12 +19,12 @@ import androidx.navigation.navArgument
 import com.example.pokemontcg.presentation.features.createdecks.chosendeck.ChosenDeckScreen
 import com.example.pokemontcg.presentation.features.createdecks.modifydeck.ModifyDeckScreen
 import com.example.pokemontcg.presentation.features.createdecks.alldecks.AllDecksScreen
+import com.example.pokemontcg.presentation.features.game.GameScreen
 import com.example.pokemontcg.presentation.features.gyms.GymScreen
 import com.example.pokemontcg.presentation.features.main.MainScreen
 import com.example.pokemontcg.presentation.features.pokecardinfo.PokeCardInfoScreen
 import com.example.pokemontcg.presentation.features.welcome.WelcomeScreen
 import com.example.pokemontcg.ui.theme.PokemonTcgTheme
-import com.example.pokemontcg.util.navigation.EnterAnimation
 import com.example.pokemontcg.util.navigation.Screen
 import com.example.pokemontcg.util.navigation.navigate
 import dagger.hilt.android.AndroidEntryPoint
@@ -51,7 +51,7 @@ class MainActivity : ComponentActivity() {
 
                     NavHost(
                         navController = navController,
-                        startDestination = Screen.Welcome.route
+                        startDestination = Screen.Game.route +"/{deckNumber}/{opponent}"
                     ){
 
                         composable(route = Screen.Welcome.route){
@@ -115,8 +115,20 @@ class MainActivity : ComponentActivity() {
                         )
                         ){
                             GymScreen(
-                                snackbarHostState = snackbarHostState
+                                onNavigate = navController::navigate
                             )
+                        }
+                        composable(route = Screen.Game.route +"/{deckNumber}/{opponent}",
+                        arguments = listOf(
+                            navArgument("deckNumber"){
+                                type = NavType.StringType
+                            },
+                            navArgument("opponent"){
+                                type = NavType.StringType
+                            }
+                        )
+                        ){
+                            GameScreen()
                         }
                     }
                 }

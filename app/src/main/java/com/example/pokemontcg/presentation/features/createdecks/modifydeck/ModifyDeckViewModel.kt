@@ -66,7 +66,6 @@ class ModifyDeckViewModel @Inject constructor(
                 deletePokemonFromDeck(cardOverview = event.cardOverview)
             }
             is ModifyDeckEvent.OnInsertToChosenDeck -> {
-                println(state.savedCardList)
                 insertPokemonToDeck(
                     deckNumber = event.deck,
                     card = event.cardOverview,
@@ -81,17 +80,15 @@ class ModifyDeckViewModel @Inject constructor(
             }
             is ModifyDeckEvent.OnSearch -> {
 
-                if(event.query.isBlank()){
-                    state = state.copy(
-                        cardList = cardListFromAPIWithAllCards
-                    )
-                } else{
-                    state = state.copy(
-                        cardList = cardListFromAPIWithAllCards.filter {card->
-                            card.name.lowercase().contains(event.query.lowercase())
-                        }
-                    )
-                }
+                state = state.copy(
+                    cardList = if(event.query.isBlank())
+                        cardListFromAPIWithAllCards
+                    else
+                        cardListFromAPIWithAllCards.filter {card->
+                        card.name.contains(event.query, ignoreCase = true)
+                    }
+                )
+
 
             }
             is ModifyDeckEvent.OnTextFieldChange -> {

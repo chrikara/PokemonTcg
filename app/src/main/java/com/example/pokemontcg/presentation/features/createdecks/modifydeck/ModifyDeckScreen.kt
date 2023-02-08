@@ -3,6 +3,7 @@
 package com.example.pokemontcg.presentation.features.createdecks.modifydeck
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -38,7 +39,7 @@ import com.example.pokemontcg.ui.theme.DarkDialog
 import com.example.pokemontcg.util.UiEvent
 import com.example.pokemontcg.util.navigation.Screen
 
-@OptIn(ExperimentalCoilApi::class)
+@OptIn(ExperimentalCoilApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun ModifyDeckScreen(
     snackbarHostState: SnackbarHostState,
@@ -135,12 +136,17 @@ fun ModifyDeckScreen(
                 )
                 .padding(horizontal = 5.dp)
             ,
-            columns = GridCells.Fixed(2)
+            columns = GridCells.Fixed(2),
+
         ){
 
-            items(state.cardList){ cardOverview ->
+            items(
+                items = state.cardList,
+                key = {it.name}
+            ){ cardOverview ->
 
                 CardItemToInsertToDeck(
+                    modifier = Modifier.animateItemPlacement(),
                     image = cardOverview.imgString,
                     totalCounts = state.savedCardList.count{it.pokemonId == cardOverview.id },
                     onShowInfo = { navController.navigate(Screen.PokeCardInfo.route + "/${cardOverview.id}")},

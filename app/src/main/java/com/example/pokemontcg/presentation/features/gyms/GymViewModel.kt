@@ -6,11 +6,13 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pokemontcg.domain.model.toNumberString
 import com.example.pokemontcg.domain.use_cases.AllGymOpponentsUseCases
 import com.example.pokemontcg.domain.use_cases.AllMyDeckUseCases
 import com.example.pokemontcg.domain.use_cases.FilterOutDeckUseCase
 import com.example.pokemontcg.util.TOTAL_DECK_CARDS_GLOBAL
 import com.example.pokemontcg.util.UiEvent
+import com.example.pokemontcg.util.navigation.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -128,9 +130,13 @@ class GymViewModel @Inject constructor(
 
             GymEvent.OnPlay -> {
                 viewModelScope.launch {
-                    _uiEvent.send(UiEvent.ShowSnackBar(
-                        message = " Ήρθε η ώρα να παίξεις!"
-                    ))
+                    _uiEvent.send(
+                        UiEvent.Navigate(
+                        route = Screen.Game.route
+                                + "/${state.selectedDeck.toNumberString()}"
+                                + "/${state.selectedOpponent!!.name}"
+                        )
+                    )
                 }
             }
 

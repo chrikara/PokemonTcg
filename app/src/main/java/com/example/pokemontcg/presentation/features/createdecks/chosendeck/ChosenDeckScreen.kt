@@ -1,5 +1,6 @@
 package com.example.pokemontcg.presentation.features.createdecks.chosendeck
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -54,6 +55,7 @@ import com.example.pokemontcg.presentation.features.welcome.PrimaryButton
 import com.example.pokemontcg.ui.theme.LocalSpacing
 import com.example.pokemontcg.util.UiEvent
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ChosenDeckScreen(
     deckNumber: Int,
@@ -105,8 +107,13 @@ fun ChosenDeckScreen(
 
         LazyRow(
             content = {
-            items(state.cardsSaved){cardSaved ->
+            items(
+                items = state.cardsSaved,
+                key = {it.id?: -1}
+                )
+                {cardSaved ->
                 SavedImageInDeck(
+                    modifier = Modifier.animateItemPlacement(),
                     cardSaved = cardSaved,
                     onClickImage = { viewModel.onEvent(ChosenDeckEvent.ShowCardInfo(cardSaved)) },
                     onClickInfo = { viewModel.onEvent(ChosenDeckEvent.ShowCardInfo(cardSaved)) },
@@ -196,9 +203,7 @@ private fun SavedImageInDeck(
                     ),
                     radius = 1060f,
                 )
-            )
-
-        ,
+            ),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         AsyncImage(

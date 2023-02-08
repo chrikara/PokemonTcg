@@ -65,7 +65,7 @@ import com.example.pokemontcg.util.UiEvent
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun GymScreen(
-    snackbarHostState : SnackbarHostState,
+    onNavigate: (UiEvent.Navigate) -> Unit,
     viewModel: GymViewModel = hiltViewModel()
 ) {
 
@@ -79,12 +79,8 @@ fun GymScreen(
     LaunchedEffect(key1 = true){
         viewModel.uiEvent.collect{event ->
             when(event){
-                is UiEvent.ShowSnackBar ->{
-
-                    snackbarHostState.showSnackbar(
-                        message = event.message,
-                        withDismissAction = true
-                    )
+                is UiEvent.Navigate ->{
+                    onNavigate(event)
                 }
                 else -> Unit
             }

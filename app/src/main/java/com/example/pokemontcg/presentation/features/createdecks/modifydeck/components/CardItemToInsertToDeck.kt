@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -52,8 +53,10 @@ import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.example.pokemontcg.R
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CardItemToInsertToDeck(
+    modifier : Modifier = Modifier,
     image: String,
     totalCounts : Int,
     onShowInfo : () -> Unit,
@@ -73,7 +76,7 @@ fun CardItemToInsertToDeck(
 
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxHeight()
             .padding(vertical = 2.dp)
             .padding(horizontal = 2.dp)
