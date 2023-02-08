@@ -17,8 +17,8 @@ class GetCardsUseCase @Inject constructor(
     operator fun invoke() : Flow<Resource<List<CardOverview>>> = flow {
         try {
             emit(Resource.Loading<List<CardOverview>>())
-            val coins = repository.getCards().data.map { it.toCardOverViewList() }
-            emit(Resource.Success<List<CardOverview>>(data = coins))
+            val cards = repository.getCards().data.map { it.toCardOverViewList() }
+            emit(Resource.Success<List<CardOverview>>(data = cards))
         } catch(e: HttpException) {
             emit(Resource.Error<List<CardOverview>>(message = e.localizedMessage ?: "An unexpected error occured"))
         } catch(e: IOException) {

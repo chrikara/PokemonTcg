@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pokemontcg.domain.model.defaultOpponents
+import com.example.pokemontcg.domain.model.defaults.defaultOpponents
 import com.example.pokemontcg.domain.preferences.Preferences
 import com.example.pokemontcg.domain.use_cases.AllGymOpponentsUseCases
 import com.example.pokemontcg.domain.use_cases.AllMyDeckUseCases

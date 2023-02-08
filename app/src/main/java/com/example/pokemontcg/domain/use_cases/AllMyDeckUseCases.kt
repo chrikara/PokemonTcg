@@ -7,6 +7,9 @@ import com.example.pokemontcg.presentation.features.createdecks.use_cases.Insert
 
 data class AllMyDeckUseCases(
     val getPokemonInfoFromAPIUseCase: GetPokemonInfoFromAPIUseCase,
+    val getAllPokemonInfoFromAPIUseCase : GetAllPokemonInfoFromAPIUseCase,
+
+
     val getPokemonFromDeckUseCase: GetPokemonFromDeckUseCase,
     val insertPokemonToDeckUseCase: InsertPokemonToDeckUseCase,
     val deletePokemonFromDeckUseCase: DeletePokemonFromDeckUseCase,

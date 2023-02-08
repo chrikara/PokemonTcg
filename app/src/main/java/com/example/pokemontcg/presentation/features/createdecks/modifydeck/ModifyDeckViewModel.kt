@@ -194,7 +194,7 @@ class ModifyDeckViewModel @Inject constructor(
                             card.copy(nationalDex = 1000)
                         } else card
                     }
-                        .filter { card -> card.superType != SuperType.Trainer }
+                        .filter { card -> card.superType == SuperType.Pokemon || card.superType == SuperType.Energy }
                         .sortedBy { it.nationalDex }
 
                     cardListFromAPIWithAllCards = newResult

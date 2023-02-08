@@ -1,6 +1,6 @@
-package com.example.pokemontcg.util
+package com.example.pokemontcg.domain.model.defaults
 
-object Pokedex {
+object DefaultPokedex {
 
 val pokedexBaseIdtoNameHash = hashMapOf(
     "base1-1" to "Alakazam",

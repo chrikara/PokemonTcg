@@ -16,11 +16,15 @@ import com.example.pokemontcg.domain.use_cases.AllMyDeckUseCases
 import com.example.pokemontcg.domain.use_cases.DeleteAllPokemonCardsUseCase
 import com.example.pokemontcg.domain.use_cases.DeleteOpponentFromDbUseCase
 import com.example.pokemontcg.domain.use_cases.GetAllGymOpponentsUseCase
+import com.example.pokemontcg.domain.use_cases.GetAllPokemonInfoFromAPIUseCase
 import com.example.pokemontcg.domain.use_cases.InsertGymOpponentUseCase
 import com.example.pokemontcg.presentation.features.createdecks.use_cases.DeletePokemonFromDeckUseCase
 import com.example.pokemontcg.presentation.features.createdecks.use_cases.GetPokemonFromDeckUseCase
 import com.example.pokemontcg.presentation.features.createdecks.use_cases.GetPokemonInfoFromAPIUseCase
 import com.example.pokemontcg.presentation.features.createdecks.use_cases.InsertPokemonToDeckUseCase
+import com.example.pokemontcg.presentation.features.game.domain.use_cases.DrawCardsUseCase
+import com.example.pokemontcg.presentation.features.game.domain.use_cases.GameUseCases
+import com.example.pokemontcg.presentation.features.game.domain.use_cases.ShuffleUseCase
 import com.example.pokemontcg.util.DangerousConstants
 import dagger.Module
 import dagger.Provides
@@ -113,6 +117,7 @@ object AppModule {
             deletePokemonFromDeckUseCase = DeletePokemonFromDeckUseCase(repository),
             deleteAllPokemonCardsUseCase = DeleteAllPokemonCardsUseCase(repository),
             getPokemonInfoFromAPIUseCase = GetPokemonInfoFromAPIUseCase(repository),
+            getAllPokemonInfoFromAPIUseCase = GetAllPokemonInfoFromAPIUseCase(repository)
         )
     }
 
@@ -128,7 +133,15 @@ object AppModule {
             insertGymOpponentUseCase = InsertGymOpponentUseCase(repository)
         )
     }
-
+    @Singleton
+    @Provides
+    fun provideGameUseCases(
+    ): GameUseCases {
+        return GameUseCases(
+            shuffle = ShuffleUseCase(),
+            drawCards = DrawCardsUseCase()
+        )
+    }
     @Singleton
     @Provides
     fun provideFilterOutDeck() : FilterOutDeckUseCase{
