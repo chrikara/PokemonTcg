@@ -22,6 +22,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Text
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -43,12 +44,27 @@ import com.example.pokemontcg.presentation.features.game.components.GameHandBox
 import com.example.pokemontcg.presentation.features.game.components.ShuffleDeckGame
 import com.example.pokemontcg.ui.theme.BlueAlpha80
 import com.example.pokemontcg.ui.theme.LocalSpacing
+import com.example.pokemontcg.util.UiEvent
 import kotlinx.coroutines.delay
 
 @Composable
 fun GameScreen(
-    viewModel: GameViewModel = hiltViewModel()
+    viewModel: GameViewModel = hiltViewModel(),
+    snackbarHostState : SnackbarHostState
 ) {
+    LaunchedEffect(key1 = true){
+        viewModel.uiEvent.collect{event ->
+            when(event){
+                is UiEvent.ShowSnackBar -> {
+                    snackbarHostState.showSnackbar(
+                        message = event.message,
+                        withDismissAction = true
+                    )
+                }
+                else -> {}
+            }
+        }
+    }
 
     val state = viewModel.state
 

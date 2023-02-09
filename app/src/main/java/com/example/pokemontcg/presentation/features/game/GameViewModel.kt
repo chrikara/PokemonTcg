@@ -23,8 +23,10 @@ import com.example.pokemontcg.presentation.features.game.domain.use_cases.GameUs
 import com.example.pokemontcg.util.INITIAL_CARDS_TO_DRAW
 import com.example.pokemontcg.util.Resource
 import com.example.pokemontcg.util.TOTAL_DECK_CARDS_GLOBAL
+import com.example.pokemontcg.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -32,6 +34,7 @@ import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -44,6 +47,9 @@ class GameViewModel @Inject constructor(
 ) : ViewModel(){
 
     private var getCardsFromAPIJob: Job? = null
+
+    private val _uiEvent = Channel<UiEvent>()
+    val uiEvent = _uiEvent.receiveAsFlow()
 
     var state by mutableStateOf(GameState())
         private set
@@ -104,6 +110,20 @@ class GameViewModel @Inject constructor(
             }
 
             is GameEvent.OnChooseActivePokemon -> {
+                if(event.card is PokemonCard){
+                    if(event.card.pokemonType == PokemonType.Basic){
+                        state.player.currentPokemon = event.card
+                        state.opponent.currentPokemon = state.opponent.currentHand.filterIsInstance<PokemonCard>().find { it.pokemonType == PokemonType.Basic }
+
+                        state = state.copy(
+                            currentState = GameState.GameSealedClass.PLAYER_TURN
+                        )
+                        return
+                    }
+                }
+                    viewModelScope.launch {
+                    _uiEvent.send(UiEvent.ShowSnackBar(message = "Διάλεξε ένα βασικό Pokemon!"))
+                }
 
             }
 

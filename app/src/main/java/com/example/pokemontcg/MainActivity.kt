@@ -128,7 +128,9 @@ class MainActivity : ComponentActivity() {
                             }
                         )
                         ){
-                            GameScreen()
+                            GameScreen(
+                                snackbarHostState = snackbarHostState
+                            )
                         }
                     }
                 }

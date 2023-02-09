@@ -9,6 +9,7 @@ import androidx.compose.runtime.setValue
 import com.example.pokemontcg.presentation.features.game.GameEvent
 import com.example.pokemontcg.presentation.features.game.GameState
 import com.example.pokemontcg.presentation.features.game.GameViewModel
+import com.example.pokemontcg.presentation.features.game.domain.model.PokemonCard
 
 @Composable
 fun GameChooseActive(
@@ -56,7 +57,11 @@ fun GameChooseActive(
                 )
                 imageUrl = it.image
             },
-            onClick2 = {}
+            onClick2 = {
+                viewModel.onEvent(
+                    GameEvent.OnChooseActivePokemon(it)
+                )
+            }
         )
     }
 
