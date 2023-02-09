@@ -68,6 +68,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.runtime.rememberCoroutineScope
 import com.example.pokemontcg.domain.model.Evolution
+import com.example.pokemontcg.domain.model.defaults.DefaultPokedex
 import com.example.pokemontcg.ui.theme.LocalSpacing
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.myPagerTabIndicatorOffset
@@ -209,12 +210,7 @@ fun PokeCardInfo(
 
                 Image(
                     painter = rememberImagePainter(
-                        data =
-                        when(pokeInfoCard.nationalDex.toString().length){
-                            1 -> "https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/00${pokeInfoCard.nationalDex}.png"
-                            2 -> "https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/0${pokeInfoCard.nationalDex}.png"
-                            else ->"https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/${pokeInfoCard.nationalDex}.png"
-                        }
+                        data = DefaultPokedex.imageUrlFromDex(pokeInfoCard.nationalDex)
                     ),
                     contentDescription ="",
                     modifier = Modifier.size(size.value)

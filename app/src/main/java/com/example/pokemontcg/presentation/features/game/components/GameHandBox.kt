@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,7 +41,7 @@ import com.example.pokemontcg.ui.theme.LocalSpacing
 @Composable
 fun GameHandBox(
     modifier : Modifier = Modifier,
-    gameCards : List<GameCard>,
+    gameCards : MutableList<GameCard>,
     textButton1 : String = "Info",
     textButton2 : String = "Confirm",
     onClick1 : (GameCard) -> Unit,
@@ -53,6 +54,11 @@ fun GameHandBox(
     var selectedPokemonCardImage by remember {
         mutableStateOf(gameCards[0])
     }
+    val isListEmpty by remember {
+        derivedStateOf { gameCards.isEmpty() }
+    }
+
+    val listState = rememberLazyListState()
 
     Box(modifier = modifier.fillMaxSize()){
 
@@ -65,6 +71,7 @@ fun GameHandBox(
             LazyColumn(
                 modifier = Modifier
                     .weight(1f),
+                state = listState
             ){
                 items(gameCards){
 
@@ -128,8 +135,17 @@ fun GameHandBox(
                     )
                     ButtonSecondary(modifier = Modifier
                         .fillMaxWidth(), text = textButton2, isEnabled = true, paddingValues = paddingValues,
-                        onClick = {onClick2(selectedPokemonCardImage)}
-                        )
+                        onClick = {
+                            onClick2(selectedPokemonCardImage)
+
+//                            if(isListEmpty){
+//                                println("Empty list")
+//                                return@ButtonSecondary
+//                            }
+//                            selectedPokemonCardImage = gameCards[0]
+
+                        }
+                    )
 
                 }
                 GameCardInHandBox(

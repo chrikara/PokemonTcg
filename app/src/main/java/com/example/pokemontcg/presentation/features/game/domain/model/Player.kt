@@ -4,7 +4,8 @@ data class Player(
     val name : String,
     var cards: MutableList<GameCard> = mutableListOf(),
     var currentPokemon : PokemonCard? = null,
-    var currentHand : MutableList<GameCard> = mutableListOf()
+    var currentHand : MutableList<GameCard> = mutableListOf(),
+    var benchPokemon : MutableList<PokemonCard> = mutableListOf()
 ){
 
 

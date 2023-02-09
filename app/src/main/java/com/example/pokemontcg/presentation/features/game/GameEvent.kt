@@ -9,6 +9,8 @@ sealed class GameEvent(){
     data class OnShuffleDeck(val player: Player) : GameEvent()
     object OnGive7CardsToEachPlayer : GameEvent()
 
+    data class OnChooseBenchPokemon(val gameCard : GameCard) : GameEvent()
+
     data class OnChooseActivePokemon(val card : GameCard) : GameEvent()
     data class OnChangeGameState(val gameState : GameState.GameSealedClass) : GameEvent()
 

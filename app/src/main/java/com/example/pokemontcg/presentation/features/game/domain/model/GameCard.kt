@@ -20,6 +20,7 @@ class PokemonCard(
     baseId: String,
     name: String,
     image: String = "",
+    val nationalDex : Int = 2,
     val pokemonType: PokemonType,
     val canEvolve : () -> Boolean = {false},
     val attack: List<Attack>? = null,

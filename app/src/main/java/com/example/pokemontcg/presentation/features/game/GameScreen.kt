@@ -40,7 +40,9 @@ import com.example.pokemontcg.presentation.components.ButtonSecondary
 import com.example.pokemontcg.presentation.features.game.components.GameActionWindow
 import com.example.pokemontcg.presentation.features.game.components.GameCardInHandBox
 import com.example.pokemontcg.presentation.features.game.components.GameChooseActive
+import com.example.pokemontcg.presentation.features.game.components.GameChooseBench
 import com.example.pokemontcg.presentation.features.game.components.GameHandBox
+import com.example.pokemontcg.presentation.features.game.components.GameMainScreen
 import com.example.pokemontcg.presentation.features.game.components.ShuffleDeckGame
 import com.example.pokemontcg.ui.theme.BlueAlpha80
 import com.example.pokemontcg.ui.theme.LocalSpacing
@@ -67,6 +69,7 @@ fun GameScreen(
     }
 
     val state = viewModel.state
+    println("STATE MAIN ${viewModel.state.currentState}")
 
     if(state.currentState == GameState.GameSealedClass.LOADING){
         LoadingScreen()
@@ -76,12 +79,16 @@ fun GameScreen(
         ShuffleDeckGame(secondsToStart = 4, viewModel = viewModel)
     }
 
+    if(state.currentState in GAMESTATE_CHOOSE_BENCH_LIST){
+        GameChooseBench(viewModel = viewModel)
+    }
+
     if(state.currentState in GAMESTATE_CHOOSE_ACTIVE_LIST){
         GameChooseActive(viewModel = viewModel,)
     }
 
-    if(state.currentState == GameState.GameSealedClass.PLAYER_TURN){
-        GameMainScreen(nationalDex = 2)
+    if(state.currentState in GAMESTATE_PLAYER_TURN_LIST){
+        GameMainScreen(viewModel = viewModel)
     }
 
 
@@ -89,8 +96,6 @@ fun GameScreen(
 
 
 }
-
-
 
 
 @Composable
@@ -105,82 +110,3 @@ private fun LoadingScreen() {
 }
 
 
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-private fun GameMainScreen(
-    modifier : Modifier = Modifier,
-    nationalDex : Int
-){
-    val listState = rememberLazyListState()
-
-
-    LazyColumn(
-        modifier = modifier
-            .fillMaxSize(),
-        state = listState,
-        reverseLayout = true
-    ){
-        item {
-            Box(
-                modifier = Modifier,
-                contentAlignment = Alignment.Center
-            ){
-                Image(
-                    painter = rememberImagePainter(
-                        data =
-                        when(nationalDex.toString().length){
-                            1 -> "https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/00${nationalDex}.png"
-                            2 -> "https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/0${nationalDex}.png"
-                            else ->"https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/${nationalDex}.png"
-                        }
-                    ),
-                    contentDescription ="",
-                    modifier = Modifier
-                        .size(250.dp)
-                        .align(Alignment.BottomStart)
-                        .offset(y = -100.dp)
-                )
-                FlowRow(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(BlueAlpha80)
-                        .border(width = 1.dp, color = Color.Black)
-                        .padding(15.dp)
-                        .align(Alignment.BottomCenter),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                    maxItemsInEachRow = 2
-                ) {
-                    val paddingValues = PaddingValues(15.dp)
-                    ButtonSecondary(modifier = Modifier.weight(1f), text = "Attack", paddingValues = paddingValues, isEnabled = true)
-                    ButtonSecondary(modifier = Modifier.weight(1f), text = "Hand", paddingValues = paddingValues,isEnabled = true)
-                    ButtonSecondary(modifier = Modifier.weight(1f), text = "Check", paddingValues = paddingValues,isEnabled = true)
-                    ButtonSecondary(modifier = Modifier.weight(1f), text = "Pass", paddingValues = paddingValues,isEnabled = true)
-
-                }
-            }
-
-
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp))
-
-            Box(modifier = Modifier.fillMaxWidth()){
-                Image(
-                    painter = rememberImagePainter(
-                        data =
-                        when((nationalDex+3).toString().length){
-                            1 -> "https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/00${nationalDex+3}.png"
-                            2 -> "https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/0${nationalDex+3}.png"
-                            else ->"https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/${nationalDex+3}.png"
-                        }
-                    ),
-                    contentDescription ="",
-                    modifier = Modifier
-                        .size(200.dp)
-                        .align(Alignment.TopEnd)
-                )
-            }
-        }
-    }
-}

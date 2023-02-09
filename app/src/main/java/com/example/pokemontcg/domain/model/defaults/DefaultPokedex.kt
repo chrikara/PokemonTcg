@@ -237,6 +237,14 @@ val pokedexBaseIdtoNameHash = hashMapOf(
         return null
     }
 
+    fun imageUrlFromDex(nationalDex : Int?) : String{
+        return when(nationalDex.toString().length){
+            1 -> "https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/00${nationalDex}.png"
+            2 -> "https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/0${nationalDex}.png"
+            else ->"https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/${nationalDex}.png"
+        }
+    }
+
 }
 
 

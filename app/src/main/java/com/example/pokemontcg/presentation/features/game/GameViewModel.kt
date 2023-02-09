@@ -113,10 +113,13 @@ class GameViewModel @Inject constructor(
                 if(event.card is PokemonCard){
                     if(event.card.pokemonType == PokemonType.Basic){
                         state.player.currentPokemon = event.card
+                        state.player.currentHand.remove(event.card)
                         state.opponent.currentPokemon = state.opponent.currentHand.filterIsInstance<PokemonCard>().find { it.pokemonType == PokemonType.Basic }
 
+
+
                         state = state.copy(
-                            currentState = GameState.GameSealedClass.PLAYER_TURN
+                            currentState = GameState.GameSealedClass.CHOOSE_BENCH.EXPLANATION
                         )
                         return
                     }
@@ -131,6 +134,27 @@ class GameViewModel @Inject constructor(
                 state = state.copy(
                     currentState = event.gameState
                 )
+            }
+
+            is GameEvent.OnChooseBenchPokemon -> {
+                viewModelScope.launch {
+                    if(event.gameCard is EnergyCard){
+                        _uiEvent.send(UiEvent.ShowSnackBar(message = "This is an Energy card!"))
+                        return@launch
+                    }
+                    if(event.gameCard is PokemonCard){
+                        if(event.gameCard.pokemonType !is PokemonType.Basic){
+                            _uiEvent.send(UiEvent.ShowSnackBar(message = "This is not a basic Pokemon!"))
+                            return@launch
+                        }
+
+
+                        state.player.currentHand = state.player.currentHand.also { it.remove(event.gameCard) }
+                        state.player.benchPokemon = state.player.benchPokemon.also { it.add(event.gameCard) }
+
+
+                    }
+                }
             }
         }
     }
@@ -167,6 +191,7 @@ class GameViewModel @Inject constructor(
                                             image = cardAPI.images.large,
                                             name = cardAPI.name,
                                             attack = cardAPI.attacks,
+                                            nationalDex = cardAPI.nationalPokedexNumbers!![0],
                                             pokemonType = getPokemonType(cardAPI.subtypes[0])
                                         )
                                         gameCard.hp = cardAPI.hp.toInt()
@@ -196,8 +221,10 @@ class GameViewModel @Inject constructor(
                                             baseId = cardAPI.id,
                                             image = cardAPI.images.large,
                                             name = cardAPI.name,
+                                            nationalDex = cardAPI.nationalPokedexNumbers!![0],
                                             attack = cardAPI.attacks,
-                                            pokemonType = getPokemonType(cardAPI.subtypes[0])
+                                            pokemonType = getPokemonType(cardAPI.subtypes[0]
+                                            )
                                         )
                                         gameCard.hp = cardAPI.hp.toInt()
                                         emptyListOpponent.add(gameCard)
@@ -234,7 +261,8 @@ class GameViewModel @Inject constructor(
                     state = state.copy(
                         currentState = GameState.GameSealedClass.ERROR,
                         errorMessageAPI = resource.message ?: "Some error occured"
-                    )                }
+                    )
+                }
                 is Resource.Loading -> {
                     state = state.copy(
                         currentState = GameState.GameSealedClass.LOADING
