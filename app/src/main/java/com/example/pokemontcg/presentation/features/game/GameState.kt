@@ -11,7 +11,9 @@ data class GameState(
 
     ){
 
+
     sealed class GameSealedClass {
+
         object LOADING : GameSealedClass()
         object ERROR : GameSealedClass()
         object START : GameSealedClass()
@@ -20,13 +22,18 @@ data class GameState(
         object FLIP_COIN : GameSealedClass()
         object PLAYER_WON : GameSealedClass()
         object OPPONENT_WON : GameSealedClass()
-        data class CHOOSE_ACTIVE(val chooseActive: CHOOSE_ACTIVE_STATE) : GameSealedClass()
-    }
-    enum class CHOOSE_ACTIVE_STATE{
-        EXPLANATION,
-        HAND,
-        CARD_INFO
+        sealed class CHOOSE_ACTIVE : GameSealedClass() {
+            object EXPLANATION : CHOOSE_ACTIVE()
+            object HAND : CHOOSE_ACTIVE()
+            object CARD_INFO : CHOOSE_ACTIVE()
+        }
     }
 
+
 }
+val GAMESTATE_CHOOSE_ACTIVE_LIST = listOf(
+    GameState.GameSealedClass.CHOOSE_ACTIVE.EXPLANATION,
+    GameState.GameSealedClass.CHOOSE_ACTIVE.HAND,
+    GameState.GameSealedClass.CHOOSE_ACTIVE.CARD_INFO,
+)
 

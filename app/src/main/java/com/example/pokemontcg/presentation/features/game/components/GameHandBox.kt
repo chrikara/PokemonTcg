@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.material3.MaterialTheme
@@ -54,7 +56,7 @@ fun GameHandBox(
 
     Box(modifier = modifier.fillMaxSize()){
 
-        Column(modifier = androidx.compose.ui.Modifier
+        Column(modifier = Modifier
             .padding(spacing.paddingExtraSmall)
             .fillMaxSize(),
             verticalArrangement = Arrangement.Center,
@@ -62,12 +64,10 @@ fun GameHandBox(
         ) {
             LazyColumn(
                 modifier = Modifier
-                    .weight(1f)
+                    .weight(1f),
             ){
                 items(gameCards){
-                    println("Selected ${selectedPokemonCardImage}")
-                    println("It ${it}")
-                    println("${selectedPokemonCardImage == it}")
+
                     Text(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -87,15 +87,16 @@ fun GameHandBox(
                                 brush = Brush.verticalGradient(GreenBrush),
                                 shape = RoundedCornerShape(5.dp)
                             )
-                            .background(brush =
-                            if (selectedPokemonCardImage == it) Brush.verticalGradient(
-                                GreenBrush
-                            ) else Brush.verticalGradient(
-                                listOf(
-                                    Color.Transparent,
-                                    Color.Transparent
+                            .background(
+                                brush =
+                                if (selectedPokemonCardImage == it) Brush.verticalGradient(
+                                    GreenBrush
+                                ) else Brush.verticalGradient(
+                                    listOf(
+                                        Color.Transparent,
+                                        Color.Transparent
+                                    )
                                 )
-                            )
                             )
                             .padding(15.dp)
                         ,
@@ -121,8 +122,8 @@ fun GameHandBox(
                     val paddingValues = PaddingValues(horizontal = 10.dp, vertical = 25.dp)
                     ButtonSecondary(
                         modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(end = 25.dp), text = textButton1, isEnabled = true, paddingValues = paddingValues,
+                            .fillMaxWidth()
+                            .padding(end = 25.dp), text = textButton1, isEnabled = true, paddingValues = paddingValues,
                         onClick = { onClick1(selectedPokemonCardImage) }
                     )
                     ButtonSecondary(modifier = Modifier

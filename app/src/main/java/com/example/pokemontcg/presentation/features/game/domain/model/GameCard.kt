@@ -20,6 +20,7 @@ class PokemonCard(
     baseId: String,
     name: String,
     image: String = "",
+    val pokemonType: PokemonType,
     val canEvolve : () -> Boolean = {false},
     val attack: List<Attack>? = null,
 ) : GameCard(baseId, name, image){
@@ -41,4 +42,10 @@ class PokemonCard(
 
     }
 
+}
+
+sealed class PokemonType(){
+    object Basic : PokemonType()
+    object Stage1 : PokemonType()
+    object Stage2 : PokemonType()
 }

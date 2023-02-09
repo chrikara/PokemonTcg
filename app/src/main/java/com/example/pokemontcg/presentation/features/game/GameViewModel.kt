@@ -18,6 +18,7 @@ import com.example.pokemontcg.presentation.features.game.domain.model.EnergyCard
 import com.example.pokemontcg.presentation.features.game.domain.model.GameCard
 import com.example.pokemontcg.presentation.features.game.domain.model.Player
 import com.example.pokemontcg.presentation.features.game.domain.model.PokemonCard
+import com.example.pokemontcg.presentation.features.game.domain.model.PokemonType
 import com.example.pokemontcg.presentation.features.game.domain.use_cases.GameUseCases
 import com.example.pokemontcg.util.INITIAL_CARDS_TO_DRAW
 import com.example.pokemontcg.util.Resource
@@ -73,14 +74,33 @@ class GameViewModel @Inject constructor(
 
             }
             is GameEvent.OnGive7CardsToEachPlayer -> {
+
                 val cards7Player = gameUseCases.drawCards(INITIAL_CARDS_TO_DRAW, state.player.cards)
                 val cards7Opponent = gameUseCases.drawCards(INITIAL_CARDS_TO_DRAW, state.opponent.cards)
+
+                val playerHandPokemonTypes = cards7Player.filterIsInstance<PokemonCard>().map { it.pokemonType }
+                val opponentHandPokemonTypes = cards7Opponent.filterIsInstance<PokemonCard>().map { it.pokemonType }
+
+                println(playerHandPokemonTypes)
+
+                if(PokemonType.Basic !in playerHandPokemonTypes || PokemonType.Basic !in opponentHandPokemonTypes){
+                    state.player.cards.addAll(cards7Player)
+                    state.opponent.cards.addAll(cards7Opponent)
+
+                    println(state.player.cards.size)
+
+                    onEvent(GameEvent.OnShuffleDeck(state.player))
+                    onEvent(GameEvent.OnShuffleDeck(state.opponent))
+                    return
+                }
 
                 state = state.copy(
                     player = state.player.copy(currentHand = cards7Player),
                     opponent = state.opponent.copy(currentHand = cards7Opponent),
-                    currentState = GameState.GameSealedClass.CHOOSE_ACTIVE(GameState.CHOOSE_ACTIVE_STATE.EXPLANATION)
+                    currentState = GameState.GameSealedClass.CHOOSE_ACTIVE.EXPLANATION
                 )
+
+
             }
 
             is GameEvent.OnChooseActivePokemon -> {
@@ -124,10 +144,10 @@ class GameViewModel @Inject constructor(
                                     if(superTypeOfChosenCard == SuperType.Pokemon){
                                         val gameCard = PokemonCard(
                                             baseId = cardAPI.id,
-
                                             image = cardAPI.images.large,
                                             name = cardAPI.name,
                                             attack = cardAPI.attacks,
+                                            pokemonType = getPokemonType(cardAPI.subtypes[0])
                                         )
                                         gameCard.hp = cardAPI.hp.toInt()
                                         emptyListPlayer.add(gameCard)
@@ -156,7 +176,8 @@ class GameViewModel @Inject constructor(
                                             baseId = cardAPI.id,
                                             image = cardAPI.images.large,
                                             name = cardAPI.name,
-                                            attack = cardAPI.attacks
+                                            attack = cardAPI.attacks,
+                                            pokemonType = getPokemonType(cardAPI.subtypes[0])
                                         )
                                         gameCard.hp = cardAPI.hp.toInt()
                                         emptyListOpponent.add(gameCard)
@@ -201,5 +222,14 @@ class GameViewModel @Inject constructor(
                 }
             }
         }.launchIn(viewModelScope)
+    }
+
+    private fun getPokemonType(subtype : String) : PokemonType{
+        return when(subtype){
+            "Basic" -> PokemonType.Basic
+            "Stage 1" -> PokemonType.Stage1
+            "Stage 2" -> PokemonType.Stage2
+            else -> PokemonType.Stage2
+        }
     }
 }
