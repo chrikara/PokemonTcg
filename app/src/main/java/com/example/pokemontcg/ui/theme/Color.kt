@@ -11,6 +11,12 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 val GreenButtonColor = Color(0xFF48CA12)
+val GreenBrush =  listOf(
+    Color(0xFF66D852),
+    Color(0xFFADF38F),
+    Color(0xFF1A9E03),
+
+    )
 
 val BlueAlpha = Color(0xFF1F81E9)
 val BlueAlpha20 = Color(0x331F81E9)

@@ -12,7 +12,7 @@ class EnergyCard(
     baseId: String = "",
     name : String = "",
     image : String = "",
-    val symbol: Symbol
+    val symbol: Symbol = Symbol.Colorless
 
 )
     : GameCard(baseId, name, image)
@@ -21,7 +21,7 @@ class PokemonCard(
     name: String,
     image: String = "",
     val canEvolve : () -> Boolean = {false},
-    val attack: List<Attack>,
+    val attack: List<Attack>? = null,
 ) : GameCard(baseId, name, image){
 
     var energyAttached = mutableListOf<EnergyCard>()

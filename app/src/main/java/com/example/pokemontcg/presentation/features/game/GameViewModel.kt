@@ -48,6 +48,7 @@ class GameViewModel @Inject constructor(
         private set
 
     init {
+
         val deckNumber = DeckNumber.fromString(savedStateHandle.get<String>("deckNumber")?: "1st")
         val opponent = savedStateHandle.get<String>("opponent") ?: "Yugo"
         startGame(deckNumber = deckNumber, opponent)
@@ -78,7 +79,17 @@ class GameViewModel @Inject constructor(
                 state = state.copy(
                     player = state.player.copy(currentHand = cards7Player),
                     opponent = state.opponent.copy(currentHand = cards7Opponent),
-                    currentState = GameState.GameEnums.PLAYER_TURN
+                    currentState = GameState.GameSealedClass.CHOOSE_ACTIVE(GameState.CHOOSE_ACTIVE_STATE.EXPLANATION)
+                )
+            }
+
+            is GameEvent.OnChooseActivePokemon -> {
+
+            }
+
+            is GameEvent.OnChangeGameState -> {
+                state = state.copy(
+                    currentState = event.gameState
                 )
             }
         }
@@ -86,6 +97,7 @@ class GameViewModel @Inject constructor(
     fun startGame(deckNumber: DeckNumber, opponent : String){
         getCardsFromAPI(deckNumber, opponent)
     }
+
 
 
     fun getCardsFromAPI(
@@ -112,9 +124,10 @@ class GameViewModel @Inject constructor(
                                     if(superTypeOfChosenCard == SuperType.Pokemon){
                                         val gameCard = PokemonCard(
                                             baseId = cardAPI.id,
+
                                             image = cardAPI.images.large,
                                             name = cardAPI.name,
-                                            attack = cardAPI.attacks
+                                            attack = cardAPI.attacks,
                                         )
                                         gameCard.hp = cardAPI.hp.toInt()
                                         emptyListPlayer.add(gameCard)
@@ -171,19 +184,19 @@ class GameViewModel @Inject constructor(
                                 name = opponent,
                                 cards = emptyListOpponent
                             ) ,
-                            currentState = GameState.GameEnums.START,
+                            currentState = GameState.GameSealedClass.START,
                         )
                     }
                 }
 
                 is Resource.Error -> {
                     state = state.copy(
-                        currentState = GameState.GameEnums.ERROR,
+                        currentState = GameState.GameSealedClass.ERROR,
                         errorMessageAPI = resource.message ?: "Some error occured"
                     )                }
                 is Resource.Loading -> {
                     state = state.copy(
-                        currentState = GameState.GameEnums.LOADING
+                        currentState = GameState.GameSealedClass.LOADING
                     )
                 }
             }
