@@ -5,10 +5,10 @@ import com.example.pokemontcg.presentation.features.game.domain.model.PokemonCar
 import com.example.pokemontcg.presentation.features.game.domain.model.PokemonType
 
 data class GameState(
-    val player: Player = Player("Player", currentPokemon = fakePlayerCurrentPokemon)
+    val player: Player = Player("Player")
     ,
-    val opponent: Player = Player("Opponent", currentPokemon = fakeOpponentCurrentPokemon),
-    val currentState : GameSealedClass = GameSealedClass.PLAYER_TURN.MAIN,
+    val opponent: Player = Player("Opponent"),
+    val currentState : GameSealedClass = GameSealedClass.LOADING,
     val errorMessageAPI : String = "",
     val isBackIntercepted : Boolean = false,
 

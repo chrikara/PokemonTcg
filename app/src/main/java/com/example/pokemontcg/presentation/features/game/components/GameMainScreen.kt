@@ -10,8 +10,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -36,12 +39,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
+import com.example.pokemontcg.data.remote.api.dto.cardoverviewdto.Attack
 import com.example.pokemontcg.domain.model.Symbol
 import com.example.pokemontcg.domain.model.defaults.DefaultPokedex
 import com.example.pokemontcg.presentation.components.ButtonSecondary
 import com.example.pokemontcg.presentation.features.game.GameEvent
 import com.example.pokemontcg.presentation.features.game.GameState
 import com.example.pokemontcg.presentation.features.game.GameViewModel
+import com.example.pokemontcg.presentation.features.game.domain.model.PokemonCard
 import com.example.pokemontcg.ui.theme.BlueAlpha80
 import com.example.pokemontcg.ui.theme.GameMenuPressedColor
 import com.example.pokemontcg.ui.theme.GreenBrush
@@ -63,6 +68,7 @@ fun GameMainScreen(
     }
 
     if(state.currentState == GameState.GameSealedClass.PLAYER_TURN.MAIN){
+        println("Attacks and state ${state.player.currentPokemon?.attack}")
         LazyColumn(
             modifier = modifier
                 .fillMaxSize(),
@@ -84,7 +90,10 @@ fun GameMainScreen(
                             .align(Alignment.BottomStart)
                             .offset(y = -100.dp)
                     )
-                    GamePlayerMenu(modifier = Modifier.align(Alignment.BottomCenter))
+                    GamePlayerMenu(
+                        modifier = Modifier.align(Alignment.BottomCenter),
+                        viewModel = viewModel
+                    )
                 }
 
 
@@ -111,6 +120,7 @@ fun GameMainScreen(
 @Composable
 fun GamePlayerMenu(
     modifier : Modifier = Modifier,
+    viewModel: GameViewModel
 
 ){
 
@@ -167,7 +177,7 @@ fun GamePlayerMenu(
         }
 
         AnimatedVisibility(visible = isAttackVisible) {
-            GameAttackBox()
+            GameAttackBox(viewModel = viewModel)
         }
     }
 
@@ -177,7 +187,10 @@ fun GamePlayerMenu(
 
 }
 @Composable
-private fun GameAttackBox(){
+private fun GameAttackBox(
+    viewModel: GameViewModel
+){
+    val currentPokemonAttacks = viewModel.state.player.currentPokemon!!.attack
 
 
     Column(modifier = Modifier
@@ -188,28 +201,33 @@ private fun GameAttackBox(){
         horizontalAlignment = Alignment.CenterHorizontally){
         Column(modifier = Modifier.fillMaxWidth())
         {
-            GamePokemonAttack(energyCount = 1, textDmg = "20", textAttack = "Water gun")
-            GamePokemonAttack(energyCount = 3, textDmg = "303", textAttack = "Call for family")
+            currentPokemonAttacks?.forEach{
+                GamePokemonAttack(attack = it)
+            }
         }
     }
 }
 @Composable
 private fun GamePokemonAttack(
-    energyCount : Int,
-    textDmg : String,
-    textAttack : String
+    attack: Attack
 ){
     Row(
-        modifier = Modifier.fillMaxWidth().clickable {  }.padding(vertical = 10.dp),
+        modifier = Modifier
+            .height(IntrinsicSize.Min)
+            .fillMaxWidth()
+            .clickable { }
+            .padding(vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
     ){
         Row(
-            modifier = Modifier.weight(2f),
+            modifier = Modifier
+                .height(IntrinsicSize.Min)
+                .weight(2f),
             horizontalArrangement = Arrangement.Start,
         ) {
-            repeat(energyCount){
+            attack.cost.forEach{
                 Image(
-                    painter = painterResource(id = Symbol.fromString("Fighting").drawable),
+                    painter = painterResource(id = Symbol.fromString(it).drawable),
                     contentDescription = "",
                     modifier = Modifier.size(25.dp)
                 )
@@ -218,9 +236,9 @@ private fun GamePokemonAttack(
 
         Text(
             modifier = Modifier.weight(3f),
-            text = textAttack,
+            text = attack.name,
             color = MaterialTheme.colorScheme.onBackground,
-            fontSize = 20.sp,
+            fontSize = 18.sp,
             style = MaterialTheme.typography.titleLarge,
             overflow = TextOverflow.Ellipsis
         )
@@ -228,9 +246,9 @@ private fun GamePokemonAttack(
         Text(
             modifier = Modifier.weight(1f),
 
-            text = textDmg,
+            text = attack.damage,
             color = MaterialTheme.colorScheme.onBackground,
-            fontSize = 20.sp,
+            fontSize = 18.sp,
             style = MaterialTheme.typography.titleLarge,
             textAlign = TextAlign.End
         )
