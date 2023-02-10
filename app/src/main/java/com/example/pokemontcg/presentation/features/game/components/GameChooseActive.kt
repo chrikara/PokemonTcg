@@ -49,7 +49,7 @@ fun GameChooseActive(
     }
     if(state.currentState ==  GameState.GameSealedClass.CHOOSE_ACTIVE.HAND){
         GameHandBox(
-            gameCards = state.player.currentHand,
+            viewModel = viewModel,
             onClick1 = {
                 viewModel.onEvent(
                     GameEvent.OnChangeGameState(

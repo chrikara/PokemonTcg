@@ -45,7 +45,6 @@ fun GameCardInHandBox(
     Column(
         modifier = modifier
             .fillMaxHeight()
-
             .padding(13.dp)
             .shadow(
                 elevation = 3.dp,

@@ -6,32 +6,23 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pokemontcg.domain.model.CardOverview
-import com.example.pokemontcg.domain.model.CardSaved
 import com.example.pokemontcg.domain.model.DeckNumber
 import com.example.pokemontcg.domain.model.Symbol
 import com.example.pokemontcg.domain.model.cardinfo.SuperType
 import com.example.pokemontcg.domain.model.defaults.defaultOpponents
 import com.example.pokemontcg.domain.use_cases.AllMyDeckUseCases
-import com.example.pokemontcg.domain.use_cases.GetCardsUseCase
 import com.example.pokemontcg.presentation.features.game.domain.model.EnergyCard
 import com.example.pokemontcg.presentation.features.game.domain.model.GameCard
-import com.example.pokemontcg.presentation.features.game.domain.model.Player
 import com.example.pokemontcg.presentation.features.game.domain.model.PokemonCard
 import com.example.pokemontcg.presentation.features.game.domain.model.PokemonType
 import com.example.pokemontcg.presentation.features.game.domain.use_cases.GameUseCases
 import com.example.pokemontcg.util.INITIAL_CARDS_TO_DRAW
 import com.example.pokemontcg.util.Resource
-import com.example.pokemontcg.util.TOTAL_DECK_CARDS_GLOBAL
 import com.example.pokemontcg.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.flatMapConcat
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -136,7 +127,7 @@ class GameViewModel @Inject constructor(
                 )
             }
 
-            is GameEvent.OnChooseBenchPokemon -> {
+            is GameEvent.OnPlayerBenchPokemon -> {
                 viewModelScope.launch {
                     if(event.gameCard is EnergyCard){
                         _uiEvent.send(UiEvent.ShowSnackBar(message = "This is an Energy card!"))
@@ -147,17 +138,47 @@ class GameViewModel @Inject constructor(
                             _uiEvent.send(UiEvent.ShowSnackBar(message = "This is not a basic Pokemon!"))
                             return@launch
                         }
+                    }
 
+                if(event.gameCard is PokemonCard){
+                    if(event.gameCard.pokemonType is PokemonType.Basic){
+                        val newCurrentHandList = mutableListOf<GameCard>().apply {
+                            addAll(state.player.currentHand)
+                            remove(event.gameCard)
+                        }
 
-                        state.player.currentHand = state.player.currentHand.also { it.remove(event.gameCard) }
-                        state.player.benchPokemon = state.player.benchPokemon.also { it.add(event.gameCard) }
-
+                        val newBenchPokemonList = mutableListOf<PokemonCard>().apply {
+                            addAll(state.player.benchPokemon)
+                            add(event.gameCard)
+                        }
+                        state = state.copy(
+                            player = state.player.copy(
+                                currentHand = newCurrentHandList,
+                                benchPokemon = newBenchPokemonList
+                            )
+                        )
+                        _uiEvent.send(UiEvent.ShowSnackBar(message = "Added ${event.gameCard.name} to bench!"))
 
                     }
                 }
             }
         }
+
+            GameEvent.OnOpponentBenchAllPokemon -> {
+                state.opponent.benchPokemon.addAll(
+                    elements = state.opponent.currentHand.filterIsInstance<PokemonCard>().filter { it.pokemonType is PokemonType.Basic }
+                )
+                state.opponent.currentHand.removeAll(
+                    elements = state.opponent.currentHand.filterIsInstance<PokemonCard>().filter { it.pokemonType is PokemonType.Basic }
+                )
+
+                println(state.opponent.benchPokemon.map { it.name })
+                println(state.opponent.currentHand.map { it.name })
+            }
+        }
     }
+
+
     fun startGame(deckNumber: DeckNumber, opponent : String){
         getCardsFromAPI(deckNumber, opponent)
     }

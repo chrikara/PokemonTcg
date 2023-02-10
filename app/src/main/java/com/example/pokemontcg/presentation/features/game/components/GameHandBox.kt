@@ -33,6 +33,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.pokemontcg.domain.model.defaults.DefaultPokedex
 import com.example.pokemontcg.presentation.components.ButtonSecondary
+import com.example.pokemontcg.presentation.features.game.GameState
+import com.example.pokemontcg.presentation.features.game.GameViewModel
 import com.example.pokemontcg.presentation.features.game.domain.model.GameCard
 import com.example.pokemontcg.presentation.features.game.domain.model.PokemonCard
 import com.example.pokemontcg.ui.theme.GreenBrush
@@ -41,22 +43,27 @@ import com.example.pokemontcg.ui.theme.LocalSpacing
 @Composable
 fun GameHandBox(
     modifier : Modifier = Modifier,
-    gameCards : MutableList<GameCard>,
+    viewModel: GameViewModel,
     textButton1 : String = "Info",
     textButton2 : String = "Confirm",
+    textButton3 : String = "End",
     onClick1 : (GameCard) -> Unit,
     onClick2: (GameCard) -> Unit,
+    onClick3: () -> Unit = {},
+    isButton3Visible : Boolean = false,
+
 
 ) {
 
-    val spacing = LocalSpacing.current
 
-    var selectedPokemonCardImage by remember {
-        mutableStateOf(gameCards[0])
+    val spacing = LocalSpacing.current
+    val currentHand = viewModel.state.player.currentHand
+
+    var selectedIndex by remember {
+        mutableStateOf(0)
     }
-    val isListEmpty by remember {
-        derivedStateOf { gameCards.isEmpty() }
-    }
+
+
 
     val listState = rememberLazyListState()
 
@@ -73,15 +80,15 @@ fun GameHandBox(
                     .weight(1f),
                 state = listState
             ){
-                items(gameCards){
+                items(currentHand){
 
                     Text(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 3.dp)
                             .clickable {
-                                selectedPokemonCardImage =
-                                    gameCards.find { defaultList -> defaultList == it }!!
+                                selectedIndex =
+                                    currentHand.indexOf(it)
                             }
 
 
@@ -96,7 +103,8 @@ fun GameHandBox(
                             )
                             .background(
                                 brush =
-                                if (selectedPokemonCardImage == it) Brush.verticalGradient(
+                                if (selectedIndex == currentHand.indexOf(it)
+                                ) Brush.verticalGradient(
                                     GreenBrush
                                 ) else Brush.verticalGradient(
                                     listOf(
@@ -127,42 +135,60 @@ fun GameHandBox(
                     verticalArrangement = Arrangement.Bottom
                 ) {
                     val paddingValues = PaddingValues(horizontal = 10.dp, vertical = 25.dp)
-                    ButtonSecondary(
+
+                    if(isButton3Visible){
+                        ButtonSecondary(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(end = 50.dp), text = textButton3, isEnabled = true, paddingValues = paddingValues,
+                            onClick = onClick3
+                        )
+                    }
+
+
+                    if(currentHand.isNotEmpty()){
+                        ButtonSecondary(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(end = 25.dp), text = textButton1, isEnabled = true, paddingValues = paddingValues,
+                            onClick = { onClick1(currentHand[selectedIndex]) }
+                        )
+                    }
+
+                    if(currentHand.isNotEmpty()){
+                        ButtonSecondary(modifier = Modifier
+                            .fillMaxWidth(), text = textButton2, isEnabled = true, paddingValues = paddingValues,
+                            onClick = {
+                                println(currentHand.size)
+                                onClick2(currentHand[selectedIndex])
+                                println(currentHand.size)
+                                if(viewModel.state.currentState == GameState.GameSealedClass.CHOOSE_BENCH.HAND){
+                                    if(selectedIndex == currentHand.indexOf(currentHand.last()) ){
+                                        selectedIndex-=1
+                                    }
+                                }
+
+                            }
+                        )
+                    }
+                }
+                if(currentHand.isNotEmpty()){
+                    GameCardInHandBox(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(end = 25.dp), text = textButton1, isEnabled = true, paddingValues = paddingValues,
-                        onClick = { onClick1(selectedPokemonCardImage) }
-                    )
-                    ButtonSecondary(modifier = Modifier
-                        .fillMaxWidth(), text = textButton2, isEnabled = true, paddingValues = paddingValues,
-                        onClick = {
-                            onClick2(selectedPokemonCardImage)
+                            .fillMaxSize()
+                            .weight(1f),
+                        imageUrl =
 
-//                            if(isListEmpty){
-//                                println("Empty list")
-//                                return@ButtonSecondary
-//                            }
-//                            selectedPokemonCardImage = gameCards[0]
 
+                        if(currentHand[selectedIndex] is PokemonCard){
+                            val dex = DefaultPokedex.getKeyByPokemonName(DefaultPokedex.pokedexNationaltoNameHash, currentHand[selectedIndex].name)
+                            "https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/$dex.png"
+                        }else{
+                            currentHand[selectedIndex].image
                         }
                     )
-
                 }
-                GameCardInHandBox(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .weight(1f),
-                    imageUrl =
-
-                    if(selectedPokemonCardImage is PokemonCard){
-                        val dex = DefaultPokedex.getKeyByPokemonName(DefaultPokedex.pokedexNationaltoNameHash, selectedPokemonCardImage.name)
-                        "https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/$dex.png"
-                    }else{
-                        selectedPokemonCardImage.image
-                    }
-                )
             }
-
         }
     }
 }

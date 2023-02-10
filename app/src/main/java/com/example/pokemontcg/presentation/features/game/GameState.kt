@@ -49,6 +49,7 @@ val GAMESTATE_CHOOSE_ACTIVE_LIST = listOf(
 val GAMESTATE_CHOOSE_BENCH_LIST = listOf(
     GameState.GameSealedClass.CHOOSE_BENCH.EXPLANATION,
     GameState.GameSealedClass.CHOOSE_BENCH.HAND,
+    GameState.GameSealedClass.CHOOSE_BENCH.CARD_INFO,
 )
 
 val GAMESTATE_PLAYER_TURN_LIST = listOf(
