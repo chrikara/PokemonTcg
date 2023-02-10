@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,6 +22,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -34,11 +36,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
+import com.example.pokemontcg.R
 import com.example.pokemontcg.data.remote.api.dto.cardoverviewdto.Attack
 import com.example.pokemontcg.domain.model.Symbol
 import com.example.pokemontcg.domain.model.defaults.DefaultPokedex
@@ -50,6 +55,9 @@ import com.example.pokemontcg.presentation.features.game.domain.model.PokemonCar
 import com.example.pokemontcg.ui.theme.BlueAlpha80
 import com.example.pokemontcg.ui.theme.GameMenuPressedColor
 import com.example.pokemontcg.ui.theme.GreenBrush
+import com.example.pokemontcg.ui.theme.LocalSpacing
+import com.example.pokemontcg.util.HEART_EMPTY
+import com.example.pokemontcg.util.HEART_FILLED
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -58,6 +66,7 @@ fun GameMainScreen(
     viewModel: GameViewModel
 ){
     val state = viewModel.state
+    val spacing = LocalSpacing.current
 //    val dex = DefaultPokedex.getKeyByPokemonName(DefaultPokedex.pokedexNationaltoNameHash, selectedPokemonCardImage.name)
 //    "https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/$dex.png"
 
@@ -80,16 +89,64 @@ fun GameMainScreen(
                     contentAlignment = Alignment.Center
                 ){
 
-                    Image(
-                        painter = rememberImagePainter(
-                            data = DefaultPokedex.imageUrlFromDex(state.player.currentPokemon!!.nationalDex)
-                        ),
-                        contentDescription ="",
+                    Row(
                         modifier = Modifier
-                            .size(250.dp)
-                            .align(Alignment.BottomStart)
+                            .fillMaxWidth()
+                            .height(IntrinsicSize.Min)
                             .offset(y = -100.dp)
-                    )
+
+                    ){
+                        Image(
+                            painter = rememberImagePainter(
+                                data = DefaultPokedex.imageUrlFromDex(state.player.currentPokemon!!.nationalDex)
+                            ),
+                            contentDescription ="",
+                            modifier = Modifier
+                                .aspectRatio(1f)
+                                .weight(1.3f)
+                        )
+                        Spacer(modifier = Modifier.width(spacing.spaceMedium))
+                        Column(modifier = Modifier
+                            .fillMaxSize()
+                            .weight(1f)
+                        ) {
+
+                            Text(
+                                text = buildAnnotatedString {
+                                    append("HP\n")
+                                    repeat(3) { append(HEART_FILLED) }
+                                    repeat(3) { append(HEART_EMPTY) }
+                                },
+                                style = MaterialTheme.typography.titleLarge,
+                                fontSize = 16.sp,
+                                lineHeight = 20.sp,
+                                fontFamily = FontFamily.Monospace
+                            )
+                            Spacer(modifier = Modifier.height(spacing.spaceMedium))
+                            Text(
+                                text = "Energy",
+                                style = MaterialTheme.typography.titleLarge,
+                                fontSize = 16.sp,
+                                lineHeight = 20.sp,
+                                fontFamily = FontFamily.Monospace
+
+                            )
+                            Spacer(modifier = Modifier.height(spacing.spaceExtraSmall))
+
+                            FlowRow(
+                            ){
+                                repeat(14){
+                                    Image(
+                                        painter = painterResource(id = R.drawable.symbol_fighting),
+                                        contentDescription = "",
+                                        modifier = Modifier.size(22.dp)
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+
                     GamePlayerMenu(
                         modifier = Modifier.align(Alignment.BottomCenter),
                         viewModel = viewModel
@@ -101,17 +158,64 @@ fun GameMainScreen(
                     .fillMaxWidth()
                     .height(200.dp))
 
-                Box(modifier = Modifier.fillMaxWidth()){
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(IntrinsicSize.Min)
+                ){
+                    Column(modifier = Modifier
+                        .fillMaxSize()
+                        .padding(start = spacing.paddingSmall)
+                        .weight(1f)
+                    ) {
+
+                        Text(
+                            text = buildAnnotatedString {
+                                append("HP\n")
+                                repeat(3) { append(HEART_FILLED) }
+                                repeat(3) { append(HEART_EMPTY) }
+                            },
+                            style = MaterialTheme.typography.titleLarge,
+                            fontSize = 16.sp,
+                            lineHeight = 20.sp,
+                            fontFamily = FontFamily.Monospace
+                        )
+                        Spacer(modifier = Modifier.height(spacing.spaceMedium))
+                        Text(
+                            text = "Energy",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontSize = 16.sp,
+                            lineHeight = 20.sp,
+                            fontFamily = FontFamily.Monospace
+                        )
+                        Spacer(modifier = Modifier.height(spacing.spaceExtraSmall))
+
+
+                        FlowRow(
+                        ){
+                            repeat(14){
+                                Image(
+                                    painter = painterResource(id = R.drawable.symbol_fighting),
+                                    contentDescription = "",
+                                    modifier = Modifier.size(22.dp)
+                                )
+                            }
+                        }
+                    }
+                    Spacer(modifier = Modifier.width(spacing.spaceMedium))
+
                     Image(
                         painter = rememberImagePainter(
                             data = DefaultPokedex.imageUrlFromDex(state.opponent.currentPokemon!!.nationalDex)
                         ),
                         contentDescription ="",
                         modifier = Modifier
-                            .size(200.dp)
-                            .align(Alignment.TopEnd)
+                            .weight(1.3f)
+                            .aspectRatio(1f)
                     )
                 }
+
+
             }
         }
     }
