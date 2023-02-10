@@ -77,7 +77,10 @@ fun GameMainScreen(
     }
 
     if(state.currentState == GameState.GameSealedClass.PLAYER_TURN.MAIN){
-        println("Attacks and state ${state.player.currentPokemon?.attack}")
+
+        println("player symbol" + viewModel.state.player.currentPokemon!!.energyAttached[0].symbol)
+        println("opponent symbol" + viewModel.state.opponent.currentPokemon!!.energyAttached[0].symbol)
+
         LazyColumn(
             modifier = modifier
                 .fillMaxSize(),
@@ -111,11 +114,14 @@ fun GameMainScreen(
                             .weight(1f)
                         ) {
 
+                            val totalPlayerHp = state.player.currentPokemon!!.totalHp / 10
+                            val remainingPlayerHp =  state.player.currentPokemon!!.remainingHp / 10
+
                             Text(
                                 text = buildAnnotatedString {
                                     append("HP\n")
-                                    repeat(3) { append(HEART_FILLED) }
-                                    repeat(3) { append(HEART_EMPTY) }
+                                    repeat(remainingPlayerHp) { append(HEART_FILLED) }
+                                    repeat(totalPlayerHp - remainingPlayerHp) { append(HEART_EMPTY) }
                                 },
                                 style = MaterialTheme.typography.titleLarge,
                                 fontSize = 16.sp,
@@ -135,9 +141,9 @@ fun GameMainScreen(
 
                             FlowRow(
                             ){
-                                repeat(14){
+                                viewModel.state.player.currentPokemon!!.energyAttached.forEach{ energyCard ->
                                     Image(
-                                        painter = painterResource(id = R.drawable.symbol_fighting),
+                                        painter = painterResource(id = energyCard.symbol.drawable),
                                         contentDescription = "",
                                         modifier = Modifier.size(22.dp)
                                     )
@@ -169,11 +175,16 @@ fun GameMainScreen(
                         .weight(1f)
                     ) {
 
+                        // total 60
+                        // remaining 30
+                        val totalOpponentHp = state.opponent.currentPokemon!!.totalHp / 10
+                        val remainingOpponentHp =  state.opponent.currentPokemon!!.remainingHp / 10
+
                         Text(
                             text = buildAnnotatedString {
                                 append("HP\n")
-                                repeat(3) { append(HEART_FILLED) }
-                                repeat(3) { append(HEART_EMPTY) }
+                                repeat(remainingOpponentHp) { append(HEART_FILLED) }
+                                repeat(totalOpponentHp - remainingOpponentHp) { append(HEART_EMPTY) }
                             },
                             style = MaterialTheme.typography.titleLarge,
                             fontSize = 16.sp,
@@ -193,9 +204,9 @@ fun GameMainScreen(
 
                         FlowRow(
                         ){
-                            repeat(14){
+                            viewModel.state.opponent.currentPokemon!!.energyAttached.forEach{ energyCard ->
                                 Image(
-                                    painter = painterResource(id = R.drawable.symbol_fighting),
+                                    painter = painterResource(id = energyCard.symbol.drawable),
                                     contentDescription = "",
                                     modifier = Modifier.size(22.dp)
                                 )

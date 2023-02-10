@@ -47,9 +47,9 @@ class GameViewModel @Inject constructor(
 
     init {
 
-//        val deckNumber = DeckNumber.fromString(savedStateHandle.get<String>("deckNumber")?: "1st")
-//        val opponent = savedStateHandle.get<String>("opponent") ?: "Yugo"
-//        startGame(deckNumber = deckNumber, opponent)
+        val deckNumber = DeckNumber.fromString(savedStateHandle.get<String>("deckNumber")?: "1st")
+        val opponent = savedStateHandle.get<String>("opponent") ?: "Yugo"
+        startGame(deckNumber = deckNumber, opponent)
 
     }
 
@@ -78,13 +78,10 @@ class GameViewModel @Inject constructor(
                 val playerHandPokemonTypes = cards7Player.filterIsInstance<PokemonCard>().map { it.pokemonType }
                 val opponentHandPokemonTypes = cards7Opponent.filterIsInstance<PokemonCard>().map { it.pokemonType }
 
-                println(playerHandPokemonTypes)
 
                 if(PokemonType.Basic !in playerHandPokemonTypes || PokemonType.Basic !in opponentHandPokemonTypes){
                     state.player.cards.addAll(cards7Player)
                     state.opponent.cards.addAll(cards7Opponent)
-
-                    println(state.player.cards.size)
 
                     onEvent(GameEvent.OnShuffleDeck(state.player))
                     onEvent(GameEvent.OnShuffleDeck(state.opponent))
@@ -172,8 +169,6 @@ class GameViewModel @Inject constructor(
                     elements = state.opponent.currentHand.filterIsInstance<PokemonCard>().filter { it.pokemonType is PokemonType.Basic }
                 )
 
-                println(state.opponent.benchPokemon.map { it.name })
-                println(state.opponent.currentHand.map { it.name })
             }
         }
     }
@@ -215,7 +210,8 @@ class GameViewModel @Inject constructor(
                                             nationalDex = cardAPI.nationalPokedexNumbers!![0],
                                             pokemonType = getPokemonType(cardAPI.subtypes[0])
                                         )
-                                        gameCard.hp = cardAPI.hp.toInt()
+                                        gameCard.totalHp = cardAPI.hp.toInt()
+                                        gameCard.remainingHp = cardAPI.hp.toInt()
                                         emptyListPlayer.add(gameCard)
                                         break
                                     }
@@ -247,7 +243,9 @@ class GameViewModel @Inject constructor(
                                             pokemonType = getPokemonType(cardAPI.subtypes[0]
                                             )
                                         )
-                                        gameCard.hp = cardAPI.hp.toInt()
+                                        gameCard.totalHp = cardAPI.hp.toInt()
+                                        gameCard.remainingHp = cardAPI.hp.toInt()
+
                                         emptyListOpponent.add(gameCard)
                                         break
                                     }

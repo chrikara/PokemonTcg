@@ -26,8 +26,9 @@ class PokemonCard(
     val attack: List<Attack>? = null,
 ) : GameCard(baseId, name, image){
 
-    var energyAttached = mutableListOf<EnergyCard>()
-    var hp: Int = 0
+    var energyAttached = mutableListOf<EnergyCard>(EnergyCard(symbol = Symbol.Psychic, name = "Psychic"))
+    var totalHp: Int = 0
+    var remainingHp : Int = 0
 
     fun attachEnergy(energy : EnergyCard){
         if(energy == EnergyCard(symbol = Symbol.Colorless)){
