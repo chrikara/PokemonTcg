@@ -41,14 +41,16 @@ import com.example.pokemontcg.ui.theme.LocalSpacing
 fun ButtonSecondary(
     modifier : Modifier = Modifier,
     text : String,
-    onClick : () -> Unit = {},
     fontSize : TextUnit = 20.sp,
     paddingValues: PaddingValues = PaddingValues(
         horizontal = 55.dp,
         vertical = 15.dp
     ),
     isEnabled : Boolean,
-) {
+    backGroundColors : List<Color> = GreenBrush,
+    onClick : () -> Unit,
+
+    ) {
 
     val spacing = LocalSpacing.current
 
@@ -85,7 +87,7 @@ fun ButtonSecondary(
             .alpha(if(isEnabled) 1f else 0.4f)
             .background(
                 brush = Brush.verticalGradient(
-                    colors = GreenBrush,
+                    colors = backGroundColors,
                     startY = 10f,
                     endY = 150f
 

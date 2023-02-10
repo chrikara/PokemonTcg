@@ -18,6 +18,13 @@ val GreenBrush =  listOf(
 
     )
 
+val GameMenuPressedColor = listOf(
+    Color(0xCC636161),
+    Color(0xCC8D9689),
+    Color(0xCC423B3B),
+
+    )
+
 val BlueAlpha = Color(0xFF1F81E9)
 val BlueAlpha20 = Color(0x331F81E9)
 val BlueAlpha40 = Color(0x661F81E9)

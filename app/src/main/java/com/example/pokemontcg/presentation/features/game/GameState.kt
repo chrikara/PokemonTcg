@@ -1,11 +1,14 @@
 package com.example.pokemontcg.presentation.features.game
 
 import com.example.pokemontcg.presentation.features.game.domain.model.Player
+import com.example.pokemontcg.presentation.features.game.domain.model.PokemonCard
+import com.example.pokemontcg.presentation.features.game.domain.model.PokemonType
 
 data class GameState(
-    val player: Player = Player("Player",),
-    val opponent: Player = Player("Opponent"),
-    val currentState : GameSealedClass = GameSealedClass.LOADING,
+    val player: Player = Player("Player", currentPokemon = fakePlayerCurrentPokemon)
+    ,
+    val opponent: Player = Player("Opponent", currentPokemon = fakeOpponentCurrentPokemon),
+    val currentState : GameSealedClass = GameSealedClass.PLAYER_TURN.MAIN,
     val errorMessageAPI : String = "",
     val isBackIntercepted : Boolean = false,
 
@@ -56,4 +59,21 @@ val GAMESTATE_PLAYER_TURN_LIST = listOf(
     GameState.GameSealedClass.PLAYER_TURN.EXPLANATION,
     GameState.GameSealedClass.PLAYER_TURN.MAIN,
 )
+
+val fakePlayerCurrentPokemon = PokemonCard(
+    baseId = "base1-1",
+    name = "Alakazam",
+    image = "",
+    nationalDex = 65,
+    pokemonType = PokemonType.Stage2
+)
+
+val fakeOpponentCurrentPokemon = PokemonCard(
+    baseId = "base1-1",
+    name = "Mewtwo",
+    image = "",
+    nationalDex = 151,
+    pokemonType = PokemonType.Basic
+)
+
 

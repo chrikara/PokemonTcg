@@ -47,9 +47,9 @@ class GameViewModel @Inject constructor(
 
     init {
 
-        val deckNumber = DeckNumber.fromString(savedStateHandle.get<String>("deckNumber")?: "1st")
-        val opponent = savedStateHandle.get<String>("opponent") ?: "Yugo"
-        startGame(deckNumber = deckNumber, opponent)
+//        val deckNumber = DeckNumber.fromString(savedStateHandle.get<String>("deckNumber")?: "1st")
+//        val opponent = savedStateHandle.get<String>("opponent") ?: "Yugo"
+//        startGame(deckNumber = deckNumber, opponent)
 
     }
 
