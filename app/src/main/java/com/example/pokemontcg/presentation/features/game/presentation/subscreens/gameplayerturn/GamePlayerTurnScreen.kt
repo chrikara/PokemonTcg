@@ -14,69 +14,74 @@ import com.example.pokemontcg.presentation.features.game.presentation.components
 import com.example.pokemontcg.presentation.features.game.presentation.components.GameActionWindow
 import com.example.pokemontcg.presentation.features.game.presentation.components.GameCardInfoBox
 import com.example.pokemontcg.presentation.features.game.presentation.components.GameHandBox
+import com.example.pokemontcg.presentation.features.game.presentation.subscreens.gameplayerturn.GamePlayerTurnViewModel
+import com.example.pokemontcg.presentation.features.game.presentation.subscreens.gameplayerturn.PlayerTurnEvent
 import com.example.pokemontcg.presentation.features.game.presentation.subscreens.gameplayerturn.use_cases.CardTextInHandUseCase
 import com.example.pokemontcg.ui.theme.LocalSpacing
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun GamePlayerTurnScreen(
-    viewModel: GameViewModel,
+    viewModelGame: GameViewModel,
+    viewModelPlayerTurn : GamePlayerTurnViewModel
 ){
-    val state = viewModel.state
+    val stateGame = viewModelGame.state
+    val statePTurn = viewModelPlayerTurn.state
     val spacing = LocalSpacing.current
 
-    var imageUrl by remember {
-        mutableStateOf("")
-    }
+
 
     val cardTextInHandUseCase = CardTextInHandUseCase()
 
 
 
     BackHandler(enabled = true) {
-        when (state.currentState) {
-            GameState.GameSealedClass.PLAYER_TURN.CARD_INFO -> { viewModel.onEvent(GameEvent.OnChangeGameState(GameState.GameSealedClass.PLAYER_TURN.HAND)) }
-            GameState.GameSealedClass.PLAYER_TURN.HAND -> {viewModel.onEvent(GameEvent.OnChangeGameState(GameState.GameSealedClass.PLAYER_TURN.MAIN))}
+        when (stateGame.currentState) {
+            GameState.GameSealedClass.PLAYER_TURN.CARD_INFO -> { viewModelGame.onEvent(GameEvent.OnChangeGameState(GameState.GameSealedClass.PLAYER_TURN.HAND)) }
+            GameState.GameSealedClass.PLAYER_TURN.HAND -> {viewModelGame.onEvent(GameEvent.OnChangeGameState(GameState.GameSealedClass.PLAYER_TURN.MAIN))}
             else -> Unit
         }
     }
 
-    if(state.currentState == GameState.GameSealedClass.PLAYER_TURN.EXPLANATION){
+    if(stateGame.currentState == GameState.GameSealedClass.PLAYER_TURN.EXPLANATION){
         GameActionWindow(title = " PLAYER \n TURN ", message ="It's your turn now!\n\n") {
-            viewModel.onEvent(GameEvent.OnChangeGameState(GameState.GameSealedClass.PLAYER_TURN.MAIN))
+            viewModelGame.onEvent(GameEvent.OnChangeGameState(GameState.GameSealedClass.PLAYER_TURN.MAIN))
         }
     }
 
-    if(state.currentState == GameState.GameSealedClass.PLAYER_TURN.MAIN){
-        GamePlayerMain(viewModel = viewModel)
+    if(stateGame.currentState == GameState.GameSealedClass.PLAYER_TURN.MAIN){
+        GamePlayerMain(
+            viewModelGame = viewModelGame,
+            viewModelPTurn = viewModelPlayerTurn
+        )
     }
 
-    if(state.currentState == GameState.GameSealedClass.PLAYER_TURN.HAND){
+    if(stateGame.currentState == GameState.GameSealedClass.PLAYER_TURN.HAND){
         var textButton1 by remember {
             mutableStateOf("")
         }
 
         GameHandBox(
-            viewModel = viewModel,
-            textButton1 = textButton1,
-            textButton2 = "Info",
+            viewModel = viewModelGame,
+            textButton2 = textButton1,
+            textButton1 = "Info",
             textButton3 = "Back",
             isButton3Visible = true,
-            onClick1 = {},
+            onClick2 = {},
             onDoSomethingWithSelectedIndex = {
                                              textButton1 = cardTextInHandUseCase(it)
             },
-            onClick2 = {
-                viewModel.onEvent(GameEvent.OnChangeGameState(GameState.GameSealedClass.PLAYER_TURN.CARD_INFO))
-                imageUrl = it.image
+            onClick1 = {
+                viewModelGame.onEvent(GameEvent.OnChangeGameState(GameState.GameSealedClass.PLAYER_TURN.CARD_INFO))
+                viewModelPlayerTurn.onEvent(PlayerTurnEvent.OnCardInfoImage(it.image))
             },
-            onClick3 = { viewModel.onEvent(GameEvent.OnChangeGameState(GameState.GameSealedClass.PLAYER_TURN.MAIN))}
+            onClick3 = { viewModelGame.onEvent(GameEvent.OnChangeGameState(GameState.GameSealedClass.PLAYER_TURN.MAIN))}
         )
     }
 
-    if(state.currentState == GameState.GameSealedClass.PLAYER_TURN.CARD_INFO){
+    if(stateGame.currentState == GameState.GameSealedClass.PLAYER_TURN.CARD_INFO){
         GameCardInfoBox(
-            imageUrl = imageUrl,
+            imageUrl = statePTurn.cardInfoImage,
             radius = 1500f
             )
     }

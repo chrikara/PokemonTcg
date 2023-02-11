@@ -46,13 +46,12 @@ import com.example.pokemontcg.ui.theme.GreenBrush
 @Composable
 fun GamePlayerMenu(
     modifier : Modifier = Modifier,
-    viewModel: GameViewModel
+    viewModel: GameViewModel,
+    isAttackVisible : Boolean,
+    onClickAttack : () -> Unit
 
 ){
 
-    var isAttackVisible by remember{
-        mutableStateOf<Boolean>(false)
-    }
     var isCheckVisible by remember{
         mutableStateOf<Boolean>(false)
     }
@@ -78,7 +77,7 @@ fun GamePlayerMenu(
                 paddingValues = paddingValues,
                 backGroundColors = if(isAttackVisible) GameMenuPressedColor else GreenBrush,
                 isEnabled = true){
-                isAttackVisible = !isAttackVisible
+                onClickAttack()
             }
 
             ButtonSecondary(

@@ -30,6 +30,8 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.example.pokemontcg.domain.model.defaults.DefaultPokedex
 import com.example.pokemontcg.presentation.features.game.GameViewModel
+import com.example.pokemontcg.presentation.features.game.presentation.subscreens.gameplayerturn.GamePlayerTurnViewModel
+import com.example.pokemontcg.presentation.features.game.presentation.subscreens.gameplayerturn.PlayerTurnEvent
 import com.example.pokemontcg.ui.theme.Dimensions
 import com.example.pokemontcg.ui.theme.LocalSpacing
 import com.example.pokemontcg.util.HEART_EMPTY
@@ -39,11 +41,13 @@ import com.example.pokemontcg.util.HEART_FILLED
 @Composable
 fun GamePlayerMain(
     modifier : Modifier = Modifier,
-    viewModel: GameViewModel,
+    viewModelGame: GameViewModel,
+    viewModelPTurn: GamePlayerTurnViewModel,
     spacing : Dimensions = LocalSpacing.current,
 ) {
 
-    val state = viewModel.state
+    val stateGame = viewModelGame.state
+    val statePTurn = viewModelPTurn.state
 
     LazyColumn(
         modifier = modifier
@@ -65,7 +69,7 @@ fun GamePlayerMain(
                 ){
                     Image(
                         painter = rememberImagePainter(
-                            data = DefaultPokedex.imageUrlFromDex(state.player.currentPokemon!!.nationalDex)
+                            data = DefaultPokedex.imageUrlFromDex(stateGame.player.currentPokemon!!.nationalDex)
                         ),
                         contentDescription ="",
                         modifier = Modifier
@@ -78,8 +82,8 @@ fun GamePlayerMain(
                         .weight(1f)
                     ) {
 
-                        val totalPlayerHp = state.player.currentPokemon!!.totalHp / 10
-                        val remainingPlayerHp =  state.player.currentPokemon!!.remainingHp / 10
+                        val totalPlayerHp = stateGame.player.currentPokemon!!.totalHp / 10
+                        val remainingPlayerHp =  stateGame.player.currentPokemon!!.remainingHp / 10
 
                         Text(
                             text = buildAnnotatedString {
@@ -105,7 +109,7 @@ fun GamePlayerMain(
 
                         FlowRow(
                         ){
-                            viewModel.state.player.currentPokemon!!.energyAttached.forEach{ energyCard ->
+                            viewModelGame.state.player.currentPokemon!!.energyAttached.forEach{ energyCard ->
                                 Image(
                                     painter = painterResource(id = energyCard.symbol.drawable),
                                     contentDescription = "",
@@ -119,7 +123,12 @@ fun GamePlayerMain(
 
                 GamePlayerMenu(
                     modifier = Modifier.align(Alignment.BottomCenter),
-                    viewModel = viewModel,
+                    viewModel = viewModelGame,
+                    onClickAttack = {
+                        viewModelPTurn.onEvent(PlayerTurnEvent.OnAttackButtonTriggered)
+
+                    },
+                    isAttackVisible = statePTurn.isAttackButtonEnabled
                 )
             }
 
@@ -144,8 +153,8 @@ fun GamePlayerMain(
 
                     // total 60
                     // remaining 30
-                    val totalOpponentHp = state.opponent.currentPokemon!!.totalHp / 10
-                    val remainingOpponentHp =  state.opponent.currentPokemon!!.remainingHp / 10
+                    val totalOpponentHp = stateGame.opponent.currentPokemon!!.totalHp / 10
+                    val remainingOpponentHp =  stateGame.opponent.currentPokemon!!.remainingHp / 10
 
                     Text(
                         text = buildAnnotatedString {
@@ -171,7 +180,7 @@ fun GamePlayerMain(
 
                     FlowRow(
                     ){
-                        viewModel.state.opponent.currentPokemon!!.energyAttached.forEach{ energyCard ->
+                        viewModelGame.state.opponent.currentPokemon!!.energyAttached.forEach{ energyCard ->
                             Image(
                                 painter = painterResource(id = energyCard.symbol.drawable),
                                 contentDescription = "",
@@ -184,7 +193,7 @@ fun GamePlayerMain(
 
                 Image(
                     painter = rememberImagePainter(
-                        data = DefaultPokedex.imageUrlFromDex(state.opponent.currentPokemon!!.nationalDex)
+                        data = DefaultPokedex.imageUrlFromDex(stateGame.opponent.currentPokemon!!.nationalDex)
                     ),
                     contentDescription ="",
                     modifier = Modifier

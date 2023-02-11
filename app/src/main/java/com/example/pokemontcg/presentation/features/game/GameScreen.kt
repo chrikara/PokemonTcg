@@ -18,15 +18,17 @@ import com.example.pokemontcg.presentation.features.game.presentation.components
 import com.example.pokemontcg.presentation.features.game.presentation.components.GameChooseBenchScreen
 import com.example.pokemontcg.presentation.features.game.components.GamePlayerTurnScreen
 import com.example.pokemontcg.presentation.features.game.presentation.components.ShuffleDeckGameScreen
+import com.example.pokemontcg.presentation.features.game.presentation.subscreens.gameplayerturn.GamePlayerTurnViewModel
 import com.example.pokemontcg.util.UiEvent
 
 @Composable
 fun GameScreen(
-    viewModel: GameViewModel = hiltViewModel(),
+    viewModelGame: GameViewModel = hiltViewModel(),
+    viewModelPTurn : GamePlayerTurnViewModel = hiltViewModel(),
     snackbarHostState : SnackbarHostState
 ) {
     LaunchedEffect(key1 = true){
-        viewModel.uiEvent.collect{event ->
+        viewModelGame.uiEvent.collect{ event ->
             when(event){
                 is UiEvent.ShowSnackBar -> {
                     snackbarHostState.showSnackbar(
@@ -39,27 +41,30 @@ fun GameScreen(
         }
     }
 
-    val state = viewModel.state
-    println("STATE MAIN ${viewModel.state.currentState}")
+    val state = viewModelGame.state
+    println("STATE MAIN ${viewModelGame.state.currentState}")
 
     if(state.currentState == GameState.GameSealedClass.LOADING){
         LoadingScreen()
     }
 
     if(state.currentState == GameState.GameSealedClass.START){
-        ShuffleDeckGameScreen(secondsToStart = 4, viewModel = viewModel)
+        ShuffleDeckGameScreen(secondsToStart = 4, viewModel = viewModelGame)
     }
 
     if(state.currentState in GAMESTATE_CHOOSE_BENCH_LIST){
-        GameChooseBenchScreen(viewModel = viewModel)
+        GameChooseBenchScreen(viewModel = viewModelGame)
     }
 
     if(state.currentState in GAMESTATE_CHOOSE_ACTIVE_LIST){
-        GameChooseActiveScreen(viewModel = viewModel,)
+        GameChooseActiveScreen(viewModel = viewModelGame,)
     }
 
     if(state.currentState in GAMESTATE_PLAYER_TURN_LIST){
-        GamePlayerTurnScreen(viewModel = viewModel)
+        GamePlayerTurnScreen(
+            viewModelGame = viewModelGame,
+            viewModelPlayerTurn = viewModelPTurn
+        )
     }
 
 
