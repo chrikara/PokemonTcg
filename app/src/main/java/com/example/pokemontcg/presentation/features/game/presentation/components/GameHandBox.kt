@@ -1,4 +1,4 @@
-package com.example.pokemontcg.presentation.features.game.components
+package com.example.pokemontcg.presentation.features.game.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -14,12 +14,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,13 +42,15 @@ import com.example.pokemontcg.ui.theme.LocalSpacing
 fun GameHandBox(
     modifier : Modifier = Modifier,
     viewModel: GameViewModel,
-    textButton1 : String = "Info",
-    textButton2 : String = "Confirm",
+    textButton1 : String,
+    textButton2 : String,
     textButton3 : String = "End",
     onClick1 : (GameCard) -> Unit,
     onClick2: (GameCard) -> Unit,
     onClick3: () -> Unit = {},
+    onDoSomethingWithSelectedIndex : (GameCard) -> Unit = {},
     isButton3Visible : Boolean = false,
+
 
 
 ) {
@@ -62,6 +62,8 @@ fun GameHandBox(
     var selectedIndex by remember {
         mutableStateOf(0)
     }
+
+    onDoSomethingWithSelectedIndex(currentHand[selectedIndex])
 
 
 
@@ -173,7 +175,7 @@ fun GameHandBox(
                     }
                 }
                 if(currentHand.isNotEmpty()){
-                    GameCardInHandBox(
+                    GameCardInfoBox(
                         modifier = Modifier
                             .fillMaxSize()
                             .weight(1f),

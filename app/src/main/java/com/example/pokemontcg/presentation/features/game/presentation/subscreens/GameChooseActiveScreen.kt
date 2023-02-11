@@ -1,4 +1,4 @@
-package com.example.pokemontcg.presentation.features.game.components
+package com.example.pokemontcg.presentation.features.game.presentation.components
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
@@ -9,10 +9,9 @@ import androidx.compose.runtime.setValue
 import com.example.pokemontcg.presentation.features.game.GameEvent
 import com.example.pokemontcg.presentation.features.game.GameState
 import com.example.pokemontcg.presentation.features.game.GameViewModel
-import com.example.pokemontcg.presentation.features.game.domain.model.PokemonCard
 
 @Composable
-fun GameChooseActive(
+fun GameChooseActiveScreen(
     viewModel: GameViewModel,
 ) {
 
@@ -50,6 +49,8 @@ fun GameChooseActive(
     if(state.currentState ==  GameState.GameSealedClass.CHOOSE_ACTIVE.HAND){
         GameHandBox(
             viewModel = viewModel,
+            textButton1 = "Info",
+            textButton2 = "Add Active",
             onClick1 = {
                 viewModel.onEvent(
                     GameEvent.OnChangeGameState(
@@ -66,7 +67,7 @@ fun GameChooseActive(
     }
 
     if(state.currentState ==  GameState.GameSealedClass.CHOOSE_ACTIVE.CARD_INFO){
-        GameCardInHandBox(
+        GameCardInfoBox(
             imageUrl = imageUrl,
             radius = 1500f
         )

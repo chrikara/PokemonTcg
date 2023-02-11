@@ -1,4 +1,4 @@
-package com.example.pokemontcg.presentation.features.game.components
+package com.example.pokemontcg.presentation.features.game.presentation.components
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
@@ -11,7 +11,7 @@ import com.example.pokemontcg.presentation.features.game.GameState
 import com.example.pokemontcg.presentation.features.game.GameViewModel
 
 @Composable
-fun GameChooseBench(
+fun GameChooseBenchScreen(
     viewModel : GameViewModel
 ) {
 
@@ -21,6 +21,7 @@ fun GameChooseBench(
     var isBackIntercepted by remember{
         mutableStateOf(true)
     }
+
     val state = viewModel.state
 
     BackHandler(enabled = isBackIntercepted) {
@@ -41,6 +42,7 @@ fun GameChooseBench(
         println("STATE1 ${viewModel.state.player.benchPokemon}")
         GameHandBox(
             viewModel = viewModel,
+            textButton1 = "Info",
             textButton2 = "Add Bench",
             textButton3 = "End",
             onClick1 = {
@@ -60,7 +62,7 @@ fun GameChooseBench(
         )
     }
     if(state.currentState == GameState.GameSealedClass.CHOOSE_BENCH.CARD_INFO){
-        GameCardInHandBox(
+        GameCardInfoBox(
             imageUrl = imageUrl,
             radius = 1500f
         )

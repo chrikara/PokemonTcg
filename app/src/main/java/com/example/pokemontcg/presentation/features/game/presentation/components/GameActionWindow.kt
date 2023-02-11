@@ -1,4 +1,4 @@
-package com.example.pokemontcg.presentation.features.game.components
+package com.example.pokemontcg.presentation.features.game.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

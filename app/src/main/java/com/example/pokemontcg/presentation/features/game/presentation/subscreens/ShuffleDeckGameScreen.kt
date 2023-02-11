@@ -1,4 +1,4 @@
-package com.example.pokemontcg.presentation.features.game.components
+package com.example.pokemontcg.presentation.features.game.presentation.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,7 +20,7 @@ import com.example.pokemontcg.presentation.features.game.GameViewModel
 import kotlinx.coroutines.delay
 
 @Composable
-fun ShuffleDeckGame(viewModel: GameViewModel, secondsToStart : Int) {
+fun ShuffleDeckGameScreen(viewModel: GameViewModel, secondsToStart : Int) {
     var currentTime by remember {
         mutableStateOf(secondsToStart)
     }
