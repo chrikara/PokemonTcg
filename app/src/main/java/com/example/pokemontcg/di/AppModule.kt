@@ -25,8 +25,8 @@ import com.example.pokemontcg.presentation.features.createdecks.use_cases.Insert
 import com.example.pokemontcg.presentation.features.game.domain.use_cases.DrawCardsUseCase
 import com.example.pokemontcg.presentation.features.game.domain.use_cases.GameUseCases
 import com.example.pokemontcg.presentation.features.game.domain.use_cases.ShuffleUseCase
-import com.example.pokemontcg.presentation.features.game.presentation.subscreens.gameplayerturn.use_cases.CardTextInHandUseCase
-import com.example.pokemontcg.presentation.features.game.presentation.subscreens.gameplayerturn.use_cases.PlayerTurnUseCases
+import com.example.pokemontcg.presentation.features.game.presentation.subscreens.playerturn.use_cases.CardTextInHandUseCase
+import com.example.pokemontcg.presentation.features.game.presentation.subscreens.playerturn.use_cases.PlayerTurnUseCases
 import com.example.pokemontcg.util.DangerousConstants
 import dagger.Module
 import dagger.Provides

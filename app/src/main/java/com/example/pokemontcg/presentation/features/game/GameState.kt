@@ -7,12 +7,16 @@ import com.example.pokemontcg.presentation.features.game.domain.model.PokemonCar
 import com.example.pokemontcg.presentation.features.game.domain.model.PokemonType
 
 data class GameState(
-    val player: Player = Player("Player"
-//        , currentPokemon = fakePlayerCurrentPokemon, currentHand = mutableListOf(
-//        fakeHandEnergyCard, fakePlayerBasicPokemon, fakePlayerStage1Pokemon, fakePlayerStage2Pokemon)
+    val player: Player = Player("Player",
+//        currentPokemon = fakePlayerCurrentPokemon,
+//        currentHand = pokemonHandList,
+//        benchPokemon = pokemonBenchList
     )
     ,
-    val opponent: Player = Player("Opponent"//, currentPokemon = fakeOpponentCurrentPokemon
+    val opponent: Player = Player("Opponent",
+//        currentPokemon = fakeOpponentCurrentPokemon,
+//        currentHand = pokemonHandList,
+//        benchPokemon = pokemonBenchList
     ),
     val currentState : GameSealedClass = GameSealedClass.LOADING,
     val errorMessageAPI : String = "",
@@ -39,6 +43,9 @@ data class GameState(
         object PLAYER_TURN : GameSealedClass(){
             object EXPLANATION : GameSealedClass()
             object MAIN : GameSealedClass()
+            object BENCH : GameSealedClass() {
+                object HAND : GameSealedClass()
+            }
             object HAND : GameSealedClass()
             object CARD_INFO : GameSealedClass()
         }
@@ -51,6 +58,9 @@ data class GameState(
 
 
 }
+
+
+
 val GAMESTATE_CHOOSE_ACTIVE_LIST = listOf(
     GameState.GameSealedClass.CHOOSE_ACTIVE.EXPLANATION,
     GameState.GameSealedClass.CHOOSE_ACTIVE.HAND,
@@ -67,6 +77,8 @@ val GAMESTATE_PLAYER_TURN_LIST = listOf(
     GameState.GameSealedClass.PLAYER_TURN.EXPLANATION,
     GameState.GameSealedClass.PLAYER_TURN.MAIN,
     GameState.GameSealedClass.PLAYER_TURN.HAND,
+    GameState.GameSealedClass.PLAYER_TURN.BENCH,
+    GameState.GameSealedClass.PLAYER_TURN.BENCH.HAND,
     GameState.GameSealedClass.PLAYER_TURN.CARD_INFO,
 )
 
@@ -113,5 +125,9 @@ val fakeOpponentCurrentPokemon = PokemonCard(
     nationalDex = 151,
     pokemonType = PokemonType.Basic
 )
+val pokemonHandList = mutableListOf(
+    fakeHandEnergyCard, fakePlayerBasicPokemon, fakePlayerStage1Pokemon, fakePlayerStage2Pokemon)
 
+val pokemonBenchList = mutableListOf(fakePlayerBasicPokemon, fakePlayerStage1Pokemon, fakePlayerStage2Pokemon
+)
 

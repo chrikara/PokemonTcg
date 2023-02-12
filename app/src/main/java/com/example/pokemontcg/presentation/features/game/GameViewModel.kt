@@ -16,6 +16,7 @@ import com.example.pokemontcg.presentation.features.game.domain.model.GameCard
 import com.example.pokemontcg.presentation.features.game.domain.model.PokemonCard
 import com.example.pokemontcg.presentation.features.game.domain.model.PokemonType
 import com.example.pokemontcg.presentation.features.game.domain.use_cases.GameUseCases
+import com.example.pokemontcg.presentation.features.game.presentation.subscreens.choosebench.GameChooseBenchEvent
 import com.example.pokemontcg.util.INITIAL_CARDS_TO_DRAW
 import com.example.pokemontcg.util.Resource
 import com.example.pokemontcg.util.UiEvent
@@ -113,7 +114,8 @@ class GameViewModel @Inject constructor(
                     }
                 }
                     viewModelScope.launch {
-                    _uiEvent.send(UiEvent.ShowSnackBar(message = "Διάλεξε ένα βασικό Pokemon!"))
+                        event.snackbarHostState.currentSnackbarData?.dismiss()
+                        _uiEvent.send(UiEvent.ShowSnackBar(message = "Διάλεξε ένα βασικό Pokemon!"))
                 }
 
             }
@@ -125,6 +127,8 @@ class GameViewModel @Inject constructor(
             }
 
             is GameEvent.OnPlayerBenchPokemon -> {
+                event.snackbarHostState.currentSnackbarData?.dismiss()
+
                 viewModelScope.launch {
                     if(event.gameCard is EnergyCard){
                         _uiEvent.send(UiEvent.ShowSnackBar(message = "This is an Energy card!"))
@@ -155,6 +159,17 @@ class GameViewModel @Inject constructor(
                             )
                         )
                         _uiEvent.send(UiEvent.ShowSnackBar(message = "Added ${event.gameCard.name} to bench!"))
+
+                        /* This decreases the state's selected index by 1 IF the Pokemon that was added to the bench
+                         was last when the hand is not empty! That's because if hand has 5 items and the selected index was 5,
+                         the new list will have 4 items but the selected index will remain 5 and that may cause problems
+
+                         */
+
+                        if(event.viewModelBench.state.selectedCardIndex == state.player.currentHand.size
+                            && state.player.currentHand.isNotEmpty()){
+                            event.viewModelBench.onEvent(GameChooseBenchEvent.OnItemSelected(event.viewModelBench.state.selectedCardIndex - 1))
+                        }
 
                     }
                 }

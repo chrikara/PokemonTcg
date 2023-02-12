@@ -18,13 +18,19 @@ import com.example.pokemontcg.presentation.features.game.presentation.components
 import com.example.pokemontcg.presentation.features.game.presentation.components.GameChooseBenchScreen
 import com.example.pokemontcg.presentation.features.game.components.GamePlayerTurnScreen
 import com.example.pokemontcg.presentation.features.game.presentation.components.ShuffleDeckGameScreen
-import com.example.pokemontcg.presentation.features.game.presentation.subscreens.gameplayerturn.GamePlayerTurnViewModel
+import com.example.pokemontcg.presentation.features.game.presentation.subscreens.check.GameCheckViewModel
+import com.example.pokemontcg.presentation.features.game.presentation.subscreens.chooseactive.GameChooseActiveViewModel
+import com.example.pokemontcg.presentation.features.game.presentation.subscreens.choosebench.GameChooseBenchViewModel
+import com.example.pokemontcg.presentation.features.game.presentation.subscreens.playerturn.GamePlayerTurnViewModel
 import com.example.pokemontcg.util.UiEvent
 
 @Composable
 fun GameScreen(
     viewModelGame: GameViewModel = hiltViewModel(),
     viewModelPTurn : GamePlayerTurnViewModel = hiltViewModel(),
+    viewModelActive : GameChooseActiveViewModel = hiltViewModel(),
+    viewModelBench : GameChooseBenchViewModel = hiltViewModel(),
+    viewModelCheck : GameCheckViewModel = hiltViewModel(),
     snackbarHostState : SnackbarHostState
 ) {
     LaunchedEffect(key1 = true){
@@ -53,17 +59,27 @@ fun GameScreen(
     }
 
     if(state.currentState in GAMESTATE_CHOOSE_BENCH_LIST){
-        GameChooseBenchScreen(viewModel = viewModelGame)
+        GameChooseBenchScreen(
+            viewModelGame = viewModelGame,
+            viewModelBench = viewModelBench,
+            snackbarHostState = snackbarHostState
+        )
     }
 
     if(state.currentState in GAMESTATE_CHOOSE_ACTIVE_LIST){
-        GameChooseActiveScreen(viewModel = viewModelGame,)
+        GameChooseActiveScreen(
+            viewModelGame = viewModelGame,
+            viewModelActive =  viewModelActive,
+            snackbarHostState = snackbarHostState
+        )
     }
 
     if(state.currentState in GAMESTATE_PLAYER_TURN_LIST){
         GamePlayerTurnScreen(
             viewModelGame = viewModelGame,
-            viewModelPlayerTurn = viewModelPTurn
+            viewModelPlayerTurn = viewModelPTurn,
+            viewModelCheck = viewModelCheck,
+            snackbarHostState = snackbarHostState
         )
     }
 

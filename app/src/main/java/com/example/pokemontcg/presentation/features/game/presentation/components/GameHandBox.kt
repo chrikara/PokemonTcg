@@ -37,6 +37,7 @@ import com.example.pokemontcg.presentation.features.game.domain.model.GameCard
 import com.example.pokemontcg.presentation.features.game.domain.model.PokemonCard
 import com.example.pokemontcg.ui.theme.GreenBrush
 import com.example.pokemontcg.ui.theme.LocalSpacing
+import com.example.pokemontcg.util.navigation.Screen
 
 @Composable
 fun GameHandBox(
@@ -48,8 +49,9 @@ fun GameHandBox(
     onClick1 : (GameCard) -> Unit,
     onClick2: (GameCard) -> Unit,
     onClick3: () -> Unit = {},
-    onDoSomethingWithSelectedIndex : (GameCard) -> Unit = {},
+    onItemClick : (GameCard) -> Unit = {},
     isButton3Visible : Boolean = false,
+    selectedIndex : Int = 0,
 
 
 
@@ -59,11 +61,9 @@ fun GameHandBox(
     val spacing = LocalSpacing.current
     val currentHand = viewModel.state.player.currentHand
 
-    var selectedIndex by remember {
-        mutableStateOf(0)
-    }
 
-    onDoSomethingWithSelectedIndex(currentHand[selectedIndex])
+
+
 
 
 
@@ -89,8 +89,7 @@ fun GameHandBox(
                             .fillMaxWidth()
                             .padding(vertical = 3.dp)
                             .clickable {
-                                selectedIndex =
-                                    currentHand.indexOf(it)
+                                onItemClick(it)
                             }
 
 
@@ -164,17 +163,18 @@ fun GameHandBox(
                                 println(currentHand.size)
                                 onClick2(currentHand[selectedIndex])
                                 println(currentHand.size)
-                                if(viewModel.state.currentState == GameState.GameSealedClass.CHOOSE_BENCH.HAND){
-                                    if(selectedIndex == currentHand.indexOf(currentHand.last()) ){
-                                        selectedIndex-=1
-                                    }
-                                }
+//                                if(viewModel.state.currentState == GameState.GameSealedClass.CHOOSE_BENCH.HAND){
+//                                    if(selectedIndex == currentHand.indexOf(currentHand.last()) ){
+//                                        selectedIndex-=1
+//                                    }
+//                                }
 
                             }
                         )
                     }
                 }
                 if(currentHand.isNotEmpty()){
+                    val selectedModifiedIndex = if(selectedIndex==currentHand.size) selectedIndex-1 else selectedIndex
                     GameCardInfoBox(
                         modifier = Modifier
                             .fillMaxSize()
@@ -182,11 +182,11 @@ fun GameHandBox(
                         imageUrl =
 
 
-                        if(currentHand[selectedIndex] is PokemonCard){
-                            val dex = DefaultPokedex.getKeyByPokemonName(DefaultPokedex.pokedexNationaltoNameHash, currentHand[selectedIndex].name)
+                        if(currentHand[selectedModifiedIndex] is PokemonCard){
+                            val dex = DefaultPokedex.getKeyByPokemonName(DefaultPokedex.pokedexNationaltoNameHash, currentHand[selectedModifiedIndex].name)
                             "https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/$dex.png"
                         }else{
-                            currentHand[selectedIndex].image
+                            currentHand[selectedModifiedIndex].image
                         }
                     )
                 }

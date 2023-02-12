@@ -51,7 +51,7 @@ class MainActivity : ComponentActivity() {
 
                     NavHost(
                         navController = navController,
-                        startDestination = Screen.Game.route +"/{deckNumber}/{opponent}"
+                        startDestination = Screen.Welcome.route
                         //startDestination = Screen.Game.route +"/{deckNumber}/{opponent}"
                     ){
 

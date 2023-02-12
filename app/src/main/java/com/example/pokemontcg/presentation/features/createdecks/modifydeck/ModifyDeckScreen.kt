@@ -55,7 +55,6 @@ fun ModifyDeckScreen(
         viewModel.uiEvent.collect{event ->
             when(event){
                 is UiEvent.ShowSnackBar -> {
-                    println("Before")
                     snackbarHostState.showSnackbar(
                         message = event.message,
                         withDismissAction = true

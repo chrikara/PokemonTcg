@@ -38,6 +38,8 @@ import com.example.pokemontcg.presentation.components.ButtonSecondary
 import com.example.pokemontcg.presentation.features.game.GameEvent
 import com.example.pokemontcg.presentation.features.game.GameState
 import com.example.pokemontcg.presentation.features.game.GameViewModel
+import com.example.pokemontcg.presentation.features.game.presentation.subscreens.playerturn.GamePlayerTurnViewModel
+import com.example.pokemontcg.presentation.features.game.presentation.subscreens.playerturn.PlayerTurnEvent
 import com.example.pokemontcg.ui.theme.BlueAlpha80
 import com.example.pokemontcg.ui.theme.GameMenuPressedColor
 import com.example.pokemontcg.ui.theme.GreenBrush
@@ -47,6 +49,7 @@ import com.example.pokemontcg.ui.theme.GreenBrush
 fun GamePlayerMenu(
     modifier : Modifier = Modifier,
     viewModel: GameViewModel,
+    viewModelPTurn : GamePlayerTurnViewModel,
     isAttackVisible : Boolean,
     onClickAttack : () -> Unit
 
@@ -57,50 +60,76 @@ fun GamePlayerMenu(
     }
 
 
+
+
     Column(
         modifier = modifier
     ) {
 
-        FlowRow(
+        Column(
             modifier = modifier
                 .fillMaxWidth()
                 .background(BlueAlpha80)
                 .border(width = 1.dp, color = Color.Black)
-                .padding(10.dp),        horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically,
-            maxItemsInEachRow = 2,
+                .padding(10.dp),
+
         ) {
             val paddingValues = PaddingValues(15.dp)
-            ButtonSecondary(modifier = Modifier
-                .weight(1f),
-                text = "Attack",
-                paddingValues = paddingValues,
-                backGroundColors = if(isAttackVisible) GameMenuPressedColor else GreenBrush,
-                isEnabled = true){
-                onClickAttack()
-            }
 
-            ButtonSecondary(
-                modifier = Modifier
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,){
+                ButtonSecondary(modifier = Modifier
                     .weight(1f),
-                text = "Hand",
-                paddingValues = paddingValues,
-                isEnabled = true){
-                viewModel.onEvent(GameEvent.OnChangeGameState(GameState.GameSealedClass.PLAYER_TURN.HAND))
+                    text = "Attack",
+                    paddingValues = paddingValues,
+                    backGroundColors = if(isAttackVisible) GameMenuPressedColor else GreenBrush,
+                    isEnabled = true){
+                    onClickAttack()
+                }
+
+                ButtonSecondary(
+                    modifier = Modifier
+                        .weight(1f),
+                    text = "Hand",
+                    paddingValues = paddingValues,
+                    isEnabled = true){
+                    viewModelPTurn.onEvent(PlayerTurnEvent.OnClickHand(
+                        currentHand = viewModel.state.player.currentHand,
+                        onShowHand = { viewModel.onEvent(GameEvent.OnChangeGameState(GameState.GameSealedClass.PLAYER_TURN.HAND)) })
+                    )
+
+                }
+
             }
 
-            ButtonSecondary(modifier = Modifier
-                .alpha(if (isCheckVisible) 0.5f else 1f)
-                .weight(1f),
-                text = "Check",
-                paddingValues = paddingValues,
-                isEnabled = true){}
+            Row(   horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,){
+                ButtonSecondary(modifier = Modifier
+                    .weight(1f),
+                    text = "Check",
+                    fontSize = 18.sp,
+                    paddingValues = paddingValues,
+                    isEnabled = true){
+                    viewModel.onEvent(GameEvent.OnChangeGameState(GameState.GameSealedClass.PLAYER_TURN.BENCH))
+                }
 
-            ButtonSecondary(modifier = Modifier
-                .weight(1f),
-                text = "Pass",
-                paddingValues = paddingValues,
-                isEnabled = true){}
+                ButtonSecondary(modifier = Modifier
+                    .alpha(if (isCheckVisible) 0.5f else 1f)
+                    .weight(1f),
+                    text = "Switch",
+                    fontSize = 18.sp,
+                    paddingValues = paddingValues,
+                    isEnabled = true){}
+
+                ButtonSecondary(modifier = Modifier
+                    .weight(1f),
+                    fontSize = 18.sp,
+                    text = "Pass",
+                    paddingValues = paddingValues,
+                    isEnabled = true){}
+            }
+
         }
 
         AnimatedVisibility(visible = isAttackVisible) {

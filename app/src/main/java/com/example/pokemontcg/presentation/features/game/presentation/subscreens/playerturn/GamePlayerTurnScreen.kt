@@ -2,11 +2,9 @@ package com.example.pokemontcg.presentation.features.game.components
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.LaunchedEffect
 import com.example.pokemontcg.presentation.features.game.GameEvent
 import com.example.pokemontcg.presentation.features.game.GameState
 import com.example.pokemontcg.presentation.features.game.GameViewModel
@@ -14,24 +12,44 @@ import com.example.pokemontcg.presentation.features.game.presentation.components
 import com.example.pokemontcg.presentation.features.game.presentation.components.GameActionWindow
 import com.example.pokemontcg.presentation.features.game.presentation.components.GameCardInfoBox
 import com.example.pokemontcg.presentation.features.game.presentation.components.GameHandBox
-import com.example.pokemontcg.presentation.features.game.presentation.subscreens.gameplayerturn.GamePlayerTurnViewModel
-import com.example.pokemontcg.presentation.features.game.presentation.subscreens.gameplayerturn.PlayerTurnEvent
-import com.example.pokemontcg.presentation.features.game.presentation.subscreens.gameplayerturn.use_cases.CardTextInHandUseCase
+import com.example.pokemontcg.presentation.features.game.presentation.subscreens.check.GameCheckScreen
+import com.example.pokemontcg.presentation.features.game.presentation.subscreens.check.GameCheckViewModel
+import com.example.pokemontcg.presentation.features.game.presentation.subscreens.playerturn.GamePlayerTurnViewModel
+import com.example.pokemontcg.presentation.features.game.presentation.subscreens.playerturn.PlayerTurnEvent
+import com.example.pokemontcg.presentation.features.game.presentation.subscreens.playerturn.use_cases.CardTextInHandUseCase
 import com.example.pokemontcg.ui.theme.LocalSpacing
+import com.example.pokemontcg.util.UiEvent
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun GamePlayerTurnScreen(
     viewModelGame: GameViewModel,
-    viewModelPlayerTurn : GamePlayerTurnViewModel
+    viewModelPlayerTurn : GamePlayerTurnViewModel,
+    viewModelCheck : GameCheckViewModel,
+    snackbarHostState : SnackbarHostState
 ){
     val stateGame = viewModelGame.state
     val statePTurn = viewModelPlayerTurn.state
+    val stateCheck = viewModelCheck.state
     val spacing = LocalSpacing.current
 
-
+    println("Stttate ${stateGame.currentState}")
 
     val cardTextInHandUseCase = CardTextInHandUseCase()
+
+    LaunchedEffect(key1 = true){
+        viewModelPlayerTurn.uiEvent.collect{ event ->
+            when(event){
+                is UiEvent.ShowSnackBar -> {
+                    snackbarHostState.showSnackbar(
+                        message = event.message,
+                        withDismissAction = true
+                    )
+                }
+                else -> {}
+            }
+        }
+    }
 
 
 
@@ -39,6 +57,8 @@ fun GamePlayerTurnScreen(
         when (stateGame.currentState) {
             GameState.GameSealedClass.PLAYER_TURN.CARD_INFO -> { viewModelGame.onEvent(GameEvent.OnChangeGameState(GameState.GameSealedClass.PLAYER_TURN.HAND)) }
             GameState.GameSealedClass.PLAYER_TURN.HAND -> {viewModelGame.onEvent(GameEvent.OnChangeGameState(GameState.GameSealedClass.PLAYER_TURN.MAIN))}
+            GameState.GameSealedClass.PLAYER_TURN.BENCH -> {viewModelGame.onEvent(GameEvent.OnChangeGameState(GameState.GameSealedClass.PLAYER_TURN.MAIN))}
+            GameState.GameSealedClass.PLAYER_TURN.BENCH.HAND -> {viewModelGame.onEvent(GameEvent.OnChangeGameState(GameState.GameSealedClass.PLAYER_TURN.BENCH))}
             else -> Unit
         }
     }
@@ -57,9 +77,7 @@ fun GamePlayerTurnScreen(
     }
 
     if(stateGame.currentState == GameState.GameSealedClass.PLAYER_TURN.HAND){
-        var textButton1 by remember {
-            mutableStateOf("")
-        }
+        var textButton1 = cardTextInHandUseCase(stateGame.player.currentHand[statePTurn.selectedCardIndex])
 
         GameHandBox(
             viewModel = viewModelGame,
@@ -68,14 +86,16 @@ fun GamePlayerTurnScreen(
             textButton3 = "Back",
             isButton3Visible = true,
             onClick2 = {},
-            onDoSomethingWithSelectedIndex = {
-                                             textButton1 = cardTextInHandUseCase(it)
-            },
             onClick1 = {
                 viewModelGame.onEvent(GameEvent.OnChangeGameState(GameState.GameSealedClass.PLAYER_TURN.CARD_INFO))
                 viewModelPlayerTurn.onEvent(PlayerTurnEvent.OnCardInfoImage(it.image))
             },
-            onClick3 = { viewModelGame.onEvent(GameEvent.OnChangeGameState(GameState.GameSealedClass.PLAYER_TURN.MAIN))}
+            onClick3 = { viewModelGame.onEvent(GameEvent.OnChangeGameState(GameState.GameSealedClass.PLAYER_TURN.MAIN))},
+            selectedIndex = statePTurn.selectedCardIndex,
+            onItemClick = {
+                viewModelPlayerTurn.onEvent(PlayerTurnEvent.OnSelectedCardIndex(stateGame.player.currentHand.indexOf(it)))
+                textButton1 = cardTextInHandUseCase(stateGame.player.currentHand[statePTurn.selectedCardIndex])
+            },
         )
     }
 
@@ -86,6 +106,27 @@ fun GamePlayerTurnScreen(
             )
     }
 
+    if(stateGame.currentState == GameState.GameSealedClass.PLAYER_TURN.BENCH){
+        GameCheckScreen(
+            viewModelGame = viewModelGame,
+            viewModelCheck = viewModelCheck
+        )
+    }
+
+    if(stateGame.currentState == GameState.GameSealedClass.PLAYER_TURN.BENCH){
+        GameCheckScreen(
+            viewModelGame = viewModelGame,
+            viewModelCheck = viewModelCheck
+        )
+    }
+
+    if(stateGame.currentState == GameState.GameSealedClass.PLAYER_TURN.BENCH.HAND){
+        println("kati " + stateCheck.imageUrlCardClicked)
+        GameCardInfoBox(
+            imageUrl = stateCheck.imageUrlCardClicked,
+            radius = 1500f
+        )
+    }
 
 
 

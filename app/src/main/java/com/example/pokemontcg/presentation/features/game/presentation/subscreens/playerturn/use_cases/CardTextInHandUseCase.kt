@@ -1,4 +1,4 @@
-package com.example.pokemontcg.presentation.features.game.presentation.subscreens.gameplayerturn.use_cases
+package com.example.pokemontcg.presentation.features.game.presentation.subscreens.playerturn.use_cases
 
 import com.example.pokemontcg.presentation.features.game.domain.model.EnergyCard
 import com.example.pokemontcg.presentation.features.game.domain.model.GameCard

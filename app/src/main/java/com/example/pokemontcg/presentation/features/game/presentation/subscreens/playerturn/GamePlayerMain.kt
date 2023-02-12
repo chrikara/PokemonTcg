@@ -30,8 +30,8 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.example.pokemontcg.domain.model.defaults.DefaultPokedex
 import com.example.pokemontcg.presentation.features.game.GameViewModel
-import com.example.pokemontcg.presentation.features.game.presentation.subscreens.gameplayerturn.GamePlayerTurnViewModel
-import com.example.pokemontcg.presentation.features.game.presentation.subscreens.gameplayerturn.PlayerTurnEvent
+import com.example.pokemontcg.presentation.features.game.presentation.subscreens.playerturn.GamePlayerTurnViewModel
+import com.example.pokemontcg.presentation.features.game.presentation.subscreens.playerturn.PlayerTurnEvent
 import com.example.pokemontcg.ui.theme.Dimensions
 import com.example.pokemontcg.ui.theme.LocalSpacing
 import com.example.pokemontcg.util.HEART_EMPTY
@@ -126,9 +126,9 @@ fun GamePlayerMain(
                     viewModel = viewModelGame,
                     onClickAttack = {
                         viewModelPTurn.onEvent(PlayerTurnEvent.OnAttackButtonTriggered)
-
                     },
-                    isAttackVisible = statePTurn.isAttackButtonEnabled
+                    isAttackVisible = statePTurn.isAttackButtonEnabled,
+                    viewModelPTurn = viewModelPTurn
                 )
             }
 
