@@ -1,12 +1,18 @@
 package com.example.pokemontcg.presentation.features.createdecks.modifydeck
 
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
+import androidx.core.graphics.BitmapCompat
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.palette.graphics.Palette
 import com.example.pokemontcg.domain.model.CardOverview
 import com.example.pokemontcg.domain.model.DeckNumber
 import com.example.pokemontcg.domain.model.cardinfo.SuperType
@@ -60,7 +66,6 @@ class ModifyDeckViewModel @Inject constructor(
                 deletePokemonFromDeck(cardOverview = event.cardOverview)
             }
             is ModifyDeckEvent.OnInsertToChosenDeck -> {
-                println(state.savedCardList)
                 insertPokemonToDeck(
                     deckNumber = event.deck,
                     card = event.cardOverview,
@@ -75,17 +80,15 @@ class ModifyDeckViewModel @Inject constructor(
             }
             is ModifyDeckEvent.OnSearch -> {
 
-                if(event.query.isBlank()){
-                    state = state.copy(
-                        cardList = cardListFromAPIWithAllCards
-                    )
-                } else{
-                    state = state.copy(
-                        cardList = cardListFromAPIWithAllCards.filter {card->
-                            card.name.lowercase().contains(event.query.lowercase())
-                        }
-                    )
-                }
+                state = state.copy(
+                    cardList = if(event.query.isBlank())
+                        cardListFromAPIWithAllCards
+                    else
+                        cardListFromAPIWithAllCards.filter {card->
+                        card.name.contains(event.query, ignoreCase = true)
+                    }
+                )
+
 
             }
             is ModifyDeckEvent.OnTextFieldChange -> {
@@ -191,7 +194,7 @@ class ModifyDeckViewModel @Inject constructor(
                             card.copy(nationalDex = 1000)
                         } else card
                     }
-                        .filter { card -> card.superType != SuperType.Trainer }
+                        .filter { card -> card.superType == SuperType.Pokemon || card.superType == SuperType.Energy }
                         .sortedBy { it.nationalDex }
 
                     cardListFromAPIWithAllCards = newResult
@@ -217,6 +220,8 @@ class ModifyDeckViewModel @Inject constructor(
             }
         }.launchIn(viewModelScope)
     }
+
+
 }
 
 private suspend fun insertToDeck(
@@ -232,4 +237,6 @@ private suspend fun insertToDeck(
         nationalDex = card.nationalDex?: 152
     )
 }
+
+
 

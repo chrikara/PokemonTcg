@@ -6,12 +6,13 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pokemontcg.domain.model.defaultOpponents
+import com.example.pokemontcg.domain.model.toNumberString
 import com.example.pokemontcg.domain.use_cases.AllGymOpponentsUseCases
 import com.example.pokemontcg.domain.use_cases.AllMyDeckUseCases
 import com.example.pokemontcg.domain.use_cases.FilterOutDeckUseCase
 import com.example.pokemontcg.util.TOTAL_DECK_CARDS_GLOBAL
 import com.example.pokemontcg.util.UiEvent
+import com.example.pokemontcg.util.navigation.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -128,37 +129,21 @@ class GymViewModel @Inject constructor(
             }
 
             GymEvent.OnPlay -> {
-                if(!state.selectedOpponent!!.isPlayable){
-                    viewModelScope.launch {
-                        _uiEvent.send(UiEvent.ShowSnackBar(
-                            message = "Χρειάζεσαι 2 νίκες για να κάνεις μάχη με τον ${state.selectedOpponent!!.name}!"
-                        ))
-                    }
-                    return
-                }
-
-                val totalCardsSelectedDeck = state.savedCardList.filter { it.deckNumber == state.selectedDeck }.size
-
-                if(totalCardsSelectedDeck < TOTAL_DECK_CARDS_GLOBAL){
-                    viewModelScope.launch {
-                        _uiEvent.send(UiEvent.ShowSnackBar(
-                            message = "Χρειάζεσαι $TOTAL_DECK_CARDS_GLOBAL κάρτες και έχεις $totalCardsSelectedDeck!"
-                        ))
-                    }
-                    return
-                }
-
                 viewModelScope.launch {
-                    _uiEvent.send(UiEvent.ShowSnackBar(
-                        message = " Ήρθε η ώρα να παίξεις!"
-                    ))
+                    _uiEvent.send(
+                        UiEvent.Navigate(
+                        route = Screen.Game.route
+                                + "/${state.selectedDeck.toNumberString()}"
+                                + "/${state.selectedOpponent!!.name}"
+                        )
+                    )
                 }
             }
 
             is GymEvent.OnErrorTextChange -> {
-                if(!state.selectedOpponent!!.isPlayable){
+                if(state.opponentsForThisGym.count{ it.isBeaten } < 2 && state.selectedOpponent!!.isBoss){
                     state = state.copy(
-                        messageError = "Χρειάζεσαι 2 νίκες για να νικήσεις τον ${state.selectedOpponent!!.name}",
+                        messageError = "${state.selectedOpponent!!.name}: Χρειάζεσαι 2 νίκες για να με πολεμήσεις μικρέ!",
                         isButtonEnabled = false
                     )
                     return

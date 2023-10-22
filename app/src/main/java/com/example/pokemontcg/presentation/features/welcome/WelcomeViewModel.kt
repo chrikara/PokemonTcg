@@ -5,11 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pokemontcg.domain.model.defaultOpponents
+import com.example.pokemontcg.domain.model.defaults.defaultOpponents
 import com.example.pokemontcg.domain.preferences.Preferences
 import com.example.pokemontcg.domain.use_cases.AllGymOpponentsUseCases
 import com.example.pokemontcg.domain.use_cases.AllMyDeckUseCases
-import com.example.pokemontcg.domain.use_cases.DeleteAllPokemonCardsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,8 +27,6 @@ class WelcomeViewModel @Inject constructor(
     )
         private set
 
-    init {
-    }
 
     fun onStartNewGame(){
 
@@ -39,9 +36,17 @@ class WelcomeViewModel @Inject constructor(
         )
     }
 
-    fun deleteAndInsertDefaultOpponentsInDb(){
+    fun onDialog(){
+        state = state.copy(
+            isDialogShown = !state.isDialogShown
+        )
+    }
+
+    fun deleteAllDataAndInsertDefaultOpponentsInDb(){
 
         viewModelScope.launch {
+
+
 
             allGymOpponentsUseCases.deleteOpponentFromDbUseCase()
             allMyDeckUseCases.deleteAllPokemonCardsUseCase()

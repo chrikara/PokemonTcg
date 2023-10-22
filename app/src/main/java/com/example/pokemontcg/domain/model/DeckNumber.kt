@@ -8,13 +8,7 @@ sealed class DeckNumber {
 
 
     companion object {
-        fun toNumberString(deckNumber: DeckNumber) : String{
-            return when(deckNumber) {
-                First -> "1st"
-                Second -> "2nd"
-                Third -> "3rd"
-            }
-        }
+
         fun fromInt(number  : Int) : DeckNumber{
             return when(number){
                 1 -> First
@@ -24,6 +18,14 @@ sealed class DeckNumber {
             }
         }
 
+        fun fromString(deckString : String) : DeckNumber{
+            return when(deckString){
+                "1st" -> First
+                "2nd" -> Second
+                "3rd" -> Third
+                else -> Second
+            }
+        }
     }
 
 }

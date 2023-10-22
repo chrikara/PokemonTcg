@@ -1,17 +1,27 @@
 package com.example.pokemontcg.presentation.features.createdecks.modifydeck.components
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -21,55 +31,108 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.TileMode
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import coil.compose.ImagePainter
+import androidx.palette.graphics.Palette
+import coil.compose.AsyncImage
 import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
+import com.example.pokemontcg.R
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CardItemToInsertToDeck(
     modifier : Modifier = Modifier,
     image: String,
     totalCounts : Int,
     onShowInfo : () -> Unit,
-    onAddCard : () -> Unit,
-    onDeleteCard: () -> Unit,
+    onAddCard : () -> Unit = {},
+    onDeleteCard: () -> Unit = {},
 
     )
 {
+    val defaultDominantColor =  Color.Transparent
+    var dominantColor by remember {
+        mutableStateOf(defaultDominantColor)
+    }
+
+    var isLoading by remember {
+        mutableStateOf(false)
+    }
 
 
     Column(
         modifier = modifier
+            .fillMaxHeight()
+            .padding(vertical = 2.dp)
+            .padding(horizontal = 2.dp)
+            .shadow(
+                elevation = 3.dp,
+
+                )
+            .padding(3.dp)
+            .background(
+                Brush.radialGradient(
+                    listOf(
+                        dominantColor,
+                        Color.Transparent,
+                    ),
+                    radius = 760f,
+                )
+            )
     ) {
-        Box(){
-            Image(
-                painter = rememberImagePainter(
-                    data = image,
-                    builder = {
-                              CircularProgressIndicator(
-                                  modifier = Modifier.align(Alignment.Center)
-                              )
 
-                    },
+        Box {
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(image)
+                    .crossfade(true)
+                    .build(),
+                onSuccess = {
+                    isLoading = false
+                    calcDominantColor(it.result.drawable) { color ->
+                        dominantColor = color
 
+                    }
+                },
 
-                ),
+                onLoading = {
+                    isLoading = true
+                },
+                contentScale = ContentScale.Fit,
                 contentDescription = "",
                 modifier = Modifier
                     .size(285.dp)
-                    .background(MaterialTheme.colorScheme.surface)
                     .clickable(
                         onClick = onShowInfo
-                    ),
+                    )
+                    .clip(RoundedCornerShape(50.dp))
+                    .padding(horizontal = 10.dp),
 
                 )
+            if(isLoading){
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+            }
         }
 
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 5.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
@@ -79,7 +142,7 @@ fun CardItemToInsertToDeck(
                 tint = MaterialTheme.colorScheme.onBackground,
                 modifier =
                 Modifier
-                    .clip(RoundedCornerShape(10.dp))
+                    .clip(CircleShape)
                     .clickable(onClick = onDeleteCard)
                     .padding(15.dp)
             )
@@ -94,7 +157,7 @@ fun CardItemToInsertToDeck(
                 contentDescription = "" ,
                 tint = MaterialTheme.colorScheme.onBackground ,
                 modifier = Modifier
-                    .clip(RoundedCornerShape(10.dp))
+                    .clip(CircleShape)
                     .clickable(onClick = onAddCard)
                     .padding(15.dp)
 
@@ -102,7 +165,33 @@ fun CardItemToInsertToDeck(
             )
 
         }
-        Spacer(modifier = Modifier.height(10.dp))
+    }
+
+}
+
+fun calcDominantColor(drawable: Drawable, onFinish:(Color) -> Unit){
+    val bmp = (drawable as BitmapDrawable).bitmap.copy(Bitmap.Config.ARGB_8888, true)
+
+
+
+    Palette.from(bmp).generate{
+        it?.dominantSwatch?.rgb?.let { colorValue ->
+            onFinish(Color(colorValue))
+        }
+    }
+}
+
+fun calcDominantColor(context : Context, drawable: Int, onFinish: (Color) -> Unit) {
+
+
+
+    val bmp = BitmapFactory.decodeResource(context.resources, drawable).copy(Bitmap.Config.ARGB_8888, true)
+
+    Palette.from(bmp).generate{
+
+        it?.dominantSwatch?.rgb?.let { colorValue ->
+            onFinish(Color(colorValue))
+        }
     }
 
 }

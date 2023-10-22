@@ -27,7 +27,7 @@ private val LightColorScheme = lightColorScheme(
     primary = BlueAlpha,
     secondary = BlueAlpha20,
     tertiary = Pink40,
-    background = Color(0xFF1C1B1F),
+    background = DarkDialog,
     onBackground =  Color(0xFFFFFBFE),
     surface = Color.Transparent,
     onPrimary = Color.White,
@@ -45,17 +45,25 @@ fun PokemonTcgTheme(
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
+
+
     println(Build.VERSION.SDK_INT)
     val colorScheme = when {
 
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
+//        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+//            val context = LocalContext.current
+//            if (darkTheme) {
+//                dynamicDarkColorScheme(context)
+//            } else {
+//                dynamicLightColorScheme(context)
+//            }
+//        }
 
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
+
+
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {

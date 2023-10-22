@@ -12,9 +12,9 @@ import com.example.pokemontcg.domain.model.cardinfo.EnergyInfoCard
 import com.example.pokemontcg.domain.model.cardinfo.PokeInfoCard
 import com.example.pokemontcg.domain.model.cardinfo.SuperType
 import com.example.pokemontcg.domain.use_cases.AllMyDeckUseCases
-import com.example.pokemontcg.util.Pokedex
-import com.example.pokemontcg.util.Pokedex.getKeyByPokemonName
-import com.example.pokemontcg.util.Pokedex.pokedexBaseIdtoNameHash
+import com.example.pokemontcg.domain.model.defaults.DefaultPokedex
+import com.example.pokemontcg.domain.model.defaults.DefaultPokedex.getKeyByPokemonName
+import com.example.pokemontcg.domain.model.defaults.DefaultPokedex.pokedexBaseIdtoNameHash
 import com.example.pokemontcg.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
@@ -230,7 +230,7 @@ class PokeCardInfoViewModel @Inject constructor(
 
 private fun evolveUrl(pokeName : String) : String?{
 
-    val dexString = getKeyByPokemonName(Pokedex.pokedexNationaltoNameHash,pokeName ) ?: return null
+    val dexString = getKeyByPokemonName(DefaultPokedex.pokedexNationaltoNameHash,pokeName ) ?: return null
 
     return when(dexString.length){
         1 -> "https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/00$dexString.png"

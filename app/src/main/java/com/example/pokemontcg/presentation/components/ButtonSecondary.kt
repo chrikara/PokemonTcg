@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.pokemontcg.R
+import com.example.pokemontcg.ui.theme.GreenBrush
 import com.example.pokemontcg.ui.theme.GreenButtonColor
 import com.example.pokemontcg.ui.theme.LocalSpacing
 
@@ -40,14 +41,16 @@ import com.example.pokemontcg.ui.theme.LocalSpacing
 fun ButtonSecondary(
     modifier : Modifier = Modifier,
     text : String,
-    onClick : () -> Unit = {},
     fontSize : TextUnit = 20.sp,
     paddingValues: PaddingValues = PaddingValues(
         horizontal = 55.dp,
         vertical = 15.dp
     ),
-    isEnabled : Boolean
-) {
+    isEnabled : Boolean,
+    backGroundColors : List<Color> = GreenBrush,
+    onClick : () -> Unit,
+
+    ) {
 
     val spacing = LocalSpacing.current
 
@@ -84,19 +87,14 @@ fun ButtonSecondary(
             .alpha(if(isEnabled) 1f else 0.4f)
             .background(
                 brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFF66D852),
-                        Color(0xFFADF38F),
-
-                        Color(0xFF1A9E03),
-
-                    ),
+                    colors = backGroundColors,
                     startY = 10f,
                     endY = 150f
 
                 )
             )
             .padding(paddingValues)
+
 
     ){
         Text(
