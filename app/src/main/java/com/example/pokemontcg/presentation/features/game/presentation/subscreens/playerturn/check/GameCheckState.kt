@@ -1,4 +1,4 @@
-package com.example.pokemontcg.presentation.features.game.presentation.subscreens.check
+package com.example.pokemontcg.presentation.features.game.presentation.subscreens.playerturn.check
 
 import com.example.pokemontcg.presentation.features.game.domain.model.GameCard
 

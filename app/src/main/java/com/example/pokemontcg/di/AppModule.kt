@@ -25,6 +25,7 @@ import com.example.pokemontcg.presentation.features.createdecks.use_cases.Insert
 import com.example.pokemontcg.presentation.features.game.domain.use_cases.DrawCardsUseCase
 import com.example.pokemontcg.presentation.features.game.domain.use_cases.GameUseCases
 import com.example.pokemontcg.presentation.features.game.domain.use_cases.ShuffleUseCase
+import com.example.pokemontcg.presentation.features.game.presentation.subscreens.playerturn.use_cases.ActionInHandUseCase
 import com.example.pokemontcg.presentation.features.game.presentation.subscreens.playerturn.use_cases.CardTextInHandUseCase
 import com.example.pokemontcg.presentation.features.game.presentation.subscreens.playerturn.use_cases.PlayerTurnUseCases
 import com.example.pokemontcg.util.DangerousConstants
@@ -76,7 +77,9 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providePokemonTcgApi(client: OkHttpClient): PokemonTcgApi {
+    fun providePokemonTcgApi(
+        client: OkHttpClient
+    ): PokemonTcgApi {
         return Retrofit.Builder()
             .baseUrl(DangerousConstants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
@@ -150,7 +153,8 @@ object AppModule {
     fun providePlayerTurnUseCases(
     ): PlayerTurnUseCases {
         return PlayerTurnUseCases(
-            cardTextInHand = CardTextInHandUseCase()
+            cardTextInHand = CardTextInHandUseCase(),
+            actionInHand = ActionInHandUseCase()
         )
     }
     @Singleton

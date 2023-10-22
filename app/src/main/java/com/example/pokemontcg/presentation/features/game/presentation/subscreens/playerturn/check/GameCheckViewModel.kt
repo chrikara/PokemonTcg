@@ -1,4 +1,4 @@
-package com.example.pokemontcg.presentation.features.game.presentation.subscreens.check
+package com.example.pokemontcg.presentation.features.game.presentation.subscreens.playerturn.check
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

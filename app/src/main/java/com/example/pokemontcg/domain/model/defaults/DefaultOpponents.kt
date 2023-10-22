@@ -12,7 +12,7 @@ val defaultOpponents = listOf<GymOpponent>(
         symbolImage = Symbol.fromString("Fighting").drawable,
         isBoss = false,
         isBeaten = false,
-        defaultDeck = defaultOpponentsDecks[0],
+        defaultDeck = OpponentDeck.Yugo.deckList,
     ),
     GymOpponent(
         gymName = "Pewter",

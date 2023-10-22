@@ -5,6 +5,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pokemontcg.presentation.features.game.GameEvent
+import com.example.pokemontcg.presentation.features.game.GameViewModel
+import com.example.pokemontcg.presentation.features.game.domain.model.EnergyCard
+import com.example.pokemontcg.presentation.features.game.domain.model.GameCard
+import com.example.pokemontcg.presentation.features.game.domain.model.PokemonCard
+import com.example.pokemontcg.presentation.features.game.domain.model.PokemonType
 import com.example.pokemontcg.presentation.features.game.presentation.subscreens.playerturn.use_cases.PlayerTurnUseCases
 import com.example.pokemontcg.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -58,7 +64,49 @@ class GamePlayerTurnViewModel @Inject constructor(
                 }
             }
 
+            is PlayerTurnEvent.OnClickSelectedCardBasicPokemon -> {
+                val benchPokemon = event.viewModelGame.state.player.benchPokemon
+                val currentHand = event.viewModelGame.state.player.currentHand
 
+                when(event.gameCard){
+                    is PokemonCard ->{
+                        when(event.gameCard.pokemonType){
+                            PokemonType.Basic -> {
+                                if(benchPokemon.size < 3){
+
+                                    benchPokemon.add(event.gameCard)
+                                    currentHand.remove(event.gameCard)
+
+
+                                    println("State index" + state.selectedCardIndex)
+
+                                    state = state.copy(
+
+                                        /*
+                                        Same as ChooseBench, we modify selectedInde if card removed
+                                        was last.
+                                         */
+                                        selectedCardIndex =
+                                        if(state.selectedCardIndex == currentHand.size
+                                            && currentHand.isNotEmpty())
+                                            currentHand.lastIndex
+                                        else state.selectedCardIndex,
+
+                                        currentHandSize = currentHand.size
+                                        /*
+                                        This is just to update state so we can see changes
+                                         */
+
+                                    )
+                                }
+                            }
+                            PokemonType.Stage1 -> {}
+                            PokemonType.Stage2 -> {}
+                        }
+                    }
+                    else -> Unit
+                }
+            }
         }
 
     }

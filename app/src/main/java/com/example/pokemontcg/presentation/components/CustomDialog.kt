@@ -38,15 +38,11 @@ fun CustomDialog(
     title : String,
     text : String,
 ) {
-    
-    val txtFieldError = remember { mutableStateOf("") }
-    val txtField = remember { mutableStateOf("") }
+
     val spacing = LocalSpacing.current
 
     Dialog(onDismissRequest = { onDismiss()}) {
         Box(
-
-
             contentAlignment = Alignment.Center)
         {
             

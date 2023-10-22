@@ -1,6 +1,9 @@
 package com.example.pokemontcg.domain.model.defaults
 
 import com.example.pokemontcg.domain.model.CardOverview
+sealed class OpponentDeck(val deckList : List<CardOverview>){
+    object Yugo : OpponentDeck(defaultOpponentsDecks[0])
+}
 
 val defaultOpponentsDecks = listOf<List<CardOverview>>(
     // Yugo

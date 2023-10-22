@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalLayoutApi::class, ExperimentalLayoutApi::class)
 
-package com.example.pokemontcg.presentation.features.game.presentation.subscreens.check
+package com.example.pokemontcg.presentation.features.game.presentation.subscreens.playerturn.check
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -34,6 +34,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,6 +48,8 @@ import com.example.pokemontcg.presentation.features.game.domain.model.PokemonTyp
 import com.example.pokemontcg.ui.theme.BlueAlpha
 import com.example.pokemontcg.ui.theme.GreenBrush
 import com.example.pokemontcg.ui.theme.LocalSpacing
+import com.example.pokemontcg.util.HEART_EMPTY
+import com.example.pokemontcg.util.HEART_FILLED
 
 @Composable
 fun GameCheckScreen(
@@ -257,7 +260,8 @@ fun GameCheckCard(
             .clickable(
                 enabled = !isEmpty,
                 onClick = {
-                    onClick(pokemonCard.image)}
+                    onClick(pokemonCard.image)
+                }
             )
             .shadow(
                 elevation = 2.dp,
@@ -329,6 +333,26 @@ fun GameCheckCard(
 
 
         Spacer(modifier = Modifier.height(5.dp))
+
+
+        FlowRow(
+            maxItemsInEachRow = 6,
+            modifier = Modifier.height(60.dp)
+        ) {
+            if(!isEmpty){
+                for(i in 0 until pokemonCard.totalHp/10){
+                    Text(
+                        text = if(i<pokemonCard.remainingHp/10) HEART_FILLED else HEART_EMPTY,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontSize = 12.sp
+                    )
+                }
+            }
+
+
+
+
+        }
     }
 }
 

@@ -12,11 +12,13 @@ import com.example.pokemontcg.presentation.features.game.presentation.components
 import com.example.pokemontcg.presentation.features.game.presentation.components.GameActionWindow
 import com.example.pokemontcg.presentation.features.game.presentation.components.GameCardInfoBox
 import com.example.pokemontcg.presentation.features.game.presentation.components.GameHandBox
-import com.example.pokemontcg.presentation.features.game.presentation.subscreens.check.GameCheckScreen
-import com.example.pokemontcg.presentation.features.game.presentation.subscreens.check.GameCheckViewModel
+import com.example.pokemontcg.presentation.features.game.presentation.subscreens.playerturn.check.GameCheckScreen
+import com.example.pokemontcg.presentation.features.game.presentation.subscreens.playerturn.check.GameCheckViewModel
 import com.example.pokemontcg.presentation.features.game.presentation.subscreens.playerturn.GamePlayerTurnViewModel
 import com.example.pokemontcg.presentation.features.game.presentation.subscreens.playerturn.PlayerTurnEvent
+import com.example.pokemontcg.presentation.features.game.presentation.subscreens.playerturn.use_cases.ActionInHandUseCase
 import com.example.pokemontcg.presentation.features.game.presentation.subscreens.playerturn.use_cases.CardTextInHandUseCase
+import com.example.pokemontcg.presentation.features.game.presentation.subscreens.playerturn.use_cases.PlayerTurnUseCases
 import com.example.pokemontcg.ui.theme.LocalSpacing
 import com.example.pokemontcg.util.UiEvent
 
@@ -35,7 +37,11 @@ fun GamePlayerTurnScreen(
 
     println("Stttate ${stateGame.currentState}")
 
-    val cardTextInHandUseCase = CardTextInHandUseCase()
+    val playerTurnUseCases = PlayerTurnUseCases(
+        cardTextInHand = CardTextInHandUseCase(),
+        actionInHand = ActionInHandUseCase()
+    )
+
 
     LaunchedEffect(key1 = true){
         viewModelPlayerTurn.uiEvent.collect{ event ->
@@ -77,7 +83,7 @@ fun GamePlayerTurnScreen(
     }
 
     if(stateGame.currentState == GameState.GameSealedClass.PLAYER_TURN.HAND){
-        var textButton1 = cardTextInHandUseCase(stateGame.player.currentHand[statePTurn.selectedCardIndex])
+        var textButton1 = playerTurnUseCases.cardTextInHand(stateGame.player.currentHand[statePTurn.selectedCardIndex])
 
         GameHandBox(
             viewModel = viewModelGame,
@@ -85,7 +91,12 @@ fun GamePlayerTurnScreen(
             textButton1 = "Info",
             textButton3 = "Back",
             isButton3Visible = true,
-            onClick2 = {},
+            onClick2 = {
+                       viewModelPlayerTurn.onEvent(PlayerTurnEvent.OnClickSelectedCardBasicPokemon(
+                           gameCard = it,
+                           viewModelGame = viewModelGame
+                       ))
+            },
             onClick1 = {
                 viewModelGame.onEvent(GameEvent.OnChangeGameState(GameState.GameSealedClass.PLAYER_TURN.CARD_INFO))
                 viewModelPlayerTurn.onEvent(PlayerTurnEvent.OnCardInfoImage(it.image))
@@ -94,7 +105,7 @@ fun GamePlayerTurnScreen(
             selectedIndex = statePTurn.selectedCardIndex,
             onItemClick = {
                 viewModelPlayerTurn.onEvent(PlayerTurnEvent.OnSelectedCardIndex(stateGame.player.currentHand.indexOf(it)))
-                textButton1 = cardTextInHandUseCase(stateGame.player.currentHand[statePTurn.selectedCardIndex])
+                textButton1 = playerTurnUseCases.cardTextInHand(stateGame.player.currentHand[statePTurn.selectedCardIndex])
             },
         )
     }

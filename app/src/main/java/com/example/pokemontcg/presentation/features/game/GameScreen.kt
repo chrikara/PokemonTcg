@@ -18,7 +18,7 @@ import com.example.pokemontcg.presentation.features.game.presentation.components
 import com.example.pokemontcg.presentation.features.game.presentation.components.GameChooseBenchScreen
 import com.example.pokemontcg.presentation.features.game.components.GamePlayerTurnScreen
 import com.example.pokemontcg.presentation.features.game.presentation.components.ShuffleDeckGameScreen
-import com.example.pokemontcg.presentation.features.game.presentation.subscreens.check.GameCheckViewModel
+import com.example.pokemontcg.presentation.features.game.presentation.subscreens.playerturn.check.GameCheckViewModel
 import com.example.pokemontcg.presentation.features.game.presentation.subscreens.chooseactive.GameChooseActiveViewModel
 import com.example.pokemontcg.presentation.features.game.presentation.subscreens.choosebench.GameChooseBenchViewModel
 import com.example.pokemontcg.presentation.features.game.presentation.subscreens.playerturn.GamePlayerTurnViewModel

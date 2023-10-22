@@ -93,7 +93,10 @@ val fakePlayerBasicPokemon = PokemonCard(
     image = "",
     nationalDex = 113,
     pokemonType = PokemonType.Basic
-)
+).apply {
+    totalHp = 120
+    remainingHp = 60
+}
 
 val fakePlayerStage2Pokemon = PokemonCard(
     baseId = "base1-1",
@@ -101,14 +104,22 @@ val fakePlayerStage2Pokemon = PokemonCard(
     image = "",
     nationalDex = 65,
     pokemonType = PokemonType.Stage2
-)
+).apply {
+    totalHp = 70
+    remainingHp = 10
+}
+
 val fakePlayerStage1Pokemon = PokemonCard(
     baseId = "base1-6",
     name = "Gyarados",
     image = "",
     nationalDex = 130,
     pokemonType = PokemonType.Stage1
-)
+).apply {
+    totalHp = 60
+    remainingHp = 60
+}
+
 
 val fakePlayerCurrentPokemon = PokemonCard(
     baseId = "base1-1",
